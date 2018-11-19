@@ -6,5 +6,5 @@
   * Role(1)
   * Role(2) and so on.
   
-* **DamBRA https://github.com/DamBRA**
+* **Damien BRADELLE https://github.com/DamBRA**
   * Data structure team
