@@ -2,6 +2,5 @@
 
 [comment]: <> (Here is a standard template.)
 
-* **[Your Name] (github-link)**
-  * Role(1)
-  * Role(2) and so on.
+* **[Ghjulia Sialelli] (github.com/ghjuliasialelli)**
+  * Gathering data team
