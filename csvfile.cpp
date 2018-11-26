@@ -19,3 +19,15 @@ std::vector<std::vector<std::string>> CSVfile::read() {
 	file.close();
 	return ret;
 }
+
+void CSVfile::print() {
+	std::vector<std::vector<std::string>> data = this->read();
+	for (std::vector<std::string> vec : data)
+	{
+		for (std::string data : vec)
+		{
+			std::cout << data << " , ";
+		}
+		std::cout << std::endl;
+	}
+}
