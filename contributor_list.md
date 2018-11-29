@@ -1,8 +1,14 @@
 ## Contributor's List for the C++ Project
 
-[comment]: <> (Here is a standard template.)
 
-* **[Your Name] (github-link)**
-  * Role(1)
-  * Role(2) and so on.
-  * Miha Smaka - Data Collecting (https://github.com/Smakson/CSE201_prototype)
+* **[Miha Smaka] (https://github.com/Smakson/CSE201_prototype)**
+  * Data Collecting
+  
+* **[Deivis Banys] (www.github.com/deivisbanys)**
+  * Working in Team_III
+
+* **[Ghjulia Sialelli] (github.com/ghjuliasialelli)**
+    * Gathering data team
+    
+* **[Loan Tricot] (github.com/ltricot)**
+    * All teams
