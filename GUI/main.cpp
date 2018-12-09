@@ -86,6 +86,14 @@ int main(int argc, char *argv[])
     // create a first window called home that is not displayed
     QWidget *home = new QWidget;
 
+    // create the main window, core of the application (unsued for now)
+    QWidget *main = new QWidget;
+    main->setWindowTitle("App name");
+    main->setMinimumSize(500, 500);
+    QPushButton *quit_button = new QPushButton(main);
+    quit_button->setText("Quit");
+    QObject::connect(quit_button, SIGNAL(clicked()), qApp, SLOT(quit()));
+
     // Display a message box
     int ok = QMessageBox::question(home, "Hello", "Welcome to our app, let's start", QMessageBox::Ok);
     // Check that the button has been clicked and manage the different cases
@@ -103,7 +111,9 @@ int main(int argc, char *argv[])
             // if the button has been clicked and that the ID is not empty (we may add if the ID is in id_list ?)
             if (ok && !id.isEmpty())
             {
-                   // IT HAS NOT BEEN CODED YET
+                   // display the app
+                home->close();
+                main->show();
             }
             // If the ID is empty
             else
@@ -941,8 +951,20 @@ int main(int argc, char *argv[])
             ID->setLayout(ID_layout);
             ID->show();
             QObject::connect(val_id, SIGNAL(clicked()), ID, SLOT(hide()));
-            }
 
+            bool b = true;
+            while (b)
+            {
+                delay();
+                if (ID->isHidden())
+                {
+                    b = false;
+                    ID->close();
+                    home->close();
+                    main->show();
+                }
+            }
+            }
         }
     return app.exec();
 }
