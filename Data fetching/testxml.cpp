@@ -26,12 +26,14 @@ int main() {
 	doc.parse<0>(&content[0]);
 	// Find our root node
 	xml_node<> *pRoot = doc.first_node("feed");
-    xml_node<> *pUpdate =pRoot->first_node("updated");
-    std::cout << pUpdate->value()<<std::endl;
 	xml_node<> *pEntry =pRoot->first_node("entry");
+	xml_node<> *pID =pEntry->first_node("id"); //get the id
+	std::cout << pID->value()<<std::endl;
+    xml_node<> *pUpdate =pEntry->first_node("updated"); //get the date
+    std::cout << pUpdate->value()<<std::endl;
 	for(xml_node<> *pAuthor=pEntry->first_node("author"); pAuthor; pAuthor=pAuthor->next_sibling("author"))
 	{
-		xml_node<> *pName=pAuthor->first_node("name");
-		std::cout<< pName->value() <<std::endl;
+		xml_node<> *pName=pAuthor->first_node("name"); //get the author names
+		std::cout<< pName->value() <<std::endl; 
 	}
 } 
