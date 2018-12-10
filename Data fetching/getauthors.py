@@ -53,7 +53,11 @@ def ids_from_authors(authors, max_results=100):
         # iterate over entries & yield ids
         for entry in root.findall(prefix + 'entry'):
             id_ = entry.find(prefix + 'id').text.rsplit('/', 1)[-1]  # last part of id url
-            yield author, id_
+
+            # iterate over authors & yield names
+            for auth in entry.findall(prefix + 'author'):
+                name = auth.find(prefix + 'name').text
+                yield name, id_
 
 def crawl(id_):
     """Crawl the arxiv author / ID graph from a source ID.
