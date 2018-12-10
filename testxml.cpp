@@ -21,15 +21,22 @@ int main() {
 	ifstream file("test.xml");
 	stringstream buffer;
 	buffer << file.rdbuf();
+	std::cout<<"e"<<std::endl;
 	file.close();
 	string content(buffer.str());
+	std::cout<<"e0"<<std::endl;
 	doc.parse<0>(&content[0]);
 	// Find our root node
 	xml_node<> *pRoot = doc.first_node("feed");
-    xml_node<> *pUpdate =pRoot->first_node("update");
+	std::cout<<"e1"<<std::endl;
+    xml_node<> *pUpdate =pRoot->first_node("updated");
+	std::cout<<"e2"<<std::endl;
     std::cout << pUpdate->value()<<std::endl;
-	for(xml_node<> *pAuthor=pRoot->first_node("author"); pAuthor; pAuthor=pAuthor->next_sibling())
-	{
-		std::cout<< pAuthor->value() <<std::endl;
-	}
+	std::cout<<"e4"<<std::endl;
+	xml_node<> *pEntry =pRoot->first_node("entry");
+	xml_node<> *pAuthor=pEntry->first_node("author");
+	xml_node<> *pName=pAuthor->first_node("name");
+	std::cout<< pName->value() <<std::endl;
+
+	
 } 
