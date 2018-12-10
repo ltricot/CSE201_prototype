@@ -2,12 +2,14 @@
 #include <string>
 #include <vector>
 
-class CSVfile {
+class Reader {
 public:
 	std::string filename;
-	CSVfile(std::string name) {
-		this->filename = name;
-	}
+	std::string delim;
+	Reader();
+	Reader(std::string name);
+	Reader(std::string name, std::string delimeter);
 	std::vector<std::vector<std::string>> read();
 	void print();
 };
+
