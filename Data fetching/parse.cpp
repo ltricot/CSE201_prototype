@@ -16,11 +16,22 @@
 using namespace rapidxml;
 using namespace std;
 
-
+// converting a string to a char pointer 
 const char* stringToCharpt(std::string str) {
     const char* c = str.c_str() ; 
     return c ;
 }
+
+// converting a string to a char vector
+// maybe instead of doing this i could directly put this in urlToString which would make it urlToCharVector ?
+// i dont know which one is the most efficient 
+
+std::vector<char> stringToCharVct(std::string s) {
+    std::vector<char> v(   s.begin(), s.end()   ); 
+    return v ; 
+
+} 
+
 
 static size_t makeString(void *contents, size_t size, size_t nmemb, std::string *s) {
     size_t newLength = size*nmemb;
@@ -74,12 +85,25 @@ std::string urlToString(const char* url) {
 
 
 
-void parseString(std::string s){
-    xml_document<> doc; // character type defaults to char
-    stringstream buffer;
-    buffer << file.rdbuf();
-    string content(buffer.str());
-    doc.parse<0>(&content[0]);
+void parseString(std::string xmlString){
+    // convert xmlString to vector<char>
+    vector<char> url = stringToCharVct(xmlString) ; 
+    // we need it to be a null-terminated string : 
+    url.push_back('\0'); 
+
+    xml_document<> doc; 
+
+    /* 
+    const char* xmldata = stringToCharpt(xmlString) ;
+
+    // Convert xml to vector<char>
+    vector<char> buffer(xmldata, xmldata + xmldata.length());
+    // we need it to be a null-terminated string : 
+	buffer.push_back('\0');
+    */ 
+    // parse the buffer 
+	doc.parse<0>(&url[0]);
+
     // Find our root node
 	xml_node<> *pRoot = doc.first_node("feed");
 	xml_node<> *pEntry =pRoot->first_node("entry");
