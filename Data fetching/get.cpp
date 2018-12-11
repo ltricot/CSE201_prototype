@@ -1,9 +1,11 @@
 using namespace std ;
 #include "parse.cpp"
+#include "join.cpp"
 
 // arxiv's api seems to prefix this to the tags of all its nodes
 std::string prefix = "{http://www.w3.org/2005/Atom}"
 std::string base_url = "http://export.arxiv.org/api/query"
+
 
 
 /* 
@@ -17,13 +19,22 @@ std::vector<string> authorsFromId (std::vector<string> id_list) {
     tuple_list pairs;
 
     // step 1 : call arxiv's api
+
+
     for(std::vector<int>::size_type k = 0; k != id_list.size(); k=k+15) {
-        for(std::vector<string>::iterator ids = id_list.at(k); ids != id_list.at(k+15); ++ids) {
+        
+        std::vector<string> sub(&id_list[k],&id_list[k+15] ; // not really sure about this tho (is it like for buffer where we can call it as such?)
+
+        // for(std::vector<string>::iterator ids = id_list.at(k); ids != id_list.at(k+15); ++ids) (replaced by above)
 
             // this is a map, where the keys and the values are strings
             std::map<std::string, std::string> params;
-            params["id_list"] = ','.join(*ids)  ;
-            params["max_results"] = '1' ; 
+
+            std::string ids ; 
+            join(sub, char c, ids) 
+
+            params["id_list"] = ids ; 
+            params["max_results"] = std::to_string(id_list.length()) ; 
 
             // now we want to create the url 
             std::string url = base_url + '?' + "id_list=" + params["id_list"] + ";max_results=" + params["max_results"]
@@ -37,12 +48,13 @@ std::vector<string> authorsFromId (std::vector<string> id_list) {
 
             // step 3 : iterate over authors & yield names
             for(std::vector<string>::iterator author = authors.start(); author != authors.end(); ++author) {
-                res.push_back( tuple<string, string>(author, id)  )
+                pairs.push_back( tuple<string, string>(author, id)  )
             }
-        }
+        }   
 
-        return pairs ; 
-    }
+        
+    return pairs ; 
+    
 }
 
 /* 
@@ -76,4 +88,3 @@ std::vector<string> idsFromAuthor (std::vector<string> authors) {
         return pairs ; 
     
 } 
-
