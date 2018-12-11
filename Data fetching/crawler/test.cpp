@@ -3,16 +3,11 @@
 
 
 int main(int argc, char** argv) {
-    Crawler *crawler = new Crawler();
-    std::vector<std::pair<std::string, std::string>> pairs;
-    std::vector<std::string> authors;
-    authors.push_back("Kortchemski");
-
-    pairs = crawler->fromAuthors(authors);
     std::vector<std::pair<std::string, std::string>>::iterator pair;
-    std::cout << pairs.size() << std::endl;
+    Crawler *crawler = new Crawler();
+    crawler->crawl("1812.01161", 6);
 
-    for(pair = pairs.begin(); pair != pairs.end(); pair++) {
-        std::cout << pair->first << std::endl;
+    for(pair = crawler->pairs.begin(); pair != crawler->pairs.end(); pair++) {
+        std::cout << pair->first << ", " << pair->second << std::endl;
     }
 }
