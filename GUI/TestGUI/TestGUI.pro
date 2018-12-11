@@ -1,5 +1,6 @@
 QT += widgets
-CONFIG += console
+QT += webenginewidgets
+CONFIG+=sdk_no_version_check
 
 SOURCES += \
     main.cpp \
