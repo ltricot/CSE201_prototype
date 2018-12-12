@@ -10,7 +10,7 @@ using namespace std;
 
 
 int main() {
-	/*const utility::string_t storage_connection_string = utility::conversions::to_string_t("DefaultEndpointsProtocol=https;AccountName=abdelrahmansameh;AccountKey=0KyoXM2pAEIePW34e0zQkEV+M1PDwPs7RdSe1+aT1xo9ZZXCyaGv+tdAYp0rCFkVcq8L/hKCh6puen7PVsihkQ==;EndpointSuffix=core.windows.net");
+	/*const utility::string_t storage_connection_string = utility::conversions::to_string_t("");
 	
 	// Retrieve the storage account from the connection string.
 	azure::storage::cloud_storage_account storage_account = azure::storage::cloud_storage_account::parse(storage_connection_string);
