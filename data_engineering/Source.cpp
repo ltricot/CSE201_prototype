@@ -4,11 +4,13 @@
 #include <string>
 #include "Paper.h"
 #include "PapersReader.h"
+#include "ReferencesReader.h"
+
 using namespace std;
 
 
 int main() {
-	const utility::string_t storage_connection_string = utility::conversions::to_string_t("INSERT KEY HERE");
+	/*const utility::string_t storage_connection_string = utility::conversions::to_string_t("");
 	
 	// Retrieve the storage account from the connection string.
 	azure::storage::cloud_storage_account storage_account = azure::storage::cloud_storage_account::parse(storage_connection_string);
@@ -21,6 +23,9 @@ int main() {
 	azure::storage::cloud_table table = table_client.get_table_reference(utility::conversions::to_string_t(s));
 	
 	PapersReader R("test.txt");
-	R.UploadPapers(table);
+	R.UploadPapers(table);*/
+	
+	ReferencesReader r("References.txt");
+	r.MakeMatrix();
 	return 0;
 }
