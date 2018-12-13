@@ -1,11 +1,25 @@
-#include "csvfile.h"
+#include "Reader.h"
 #include <string>
 #include <iostream>
 #include <vector>
 #include <fstream>
 #include <boost/algorithm/string.hpp>
 
-std::vector<std::vector<std::string>> CSVfile::read() {
+Reader::Reader() {
+	this->filename = " ";
+	this->delim = ",";
+}
+Reader::Reader(std::string name) {
+	this->filename = name;
+	this->delim = ",";
+}
+
+Reader::Reader(std::string name, std::string delimeter) {
+	this->filename = name;
+	this->delim = delimeter;
+}
+
+std::vector<std::vector<std::string>> Reader::read() {
 	std::ifstream file(filename);
 	std::vector<std::vector<std::string>> ret;
 	std::string line;
@@ -20,7 +34,7 @@ std::vector<std::vector<std::string>> CSVfile::read() {
 	return ret;
 }
 
-void CSVfile::print() {
+void Reader::print() {
 	std::vector<std::vector<std::string>> data = this->read();
 	for (std::vector<std::string> vec : data)
 	{
