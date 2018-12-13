@@ -1,9 +1,6 @@
 #include <QApplication>
 #include <QWidget>
 #include <QPushButton>
-#include <QLCDNumber>
-#include <QSlider>
-#include <QProgressBar>
 #include <QMessageBox>
 #include <QVBoxLayout>
 #include <QProcess>
@@ -14,10 +11,13 @@
 #include <QTime>
 #include <QScrollBar>
 #include <QScrollArea>
-#include <random>
 #include <QTabWidget>
 #include <info_user.h>
 #include <iostream>
+#include <QGridLayout>
+#include <QWebEngineView>
+#include <QSizePolicy>
+
 
 // create a function that wait for a duration of 10 ms in order to slow down while loops
 void delay()
@@ -36,12 +36,17 @@ int main(int argc, char *argv[])
     QApplication app(argc, argv);
 
 
+    // CREATE THE LOGO
+    QIcon logo =  QIcon("/Users/damienbradelle/TestGUI/logo_2.png");
+
+
 
     // CREATION OF THE FIRST WINDOW
     QWidget *home = new QWidget; // The window
+    home->setWindowIcon(logo); // The icon of the app
     QVBoxLayout *layout = new QVBoxLayout; // its layout
     // Create the text that is going to be displayed in the window home
-    QLabel *title = new QLabel;
+    QLabel *title = new QLabel; // the title and its parameters
     title->setText("What are you ineterested in?");
     title->setFont(QFont("Courrier", 15, QFont::Bold));
     // Give a title to the window home
@@ -77,61 +82,61 @@ int main(int argc, char *argv[])
     // CREATE AND CONFIGURE A WINDOW FOR EACH SUBJECT
     // Create a new window and a layout for each subject with a scroll area
     QWidget *precise_phy = new QWidget;
+    precise_phy->setWindowIcon(logo);
     QVBoxLayout *l_p_phy = new QVBoxLayout;
     QScrollArea *scroll_phy = new QScrollArea;
     scroll_phy->setWidget(precise_phy);
     scroll_phy->setWidgetResizable(true);
     scroll_phy->setVerticalScrollBarPolicy(Qt::ScrollBarAlwaysOn);
-    scroll_phy->setMinimumSize(500,500);
     QWidget *precise_math = new QWidget;
+    precise_math->setWindowIcon(logo);
     QVBoxLayout *l_p_math = new QVBoxLayout;
     QScrollArea *scroll_math = new QScrollArea;
     scroll_math->setWidget(precise_math);
     scroll_math->setWidgetResizable(true);
     scroll_math->setVerticalScrollBarPolicy(Qt::ScrollBarAlwaysOn);
-    scroll_math->setMinimumSize(500,500);
     QWidget *precise_cs = new QWidget;
+    precise_cs->setWindowIcon(logo);
     QVBoxLayout *l_p_cs = new QVBoxLayout;
     QScrollArea *scroll_cs = new QScrollArea;
     scroll_cs->setWidget(precise_cs);
     scroll_cs->setWidgetResizable(true);
     scroll_cs->setVerticalScrollBarPolicy(Qt::ScrollBarAlwaysOn);
-    scroll_cs->setMinimumSize(500,500);
     QWidget *precise_bio = new QWidget;
+    precise_bio->setWindowIcon(logo);
     QVBoxLayout *l_p_bio = new QVBoxLayout;
     QScrollArea *scroll_bio = new QScrollArea;
     scroll_bio->setWidget(precise_bio);
     scroll_bio->setWidgetResizable(true);
     scroll_bio->setVerticalScrollBarPolicy(Qt::ScrollBarAlwaysOn);
-    scroll_bio->setMinimumSize(500,500);
     QWidget *precise_fin = new QWidget;
+    precise_fin->setWindowIcon(logo);
     QVBoxLayout *l_p_fin = new QVBoxLayout;
     QScrollArea *scroll_fin = new QScrollArea;
     scroll_fin->setWidget(precise_fin);
     scroll_fin->setWidgetResizable(true);
     scroll_fin->setVerticalScrollBarPolicy(Qt::ScrollBarAlwaysOn);
-    scroll_fin->setMinimumSize(500,500);
     QWidget *precise_stat = new QWidget;
+    precise_stat->setWindowIcon(logo);
     QVBoxLayout *l_p_stat = new QVBoxLayout;
     QScrollArea *scroll_stat = new QScrollArea;
     scroll_stat->setWidget(precise_stat);
     scroll_stat->setWidgetResizable(true);
     scroll_stat->setVerticalScrollBarPolicy(Qt::ScrollBarAlwaysOn);
-    scroll_stat->setMinimumSize(500,500);
     QWidget *precise_eess = new QWidget;
+    precise_eess->setWindowIcon(logo);
     QVBoxLayout *l_p_eess = new QVBoxLayout;
     QScrollArea *scroll_eess = new QScrollArea;
     scroll_eess->setWidget(precise_eess);
     scroll_eess->setWidgetResizable(true);
     scroll_eess->setVerticalScrollBarPolicy(Qt::ScrollBarAlwaysOn);
-    scroll_eess->setMinimumSize(500,500);
     QWidget *precise_econ = new QWidget;
+    precise_econ->setWindowIcon(logo);
     QVBoxLayout *l_p_econ = new QVBoxLayout;
     QScrollArea *scroll_econ = new QScrollArea;
     scroll_econ->setWidget(precise_econ);
     scroll_econ->setWidgetResizable(true);
     scroll_econ->setVerticalScrollBarPolicy(Qt::ScrollBarAlwaysOn);
-    scroll_econ->setMinimumSize(500,500);
     // Create a text for each subject and add it to the layout associated
     QLabel *title_phy = new QLabel();
     title_phy->setText("More precisely in physics:");
@@ -196,10 +201,70 @@ int main(int argc, char *argv[])
 
     // CREATION OF THE MAIN WINDOW
     QWidget *main = new QWidget; // The window
+    main->setWindowIcon(logo);
     main->setWindowTitle("App name"); // Its title
     main->setMinimumSize(500, 500); // Its size
-    QPushButton *quit_button = new QPushButton(main); // A push button to leave the app
+    QVBoxLayout *l_main = new QVBoxLayout;
+    // tabs and scrolls
+    QTabWidget *tabs = new QTabWidget(main);
+    QScrollArea *page_info_scroll = new QScrollArea;
+    QGridLayout *l_info = new QGridLayout;
+    QScrollArea *page_like_scroll = new QScrollArea;
+    QGridLayout *l_like = new QGridLayout;
+    QScrollArea *page_recom_scroll = new QScrollArea;
+    QVBoxLayout *l_recom = new QVBoxLayout;
+    QScrollArea *page_param_scroll = new QScrollArea;
+    QGridLayout *l_param = new QGridLayout;
+    // Interior (buttons, text, webpages...)
+    QPushButton *quit_button = new QPushButton; // A push button to leave the app
+    QPushButton *like_button = new QPushButton;
+    like_button->setIcon(QIcon("/Users/damienbradelle/TestGUI/like.png"));
+    QPushButton *dislike_button = new QPushButton;
+    dislike_button->setIcon(QIcon("/Users/damienbradelle/TestGUI/dislike.png"));
+    QPushButton *indiff_button = new QPushButton;
+    QWebEngineView *view = new QWebEngineView;
+    view->load(QUrl("https://arxiv.org/abs/1812.03184"));
+    l_like->addWidget(view, 0, 0, 1, 0);
+    l_like->addWidget(like_button,1,2);
+    l_like->addWidget(dislike_button,1,0);
+    l_like->addWidget(indiff_button,1,1);
+    indiff_button->setIcon(QIcon("/Users/damienbradelle/TestGUI/indiff.png"));
     quit_button->setText("Quit");
+    QLabel *text_info = new QLabel;
+    text_info->setText("Lol, coming soon (before 2024)");
+    l_info->addWidget(text_info);
+    l_info->addWidget(quit_button);
+    QPushButton *recom_1 = new QPushButton;
+    recom_1->setText("[1812.03857] The role of the time delay in the reflection and transmission of ultrashort electromagnetic pulses on a system of parallel current sheets");
+    QPushButton *recom_2 = new QPushButton;
+    recom_2->setText("[1812.03811] Semiconductor laser mode locking stabilization with optical feedback from a silicon PIC");
+    QPushButton *recom_3 = new QPushButton;
+    recom_3->setText("[1812.03808] Ultrasensitive hybrid optical skin");
+    l_recom->addWidget(recom_1);
+    l_recom->addWidget(recom_2);
+    l_recom->addWidget(recom_3);
+    QPushButton *my_id = new QPushButton;
+    my_id->setText("My ID");
+    QPushButton *my_like = new QPushButton;
+    my_like->setText("My likes");
+    QPushButton *my_inte = new QPushButton;
+    my_inte->setText("My interests");
+    QPushButton *my_delete = new QPushButton;
+    my_delete->setText("Delete my account");
+    l_param->addWidget(my_id, 0, 0);
+    l_param->addWidget(my_like, 0, 1);
+    l_param->addWidget(my_inte, 1, 0);
+    l_param->addWidget(my_delete, 1, 1);
+    page_info_scroll->setLayout(l_info);
+    page_like_scroll->setLayout(l_like);
+    page_recom_scroll->setLayout(l_recom);
+    page_param_scroll->setLayout(l_param);
+    tabs->addTab(page_info_scroll, "Information");
+    tabs->addTab(page_like_scroll, "Let's like!");
+    tabs->addTab(page_recom_scroll, "Likeable");
+    tabs->addTab(page_param_scroll, "Parameters");
+    l_main->addWidget(tabs);
+    main->setLayout(l_main);
     QObject::connect(quit_button, SIGNAL(clicked()), qApp, SLOT(quit()));
 
 
