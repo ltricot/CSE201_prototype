@@ -23,10 +23,41 @@ typedef std::pair<Author, Paper> Edge;
 
 
 template <class Hashable> class Bloom {
+    /*
+    * Data structure that allows us to check membership (and insert) in less than linear time.
+    *
+    * It is made as a template as the only assumption made on the type of information stored 
+    * in the Bloom filter is that one can hash it efficiently. The below public methods are made
+    * for all who simply wish to interact with the data structure, while not being bothered by
+    * the details of it. An important thing to note is that 
+    */   
     public:
+    /* 
+    *Public methods:
+    *       - ``Bloom(int size, int hashers)``: simply a constructor
+    *       - ``bool seen(Hashable info)``: returns False if the (Hashable info) is not in the Bloom filter, and returns True if it is.
+    *       - ``bool add(Hashable info)``: adds the (Hashable info) to the Bloom filter
+    */
     Bloom(int size, int hashers);
     bool seen(Hashable info);
     bool add(Hashable info);
+    std::string DoYouHash; 
+    //NOTE: THE PRIVATE PART IS UNFINISHED
+    private:
+    /*
+    * Private variables:
+    *       - ``hashers``: specifies the amount of hash functions used
+    *       - ``curbyte``: the current byte array that stores the Bloom filter
+    * ****************************************************************
+    * Private methods:
+    *       - ``Bloom(int size, int hashers)``: simply a constructor
+    *       - ``int[hashers] hash(Hashable info)``: returns an array containing the hashes of the (Hashable info) computed by
+    *           the ``hashers`` different hash functions
+    *       - 
+    */
+    int hashers;
+    int[hashers] hash(Hashable info);
+    
 };
 
 
