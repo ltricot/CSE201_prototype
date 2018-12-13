@@ -11,6 +11,7 @@ Reader::Reader() {
 }
 Reader::Reader(std::string name) {
 	this->filename = name;
+	this->delim = ",";
 }
 
 Reader::Reader(std::string name, std::string delimeter) {
