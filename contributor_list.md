@@ -1,6 +1,7 @@
 ## Contributor's List for the C++ Project
 
 
+
 * **[Miha Smaka] (https://github.com/Smakson/CSE201_prototype)**
   * Data Collecting
   
@@ -12,3 +13,7 @@
     
 * **[Loan Tricot] (github.com/ltricot)**
     * All teams
+    
+* **[Antonin Jean] (https://github.com/TotoJean)**
+  * Data Collecting
+  * 
