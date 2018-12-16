@@ -1,12 +1,16 @@
 ## Contributor's List for the C++ Project
 
 
+
+
+   
 * **[Your Name] (github-link)**
   * Role(1)
   * Role(2) and so on.
   
 * **Damien BRADELLE https://github.com/DamBRA**
   * Data structure team
+  
 * **[Jules Baudet] (https://github.com/jjbl99)**
   * Algorithms team, work and research data analysis algorithms
 
@@ -25,3 +29,8 @@
 * **[Antonin Jean] (https://github.com/TotoJean)**
   * Data Collecting
   * 
+
+* **Marine  github.com/MarineHoche**
+  * Use data team
+  * Organising data team
+  
