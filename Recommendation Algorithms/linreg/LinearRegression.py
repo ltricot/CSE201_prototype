@@ -1,10 +1,10 @@
 #!/usr/bin/env python3
 # -*- coding: utf-8 -*-
+
 """
 Created on Sat Dec  8 23:55:49 2018
 
 @author: deivis
-"""
 -------------------------------------------------------------------------------
 
 Data requirements (just for Linear Regression class, not for the FillMatrix): 
@@ -233,3 +233,17 @@ class FillMatrix:
         print('-' * self.n * 3)
         for i in range(self.n):
             print(self.matrix[i])
+
+features = [[0.7, 0.3, 0.7, 0.9],
+            [0.1, 1, 0.7, 0.1],
+            [1, 0.2, 0.2, 0.9],
+            [0.9, 0.3, 0.1, 0.9]]
+
+rankings = [[4,0,5,5],
+            [None,5,1,1],
+            [4,1,None,0],
+            [4,0,None,5],
+            [None,5,5,0]]
+
+sample = FillMatrix(rankings, features)
+sample.fill()
