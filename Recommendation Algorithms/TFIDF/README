@@ -1,0 +1,6 @@
+This code uses Eigen and boost libraries
+
+Need to include them when compiling
+
+g++ -std=c++0x  -c tfidf.cpp -I Eigen/
+g++ -std=c++0x  -c tfidf_arxiv.cpp -I Eigen/ -I boost_1_69_0
