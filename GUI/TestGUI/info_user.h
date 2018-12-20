@@ -29,6 +29,9 @@ class info_user{
         // take the list of 0 and 1 (equivalent to info) from the server and update checkboxes
         void update_from_server(int a[154]);
 
+        // give the associated checkbox
+        QCheckBox* give_check(int a);
+
 
     private:
         // Create a list of 0 and 1
