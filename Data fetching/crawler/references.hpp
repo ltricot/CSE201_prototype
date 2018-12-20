@@ -19,8 +19,9 @@ class References {
      *      - ``references``: holds parsed references.
      *      - ``textBuffer``: text of paper's pdf.
      */
-    std::vector<Reference> references;
+    std::vector<References> references;
     std::stringstream textBuffer;
+    Converter converter ; //  converter object which will store the state of the variables for fillBuffer
 
     public:
     /**
@@ -28,7 +29,7 @@ class References {
      * Simple delegation to the underlying ``references`` vector. Give this no
      * thought when developing this object, only when using it.
      */
-    typedef std::vector<Reference>::iterator iterator;
+    typedef std::vector<References>::iterator iterator;
     iterator begin() { return this->references.begin(); }
     iterator end() { return this->references.end(); }
 
@@ -66,3 +67,15 @@ class References {
      */
     References(Paper paper);
 };
+
+
+class Converter {
+    private:
+        bool intextobject ;     // are we currently inside a text object?
+        bool nextliteral ;      // is the next character literal (e.g. \\ to get a \ character or \( to get ( ):
+        int rbdepth ;           // () bracket nesting level. Text appears inside ()
+        char oc[oldchar];       // keep previous chars to get extract numbers etc.:
+
+
+    Converter() ; 
+}
