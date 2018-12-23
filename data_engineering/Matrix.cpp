@@ -5,6 +5,8 @@
 #include <sys/stat.h>
 #include <sys/types.h>
 #include <direct.h>
+#include <iostream>
+#include <boost/algorithm/string.hpp>
 
 using namespace std;
 
@@ -13,37 +15,45 @@ Matrix::Matrix(string dir) {
 	int res = _mkdir(dir.c_str());
 }
 
-int Matrix::read(long i, long j) {
-	string id = to_string(i);
-	string column = to_string(j);
+Matrix::Matrix(){
+	this->root_directory = "Matrix";
+	int res = _mkdir("Matrix");
+}
+
+int Matrix::read(string i, string j) {
+	string &id = i;
+	string &column = j;
 	while (id.length() < 11) {
 		id.insert(0, 1, '0');
 	}
-	string id1 = id.substr(0, 3);
+	string id1 =this->root_directory + "/" + id.substr(0, 3);
 	string id2 = id1 + "/" + id.substr(3, 3);
 	string id3 = id2 + "/" + id.substr(6, 3);
 	string filepath = id3 + "/" + id.substr(9, 2) + ".txt";
 	Reader r(filepath, ",");
 	std::vector<std::vector<std::string>> vector = r.read();
-	
-	if (find(vector.begin(), vector.end(), column) != vector.end()) {
-		return 1;
+	std::vector<std::vector<std::string>>::iterator it;
+	for (it = vector.begin(); it != vector.end(); it++) {
+		if ((*it)[0] == column) {
+			return stoi((*it)[1]);
+		}
 	}
-	else {
-		return 0;
-	}
+	return 0;
 }
-
-void Matrix::write(long i, long j, long val) {
-	
+int Matrix::read(long long i, long long j) {
 	string id = to_string(i);
 	string column = to_string(j);
+	return this->read(id, column);
+}
+void Matrix::write(string i, string j, int val){
+	string &id = i;
+	string &column = j;
 	string app = column + "," + to_string(val);
 	while (id.length() < 11) {
 		id.insert(0, 1, '0');
 	}
 	
-	string id1 = id.substr(0, 3);
+	string id1 = this->root_directory + "/" + id.substr(0, 3);
 	string id2 = id1 + "/" + id.substr(3, 3);
 	string id3 = id2 + "/" + id.substr(6, 3);
 	
@@ -60,8 +70,7 @@ void Matrix::write(long i, long j, long val) {
 	ofstream out(id3 + "/" + "tmp.txt");
 	
 	string line;
-	bool replaced = false
-	
+	bool replaced = false;
 	while (getline(inp, line)) {
 		vector<string> vec;
 		boost::algorithm::split(vec, line, boost::is_any_of(","));
@@ -85,23 +94,12 @@ void Matrix::write(long i, long j, long val) {
 	out.close();
 	remove(filepath.c_str());
 	rename( (id3 + "/" + "tmp.txt").c_str() , filepath.c_str());
-	return;
+	return; 
+}
+
+void Matrix::write(long i, long j, int val) {
 	
-	/*
-	Reader r(filepath, ",");
-	std::vector<std::vector<std::string>> mat = r.read();
-	int a = mat.size();
-	int b = mat[0].size(); //Should be 3
-	for (int it1 = 0, it1 <a, it1++){
-		
-	if (find(vector.begin(), vector.end(), column) != vector.end()) {
-		return;
-	}
-	else {
-		ofstream output;
-		output.open(filepath, ios_base::app);
-		output << column + ",";
-		output.close();
-		return;
-	}*/
+	string id = to_string(i);
+	string column = to_string(j);
+	this->write(id, column, val); 
 }
