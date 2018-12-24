@@ -94,18 +94,14 @@ class References {
 
 
 class Converter {
-    #define oldchar 15
-
     private:
-        bool intextobject ;     // are we currently inside a text object?
-        bool nextliteral ;      // is the next character literal (e.g. \\ to get a \ character or \( to get ( ):
-        int rbdepth ;           // () bracket nesting level. Text appears inside ()
-        char oc[oldchar];       // keep previous chars to get extract numbers etc.:
-
-        // contains converted data
-        std::stringstream textBuffer;
+    // where we store the text output
+    std::stringstream pdfBuffer;
+    std::stringstream textBuffer;
 
     public:
+    // useless constructor
+    Converter();
 
     /**
      * Called by libcurl when data is received. We will not be converting the pdf
@@ -115,10 +111,11 @@ class Converter {
      * The text data must be stored in ``textBuffer``.
      */
     static std::size_t fillBuffer(
-        void *contents,
+        char *contents,
         std::size_t size,
         std::size_t nmemb,
         std::stringstream *buf);  // buf will be a pointer to ``textBuffer``
 
-    Converter() ; 
+    // apply conversion once pdf is downloaded
+    std::stringstream getText();
 }
