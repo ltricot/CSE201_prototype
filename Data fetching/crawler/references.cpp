@@ -48,32 +48,33 @@ References::References(Paper paper) {
 }
 
 /* Constructor of Converter object. Initializes the variables for the first call to ProcessOutput? Stores the state of the variables. */ 
-Converter(){
+Converter::Converter() {
     // Keep this many previous recent characters for back reference:
     #define oldchar 15
 
-    intextobject  = false ;     
-    nextliteral = false ;     
-    rbdepth = 0 ;           
-    oc[oldchar];      // but whats oc ?? 
+    intextobject  = false;
+    nextliteral = false;
+    rbdepth = 0;
+    oc[oldchar];      // but whats oc ??
 }
 
 
 // buf will be a pointer to ``textBuffer``, into which we want to write the content of the PDF 
 
 /**     
-     * This will be the callback function passed to curl_easy_setopt(curl_handle, CURLOPT_WRITEFUNCTION, fillBuffer)
-     * Called by libcurl (curl_easy_perform(curl_handle)) when data is received. 
-     * This function must convert the pdf bytes to text incrementally (as the data arrives). This requires
-     * some thought but is doable.
-     *
-     * The motivation behind this is that It is more efficient than waiting for
-     * all the data before converting (look up non-blokcing IO).
-     *
-     * The text data must be stored in ``textBuffer``.
+ * This will be the callback function passed to curl_easy_setopt(curl_handle, CURLOPT_WRITEFUNCTION, fillBuffer)
+ * Called by libcurl (curl_easy_perform(curl_handle)) when data is received. 
+ * This function must convert the pdf bytes to text incrementally (as the data arrives). This requires
+ * some thought but is doable.
+ *
+ * The motivation behind this is that It is more efficient than waiting for
+ * all the data before converting (look up non-blokcing IO).
+ *
+ * The text data must be stored in ``textBuffer``.
  */
 
 // can i access oldchar ? if defined in Converter() ? or do i need to do converter.oldchar 
+// yes we can (ty obama)
 
 static std::size_t fillBuffer(void *contents, std::size_t size, std::size_t nmemb, std::stringstream *buf) {
     
@@ -84,8 +85,8 @@ static std::size_t fillBuffer(void *contents, std::size_t size, std::size_t nmem
     
     for (size_t i = 0; i < len; i++) {
 		char c = output[i];     //TO DO : deal with "output"
-		if (converter->intextobject) {
-			if (converter->rbdepth == 0 && seen2("TD", oc)) {
+		if (this->intextobject) {
+			if (this->rbdepth == 0 && seen2("TD", oc)) {
 				// Positioning.
 				// See if a new line has to start or just a tab:
 				float num = ExtractNumber(oc, oldchar-5);
@@ -99,7 +100,7 @@ static std::size_t fillBuffer(void *contents, std::size_t size, std::size_t nmem
 				}
 			}
 
-            if (converter->rbdepth == 0 && seen2("ET", oc)) {
+            if (this->rbdepth == 0 && seen2("ET", oc)) {
                     // End of a text object, also go to a new line.
                     this->intextobject = false;
                     buf << 0x0d ;

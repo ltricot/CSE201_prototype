@@ -28,6 +28,12 @@ class Papers {
     // pdf conversion objects
     std::map<Paper, Converter> converters;
 
+    // curl stuff
+    void initialize();
+    void perform();
+    void cleanup();  // should be idem potent
+
+
     public:
     std::vector<Edge> edges;
 
@@ -102,12 +108,9 @@ class Converter {
     public:
 
     /**
-     * Called by libcurl when data is received. This function must convert
-     * the pdf bytes to text incrementally (as the data arrives). This requires
-     * some thought but is doable.
-     *
-     * The motivation behind this is that It is more efficient than waiting for
-     * all the data before converting (look up non-blokcing IO).
+     * Called by libcurl when data is received. We will not be converting the pdf
+     * to text incrementally because this requires incremental decompression using
+     * zlib and that's annoying.
      *
      * The text data must be stored in ``textBuffer``.
      */
