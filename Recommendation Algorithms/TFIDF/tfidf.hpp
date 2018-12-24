@@ -1,11 +1,12 @@
-#include <iostream>
-#pragma once
 
+#pragma once
+#include <iostream>
 #include <fstream>
 #include <set>
 #include <sstream>
 #include <vector>
 #include <string>
+#include <map>
 #include "Eigen/Dense"
 
 class tfidf{
@@ -17,7 +18,7 @@ class tfidf{
 
     private:
         std::vector<std::vector<std::string>> SetofDocs; //set of all the summaries
-        std::vector<std::string> vocabList; // set containing all the words
+        std::map<std::string, int> vocab; // set containing all the words
 
         /*matrix whose coefficients is the number of occurences of the word of the column 
         in the corresponding document of the row */
@@ -25,7 +26,6 @@ class tfidf{
         Eigen::VectorXd CountDoc;
         unsigned int nrow; // matrix row number
 	    unsigned int ncol; // matrix column number
-        //Eigen::VectorXd numOfTerms; //vector which stores the number of words in a doc
 
         void createVocabList(); //function that creates the vocabList
 

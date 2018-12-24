@@ -1,5 +1,7 @@
 #include "tfidf.hpp"
 #include "boost_1_69_0/boost/tokenizer.hpp"
+#include "boost_1_69_0/boost/algorithm/string.hpp"
+#include <clocale>
 
 /* we assume that we have a vector rawData whose entry is a string containing the summary of an article
 for each entry we have to parse the string so that we have a vector of words
@@ -17,7 +19,11 @@ std::vector<std::string> textParse(const std::string & summary) {
 		std::vector<std::string> vec;
 		boost::tokenizer<> tok(summary);
 		for(boost::tokenizer<>::iterator beg = tok.begin(); beg != tok.end(); ++ beg) {
-		    vec.push_back(*beg);
+			std::string str= *beg;
+			for(int i=0; i<str.size(); i++) {
+      			str[i] = std::tolower(str[i]); //put all in lowercase
+    		}
+		    vec.push_back(str);
 		}
 		return vec;
 }
@@ -39,6 +45,9 @@ int main() {
 	std::vector<std::vector<std::string>> inputDocs = createSetofDocs(); 
 	tfidf ins(inputDocs);
 	Eigen::MatrixXd mat = ins.weightMat;
+	std::cout<<mat<<std::endl;
+
+
 	
 }
 
