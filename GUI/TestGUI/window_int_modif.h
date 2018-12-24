@@ -1,8 +1,11 @@
 #ifndef WINDOW_INT_MODIF_H
 #define WINDOW_INT_MODIF_H
 
-#include <info_user.h>
 #include <QPushButton>
+#include <QVBoxLayout>
+#include <QTabWidget>
+
+#include <info_user.h>
 
 class window_int_modif {
 public:
