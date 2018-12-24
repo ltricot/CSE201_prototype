@@ -1,15 +1,15 @@
 #include "tfidf.hpp"
 
 void tfidf::createVocabList() {
-	std::set<std::string> AllWords;
-	for (std::vector<std::string> document : SetofDocs) {//iterate over the documents in SetofDocs
-	
-		for (std::string word : document) { //iterate over the words in the document
-			AllWords.insert(word); //insert all the words in AllWords
-		} 
+	int i=0;
+	for (std::vector<std::string> document : SetofDocs) {
+		for (std::string word : document) {
+			if ( vocab.find(word) == vocab.end() ) { //if it is the first time we encounter the word then insert it in the map
+				vocab.insert(std::pair<std::string, int>(word,i)); // a map that associates to each word an integer
+				i++;
+			}		
+		}
 	}
-	/*create VocabList by removing all the repetitions in the set AllWords*/
-	std::copy(AllWords.begin(), AllWords.end(), std::back_inserter(vocabList)); 
 }
 
 /* A small comment concerning complexity:
@@ -21,18 +21,18 @@ void tfidf::createVocabList() {
  * store the vocabList, which would make the complexity O(n). One can also iterate over a map's
  * keys so you wouldn't lose functionality.
  */
-Eigen::VectorXd tfidf::countOccDoc(const std::vector<std::string> & doc) {
-	Eigen::VectorXd res = Eigen::VectorXd::Zero(vocabList.size()); //create an array of size VocabList full of zero
-	
-	for (std::string word : doc) { //iterate over the words in the input document
-		size_t i = std::find(vocabList.begin(), vocabList.end(), word) - vocabList.begin(); //the index word in doc
-		if (i < vocabList.size()) 
-			res(i) += 1; //add one occurence of the word 
-	}
 
-	return res; 
+ Eigen::VectorXd tfidf::countOccDoc(const std::vector<std::string> & doc){
+	Eigen::VectorXd res = Eigen::VectorXd::Zero(vocab.size()); //create an array of size vocab full of zero
+
 	/*return a vector whose coeff i correspond to the number of occurences in the doc of 
-	the word at index i in vocabList*/
+	the word associated to the integer i in vocab map*/
+	for (std::string word : doc) { 
+		int i = vocab[word];
+		res(i)+=1;
+	}
+	return res;	
+
 }
 
 void tfidf::createOccMat() {
@@ -40,28 +40,29 @@ void tfidf::createOccMat() {
 	for (std::vector<std::string> document : SetofDocs) //iterate over the docs
 	{
 		vec.push_back(countOccDoc(document)); //compute the counting occurences vector for a doc and insert it in the matrix OccMat
-		//numOfTerms.push_back(it->size());
-		//it->clear();
 	}
 	ncol = vec[0].size(); //size of a vector for one document -> size of vocablist
 	nrow = vec.size(); //nb of documents 
 	OccMat.resize(nrow, ncol);
-	for (int i = 0; i < nrow; ++i)
-		{
-			OccMat.row(i) = vec[i]; 
-		}
+	for (int i = 0; i < nrow; ++i) {
+			OccMat.row(i)=vec[i];
+	}
 	SetofDocs.clear(); // release memory
 }
 
 void tfidf::createCountDoc() {
+	
 	Eigen::MatrixXd dataMat(OccMat); //copy OccMat
-	CountDoc.resize(ncol);
-	for (unsigned int i = 0; i != nrow; ++i) {
-		for (unsigned int j = 0; j != ncol; ++j) {
-			if (dataMat(i,j) > 1) // only keep 1 and 0
-				dataMat(i,j) = 1; //if the word appears in the doc put 1 otherwise : 0
+	CountDoc = Eigen::VectorXd::Zero(ncol);
+	for (unsigned int i = 0; i <nrow; ++i) {
+		for (unsigned int j = 0; j < ncol; ++j) {
+			if (dataMat(i,j) >= 1) {// only keep 1 and 0
+				dataMat(i,j) = 1;
+			} //if the word appears in the doc put 1 otherwise : 0
 		}
-		CountDoc += dataMat.row(i); //sum up the line
+	}	
+	for (unsigned int i = 0; i <nrow; ++i) {
+		CountDoc += dataMat.row(i); //sum up the columns
 	}
 	dataMat.resize(0,0);
 }
@@ -72,19 +73,39 @@ void tfidf::createCountDoc() {
  * 
  * Eigen does the looping itself and does it much (much!) faster.
  */
+
+/*void tfidf::calweightMat() {
+	createVocabList();
+	createOccMat();
+	createCountDoc();
+	
+	weightMat.resize(nrow, ncol);
+	for (unsigned int i = 0; i < nrow; ++i)
+	{
+		for (unsigned int j = 0; j < ncol; ++j)
+		{
+			double tf = OccMat(i,j) / (OccMat.row(i).sum()); //compute the term frequency
+			double idf = log(nrow / (CountDoc(j)) ); //compute the inverse doc frequency
+			weightMat(i,j) = tf * idf; // TF-IDF equation
+		}
+		
+	}
+	
+}*/
+
 void tfidf::calweightMat() {
 	createVocabList();
 	createOccMat();
 	createCountDoc();
-
 	weightMat.resize(nrow, ncol);
-	for (unsigned int i = 0; i != nrow; ++i)
-	{
-		for (unsigned int j = 0; j != ncol; ++j)
-		{
-			double tf = OccMat(i,j) / (OccMat.row(i).sum()); //compute the term frequency
-			double idf = log((double)nrow / (CountDoc(j)) ); //compute the inverse doc frequency
-			weightMat(i,j) = tf * idf; // TF-IDF equation
-		}
+	Eigen::MatrixXd tf = Eigen::MatrixXd::Zero(nrow,ncol);
+	Eigen::MatrixXd idf = Eigen::MatrixXd::Zero(ncol,ncol);
+	for (unsigned int j = 0; j < ncol; ++j) {
+		idf(j,j)= log(nrow / (CountDoc(j)));
 	}
+	for (unsigned int i=0; i<nrow;++i) {
+		tf.row(i)= OccMat.row(i)*(1/OccMat.row(i).sum());
+	}
+	weightMat = OccMat * idf;
+	
 }
