@@ -9,29 +9,33 @@
 #include <iostream>
 #include <fstream>
 
+#include "references.hpp";
+
 using namespace std;
 
 
 /* Constructor of References object. Will make the call to libcurl. */ 
-References(Paper paper){
-    
-    Converter converter;
+References::References(Paper paper) {
+    // Converter converter;
 
     CURL *curl_handle;
     CURLcode res;
 
     curl_global_init(CURL_GLOBAL_ALL);
+
     // init the curl session : 
     curl_handle = curl_easy_init();
-    // provide the URL to use in the request :
-    curl_easy_setopt(curl_handle, CURLOPT_URL, url);        
+
+    // provide the URL to use in the request:
+    curl_easy_setopt(curl_handle, CURLOPT_URL, url);
     curl_easy_setopt(curl_handle, CURLOPT_VERBOSE, 1L);     // very useful for libcurl and/or protocol debugging and understanding
     curl_easy_setopt(curl_handle, CURLOPT_NOPROGRESS, 1L);  // tells the library to shut off the progress meter completely for requests done with this handle. 
 
     // send all data to this callback function  
     curl_easy_setopt(curl_handle, CURLOPT_WRITEFUNCTION, fillBuffer); // callback function that writes the content of the file into the buffer pointed by *buf
+
     // data pointer to pass to the write callback:
-    curl_easy_setopt(curl_handle, CURLOPT_WRITEDATA, &buf );
+    curl_easy_setopt(curl_handle, CURLOPT_WRITEDATA, &buf);
 
     // perform the request, res will get the return code 
     res = curl_easy_perform(curl_handle);
