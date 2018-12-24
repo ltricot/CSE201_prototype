@@ -1,17 +1,6 @@
 #ifndef INFO_USER_H
 #define INFO_USER_H
-#include <QMessageBox>
-#include <QVBoxLayout>
-#include <QProcess>
-#include <QString>
-#include <QInputDialog>
 #include <QCheckBox>
-#include <QLabel>
-#include <QTime>
-#include <QScrollBar>
-#include <QScrollArea>
-#include <random>
-#include <QTabWidget>
 
 // create a class info_user that will store the choices of the user
 class info_user{

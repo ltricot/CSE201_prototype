@@ -1,28 +1,12 @@
 #ifndef WINDOW_MAIN_H
 #define WINDOW_MAIN_H
 
-
-#include <QWidget>
-#include <QPushButton>
-#include <QMessageBox>
-#include <QVBoxLayout>
-#include <QProcess>
-#include <QString>
-#include <QInputDialog>
-#include <QCheckBox>
-#include <QLabel>
-#include <QTime>
-#include <QScrollBar>
 #include <QScrollArea>
-#include <QTabWidget>
-#include <info_user.h>
-#include <iostream>
-#include <QGridLayout>
 #include <QWebEngineView>
-#include <QSizePolicy>
 #include <QTextEdit>
-#include <QDesktopWidget>
+
 #include <window_int_modif.h>
+#include <display_id.h>
 
 
 class window_main
@@ -31,6 +15,7 @@ class window_main
         window_main(info_user &info);
         QWidget *main;
         QWidget *modif_inter;
+        QWidget *info_id;
 
 };
 #endif // WINDOW_MAIN_H

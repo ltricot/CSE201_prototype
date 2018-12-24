@@ -5,6 +5,8 @@ window_main::window_main(info_user &info)
 
     window_int_modif mod(info);
     modif_inter = mod.modif_inter;
+    window_id id;
+    info_id = id.id_info;
 
     // CREATION OF THE MAIN WINDOW
     main = new QWidget; // The window
@@ -81,5 +83,5 @@ window_main::window_main(info_user &info)
     l_main->addWidget(tabs);
     main->setLayout(l_main);
     QObject::connect(my_inte, SIGNAL(clicked()), modif_inter, SLOT(show()));
-
+    QObject::connect(my_id, SIGNAL(clicked()), info_id, SLOT(show())); // Display the window
 }

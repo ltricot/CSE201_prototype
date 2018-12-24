@@ -1,26 +1,10 @@
 #ifndef WINDOWS_H
 #define WINDOWS_H
-#include <QApplication>
-#include <QWidget>
 #include <QPushButton>
-#include <QMessageBox>
 #include <QVBoxLayout>
-#include <QProcess>
-#include <QString>
-#include <QInputDialog>
-#include <QCheckBox>
 #include <QLabel>
-#include <QTime>
-#include <QScrollBar>
 #include <QScrollArea>
-#include <QTabWidget>
-#include <info_user.h>
-#include <iostream>
-#include <QGridLayout>
-#include <QWebEngineView>
-#include <QSizePolicy>
-#include <QTextEdit>
-#include <QDesktopWidget>
+
 #include <info_user.h>
 
 

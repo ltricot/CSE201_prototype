@@ -9,7 +9,8 @@ SOURCES += \
     windows_precise.cpp \
     info_user.cpp \
     window_int_modif.cpp \
-    new_id.cpp
+    new_id.cpp \
+    display_id.cpp
 
 HEADERS += \
     info_user.h \
@@ -17,4 +18,5 @@ HEADERS += \
     window_home.h \
     windows_precise.h \
     window_int_modif.h \
-    new_id.h
+    new_id.h \
+    display_id.h

@@ -1,23 +1,7 @@
-#include <QApplication>
-#include <QWidget>
-#include <QPushButton>
 #include <QMessageBox>
-#include <QVBoxLayout>
-#include <QProcess>
-#include <QString>
 #include <QInputDialog>
-#include <QCheckBox>
-#include <QLabel>
 #include <QTime>
-#include <QScrollBar>
-#include <QScrollArea>
-#include <QTabWidget>
-#include <iostream>
-#include <QGridLayout>
-#include <QWebEngineView>
-#include <QSizePolicy>
-#include <QTextEdit>
-#include <QDesktopWidget>
+
 #include <windows_precise.h>
 #include <window_main.h>
 #include <window_home.h>
@@ -51,28 +35,6 @@ int main(int argc, char *argv[])
 
     // CREATION OF THE FIRST WINDOW
     QWidget *home = window_home.home;
-
-
-    // CREATE A WINDOW TO DISPLAY THE ID
-    QWidget *id_info = new QWidget; // window
-    id_info->setMinimumSize(400, 150);
-    id_info->move(QApplication::desktop()->screen()->rect().center() - id_info->rect().center()); // center it
-    QVBoxLayout *id_lay = new QVBoxLayout; // its layout
-    id_info->setWindowTitle("My account: ID"); // Its title
-    QLabel *id_text = new QLabel;
-    id_text->setText("Your ID is:");
-    id_lay->addWidget(id_text);
-    QLabel *id_itself = new QLabel;
-    id_itself->setText("000000000"); // will be replaced by an ID given by the server
-    id_itself->setFont(QFont("Courrier", 25, QFont::Bold));
-    id_itself->setAlignment(Qt::AlignCenter);
-    QPushButton *quit_id = new QPushButton;
-    quit_id->setText("Quit");
-    id_lay->addWidget(id_itself);
-    id_lay->addWidget(quit_id);
-    id_info->setLayout(id_lay);
-//    QObject::connect(my_id, SIGNAL(clicked()), id_info, SLOT(show())); // Display the window
-    QObject::connect(quit_id, SIGNAL(clicked()), id_info, SLOT(hide())); // close the window
 
 
     // BEGINNIN OF THE APPLICATION
