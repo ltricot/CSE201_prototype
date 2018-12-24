@@ -10,6 +10,17 @@
 #include "crawler.hpp"
 
 
+/** ``writefunction`` parameter of a curl call
+ * 
+ * @param contents pointer to data received by curl
+ * @param size size of each member of ``contents``
+ * @param nmemb number of members of ``contents``
+ * @param s pointer to string inside which we store all received data
+ * 
+ * comments:
+ *  - we may optimize this with a stringstream for ``s`` which makes resizing
+ *    natural
+ */
 static std::size_t makeString(void *contents, size_t size, size_t nmemb, std::string *s) {
     std::size_t newLength = size * nmemb;
     std::size_t oldLength = s->size();
@@ -63,8 +74,7 @@ std::string Crawler::callArxiv(std::string url) {
     return response;
 }
 
-static std::vector<Edge>
-getPairs(std::string xmlstr) {
+std::vector<Edge> Crawler::getPairs(std::string xmlstr) {
     // return value
     std::vector<Edge> pairs;
 
@@ -117,7 +127,7 @@ Crawler::fromAuthors(std::vector<Author> authors) {
     std::ostringstream url;  // for url building
     std::string xmlstr;
 
-    // each iteration is one call to arxiv*
+    // each iteration is one call to arxiv
     // it is likely that we should have some waiting period between each call
     // so as not to be blocked by arxiv (they are a small organization)
     for(author = authors.begin(); author != authors.end(); author++) {
@@ -166,6 +176,7 @@ Crawler::fromPapers(std::vector<Paper> papers) {
     return pairs;
 }
 
+// id of paper from link to paper on arxiv
 std::string getID(std::string link) {
     std::string temp;
     std::stringstream link_s(link);

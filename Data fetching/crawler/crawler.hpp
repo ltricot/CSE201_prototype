@@ -4,6 +4,8 @@
 
 
 // url building facilities. relatively primitive but it should do
+// as of now these are not used, the functions ``fromPapers`` and
+// ``fromAuthors`` should be modified to use them.
 static std::string papersUrl(std::vector<std::string> ids);
 static std::string authorsUrl(std::vector<std::string> aus);
 
@@ -23,8 +25,7 @@ class Crawler {
      * the content of all papers he shares an edge with.
      */
 
-    public:
-    Crawler();
+    private:
 
     /**
      * Facilitator function wrapping libcurl calls.
@@ -32,6 +33,17 @@ class Crawler {
      * @return arxiv's response in a string
      */
     static std::string callArxiv(std::string url);
+
+    /** Obtain (author, paper) pairs from an arxiv response.
+     * 
+     * @param xmlstr string of arxiv's response representing an xml structure.
+     * @return a vector of edges
+     */
+    static std::vector<Edge> Crawler::getPairs(std::string xmlstr);
+
+    public:
+
+    Crawler();
 
     /**
      * Crawl arxiv from author names.
