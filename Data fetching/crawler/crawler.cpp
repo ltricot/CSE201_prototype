@@ -7,7 +7,7 @@
 #include "rapidxml-1.13/rapidxml.hpp"
 #include <curl/curl.h>
 
-#include "crawlerc.hpp"
+#include "crawler.hpp"
 
 
 static std::size_t makeString(void *contents, size_t size, size_t nmemb, std::string *s) {
@@ -170,40 +170,4 @@ std::string getID(std::string link) {
     std::stringstream link_s(link);
     while(std::getline(link_s, temp, '/'));
     return temp;
-}
-
-void Crawler::crawl(std::string paper, int steps) {
-    std::vector<std::pair<std::string, std::string>> pairs_aux;
-    std::vector<std::pair<std::string, std::string>>::iterator pair;
-    std::set<std::string> names, articles;
-    std::vector<std::string> names_v, articles_v;
-    articles.insert(paper);
-
-    bool aus = false;  // source is author?
-    for(int step = 0; step < steps; step++) {
-        if(aus) {
-            names_v.assign(names.begin(), names.end());
-
-            pairs_aux = this->fromAuthors(names_v);
-            for(pair = pairs_aux.begin(); pair != pairs_aux.end(); pair++) {
-                pair->second = getID(pair->second);
-                articles.insert(pair->second);
-                this->pairs.push_back(*pair);
-            }
-
-            names.clear(); names_v.clear();
-        } else {
-            articles_v.assign(articles.begin(), articles.end());
-            pairs_aux = this->fromPapers(articles_v);
-            for(pair = pairs_aux.begin(); pair != pairs_aux.end(); pair++) {
-                pair->second = getID(pair->second);
-                names.insert(pair->first);
-                this->pairs.push_back(*pair);
-            }
-
-            articles.clear(); articles_v.clear();
-        }
-
-        aus = !aus;
-    }
 }

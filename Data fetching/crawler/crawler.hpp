@@ -3,6 +3,11 @@
 #include <list>
 
 
+// url building facilities. relatively primitive but it should do
+static std::string papersUrl(std::vector<std::string> ids);
+static std::string authorsUrl(std::vector<std::string> aus);
+
+
 class Crawler {
     /**
      * Arxiv crawler used to generate interaction data.
