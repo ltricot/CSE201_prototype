@@ -63,10 +63,10 @@ std::string Crawler::callArxiv(std::string url) {
     return response;
 }
 
-static std::vector<std::pair<std::string, std::string>>
+static std::vector<Edge>
 getPairs(std::string xmlstr) {
     // return value
-    std::vector<std::pair<std::string, std::string>> pairs;
+    std::vector<Edge> pairs;
 
     /* We initialize here a number of variable used when traversing the
      * XML tree.
@@ -98,21 +98,22 @@ getPairs(std::string xmlstr) {
                 author && author->name() == std::string("author");
                 author = author->next_sibling()) {
             name = author->first_node("name")->value();
-            pairs.push_back(std::make_pair(name, article));
+
+            pairs.push_back(std::make_pair(Author(name), Paper(article)));
         }
     }
 
     return pairs;
 }
 
-std::vector<std::pair<std::string, std::string>>
-Crawler::fromAuthors(std::vector<std::string> authors) {
+std::vector<Edge>
+Crawler::fromAuthors(std::vector<Author> authors) {
     // return value & auxiliary iteration variable
-    std::vector<std::pair<std::string, std::string>> pairs;
-    std::vector<std::pair<std::string, std::string>> pairs_aux;
+    std::vector<Edge> pairs;
+    std::vector<Edge> pairs_aux;
 
     // initialize iteration variables
-    std::vector<std::string>::iterator author;
+    std::vector<Author>::iterator author;
     std::ostringstream url;  // for url building
     std::string xmlstr;
 
@@ -121,7 +122,7 @@ Crawler::fromAuthors(std::vector<std::string> authors) {
     // so as not to be blocked by arxiv (they are a small organization)
     for(author = authors.begin(); author != authors.end(); author++) {
         url.str(""); url << "http://export.arxiv.org/api/query?search_query=au:";
-        url << *author << "&maxresults=100";
+        url << author->name << "&maxresults=100";
         xmlstr = this->callArxiv(url.str());
 
         // extend found pairs with this author's new pairs
@@ -133,14 +134,14 @@ Crawler::fromAuthors(std::vector<std::string> authors) {
     return pairs;
 }
 
-std::vector<std::pair<std::string, std::string>>
-Crawler::fromPapers(std::vector<std::string> papers) {
+std::vector<Edge>
+Crawler::fromPapers(std::vector<Paper> papers) {
     // return value & auxiliary iteration variable
-    std::vector<std::pair<std::string, std::string>> pairs;
-    std::vector<std::pair<std::string, std::string>> pairs_aux;
+    std::vector<Edge> pairs;
+    std::vector<Edge> pairs_aux;
 
     // initialize iteration variables
-    std::vector<std::string>::iterator article;
+    std::vector<Paper>::iterator article;
     std::ostringstream url;  // for url building
     std::string xmlstr;
 
@@ -149,9 +150,9 @@ Crawler::fromPapers(std::vector<std::string> papers) {
     // so as not to be blocked by arxiv (they are a small organization)
     for(article = papers.begin(); article < papers.end(); article += 15) {
         url.str(""); url << "http://export.arxiv.org/api/query?id_list=";
-        for(std::vector<std::string>::iterator art = article;
+        for(std::vector<Paper>::iterator art = article;
                 art < min(papers.end(), article + 30); art++) {
-            url << *article << ',';
+            url << article->id << ',';
         } url << "&maxresults=30";
 
         xmlstr = this->callArxiv(url.str());

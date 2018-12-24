@@ -38,5 +38,4 @@ class tfidf{
         void createCountDoc(); 
 
         void calweightMat(); //compute the tf-idf weight matrix
-
 };

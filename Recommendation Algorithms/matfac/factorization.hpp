@@ -1,5 +1,4 @@
 #include <string>
-
 #include <Eigen/core>
 
 
