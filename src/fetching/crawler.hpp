@@ -29,24 +29,36 @@ class Crawler {
 
     /**
      * Facilitator function wrapping libcurl calls.
+     * 
      * @param url full url (containing GET parameters) to fetch through libcurl
      * @return arxiv's response in a string
      */
     static std::string callArxiv(std::string url);
 
-    /** Obtain (author, paper) pairs from an arxiv response.
+    /**
+     * Obtain (author, paper) pairs from an arxiv response.
      * 
      * @param xmlstr string of arxiv's response representing an xml structure.
      * @return a vector of edges
      */
-    static std::vector<Edge> Crawler::getPairs(std::string xmlstr);
+    static std::vector<Edge> getPairs(std::string xmlstr);
+
+    /**
+     * Obtain a paper's abstract from an arxiv response.
+     * 
+     * @param xmlstr string of arxiv's response representing an xml structure.
+     * @return a string of the paper's abstract
+     */
+    static std::string getSummary(std::string xmlstr);
 
     public:
 
+    // constructor
     Crawler();
 
     /**
      * Crawl arxiv from author names.
+     * 
      * @param authors a vector of author names.
      * @return a vector of (author, paper) pairs.
      */
@@ -54,10 +66,21 @@ class Crawler {
 
     /**
      * Crawl arxiv from paper identifiers.
+     * 
      * @param papers a vector of paper identifiers.
      * @return a vector of (author, paper) pairs.
      */
     std::vector<Edge> fromPapers(std::vector<Paper> papers);
+
+    /**
+     * Crawl for ``steps`` steps. If ``steps`` is negative, crawl forever.
+     * This function will be called in a thread so as to work concurrently with
+     * the uploads to the database.
+     * 
+     * We will move over the bloom & buffer checks currently done by the iterator
+     * so as to not call arxiv uselessly.
+     */
+    std::vector<Edge> crawl(int steps);
 
     class iterator : public std::iterator<
             std::input_iterator_tag,
