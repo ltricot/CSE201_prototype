@@ -25,7 +25,10 @@ class Crawler {
      * the content of all papers he shares an edge with.
      */
 
-    private:
+    public:
+
+    // constructor
+    Crawler();
 
     /**
      * Facilitator function wrapping libcurl calls.
@@ -50,11 +53,6 @@ class Crawler {
      * @return a string of the paper's abstract
      */
     static std::string getSummary(std::string xmlstr);
-
-    public:
-
-    // constructor
-    Crawler();
 
     /**
      * Crawl arxiv from author names.

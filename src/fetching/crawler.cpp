@@ -4,7 +4,7 @@
 #include <sstream>
 #include <iostream>
 
-#include "rapidxml-1.13/rapidxml.hpp"
+#include "rapidxml/rapidxml.hpp"
 #include <curl/curl.h>
 
 #include "crawler.hpp"
@@ -35,6 +35,9 @@ static std::size_t makeString(void *contents, size_t size, size_t nmemb, std::st
     std::copy((char*)contents, (char*)contents + newLength, s->begin() + oldLength);
     return size * nmemb;
 }
+
+// useless as of now, but necessary else g++ throws an undefined reference error
+Crawler::Crawler() {}
 
 std::string Crawler::callArxiv(std::string url) {
     CURL *curl_handle;

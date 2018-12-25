@@ -5,6 +5,18 @@
 cmake_minimum_required (VERSION 3.5)
 project (realtime-recommendation)
 
+# include directories used by all
+include_directories ("src")
+include_directories ("libraries")
+
+# get that curl
+find_package (CURL REQUIRED)
+if (CURL_FOUND)
+    include_directories (${CURL_INCLUDE_DIR})
+else (CURL_FOUND)
+    message (FATAL_ERROR "no curl we done hon")
+endif (CURL_FOUND)
+
 # those files do not exist yet
 #
 # add_executable(crawl src/fetching/crawl.cpp)
@@ -26,5 +38,5 @@ project (realtime-recommendation)
 # install (TARGETS crawl DESTINATION bin)
 # install (TARGETS engine DESTINATION bin)
 
-add_executable (testcrawl tests/crawlertest.cpp)
-include_directories ("libraries")
+add_executable (testcrawl tests/crawlertest.cpp src/fetching/crawler.cpp)
+target_link_libraries (testcrawl ${CURL_LIBRARIES})
