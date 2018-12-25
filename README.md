@@ -12,6 +12,16 @@ We use ``cmake`` to build our project. As of now we wish to build 4 executables:
 - The recommender capable of answering recommendation requests
 - The GUI
 
+Build commands:
+```
+git clone https://github.com/ltricot/CSE201_prototype
+cd CSE201_prototype
+mkdir build
+cd build
+cmake ..
+make
+```
+
 ## Libraries
 
 We use a number of header libraries in our code:
