@@ -11,3 +11,10 @@ We use ``cmake`` to build our project. As of now we wish to build 4 executables:
 - The engine responsible for the training of the recommender system
 - The recommender capable of answering recommendation requests
 - The GUI
+
+## Libraries
+
+We use a number of header libraries in our code:
+- ``Rapidxml`` for XML parsing
+- ``Eigen`` for linear algebra
+- ``Catch`` as a testing framework
