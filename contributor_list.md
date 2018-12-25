@@ -9,7 +9,7 @@
   * Role(2) and so on.
   
 * **Damien BRADELLE https://github.com/DamBRA**
-  * Data structure team
+  * GUI team
   
 * **[Jules Baudet] (https://github.com/jjbl99)**
   * Algorithms team, work and research data analysis algorithms
