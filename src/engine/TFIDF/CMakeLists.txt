@@ -1,5 +1,5 @@
 add_library (tfidf tfidf.cpp)
-target_link_libraries (tfidf Eigen3::Eigen)
+# target_link_libraries (tfidf Eigen3::Eigen)
 
 # add boost to include dirs
 find_package (Boost 1.40 REQUIRED)

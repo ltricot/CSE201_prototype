@@ -2,6 +2,9 @@
 cmake_minimum_required (VERSION 3.5)
 project (realtime-recommendation)
 
+# ugh dependencies
+include_directories (libraries/eigen-git-mirror)
+
 # structure
 add_subdirectory (src)
 target_include_directories (crawler PUBLIC "libraries")

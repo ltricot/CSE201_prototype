@@ -228,9 +228,6 @@ void extractText(stringstream &istr, outstream &ostr) {
     }
 }
 
-// yugh
-PDFConverter::PDFConverter() {}
-
 PDFConverter::PDFConverter(std::stringstream *pdf) {
 	pdfBuffer << pdf->str();
 }
