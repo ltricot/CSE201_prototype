@@ -1,6 +1,6 @@
 /** Fetching an arxiv paper's references.
  * 
- * Most the functionality in the ``Converter`` class comes from an external
+ * Most the functionality in the ``PDFConverter`` class comes from an external
  * source. It was simply adapted to our purposes.
  */
 
@@ -229,11 +229,20 @@ void extractText(stringstream &istr, outstream &ostr) {
     }
 }
 
+// yugh
+PDFConverter::PDFConverter() {}
+
+PDFConverter::PDFConverter(std::stringstream *pdf) {
+	pdfBuffer << pdf->str();
+}
+
 // I am ashamed by how simple this function is
-size_t Converter::fillBuffer(char *contents, size_t size, size_t nmemb, stringstream *buf) {
+size_t PDFConverter::fillBuffer(char *contents, size_t size, size_t nmemb, stringstream *buf) {
     *buf << contents;
 }
 
-stringstream Converter::getText() {
+string PDFConverter::getText() {
     extractText<stringstream>(pdfBuffer, textBuffer);
+	std::string temp = textBuffer.str();
+	return temp;
 }

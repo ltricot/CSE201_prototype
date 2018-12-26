@@ -1,6 +1,6 @@
 #include "tfidf.hpp"
-#include "boost_1_69_0/boost/tokenizer.hpp"
-#include "boost_1_69_0/boost/algorithm/string.hpp"
+#include "boost/tokenizer.hpp"
+#include "boost/algorithm/string.hpp"
 #include <clocale>
 
 /* we assume that we have a vector rawData whose entry is a string containing the summary of an article

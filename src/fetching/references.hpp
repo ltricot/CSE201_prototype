@@ -1,49 +1,10 @@
 #include "primitives.hpp"
+
 #include <vector>
+#include <memory>
 #include <sstream>
 #include <map>
 
-
-class Papers {
-    /**
-     * Manages the download of paper pdf's and constructs the necessary
-     * information from the results. Necessary as we will make concurrent
-     * requests to arxiv.
-     * 
-     * Given a vector of paper IDs, construct for each paper:
-     *  - a references object
-     *  - a summary object
-     * 
-     * With this information the ``Crawler`` object can build edges easily and
-     * the TF-IDF component can build its frequency matrices.
-     */
-
-    private:
-    const std::vector<std::string> ids;
-
-    // in-object convenience
-    std::map<std::string, Paper> papers;
-    std::map<Paper, References> references;
-
-    // pdf conversion objects
-    std::map<Paper, Converter> converters;
-
-    // curl stuff
-    void initialize();
-    void perform();
-    void cleanup();  // should be idem potent
-
-
-    public:
-    std::vector<Edge> edges;
-
-    /**
-     * All the work should be done here. To make the use of this object simple,
-     * when this constructor returns, the ``edges`` attributed should be
-     * finalized.
-     */
-    Papers(std::vector<std::string> ids) : ids(ids) {}
-};
 
 class References {
     /**
@@ -93,15 +54,17 @@ class References {
 };
 
 
-class Converter {
+class PDFConverter {
     private:
-    // where we store the text output
+    // where we store the pdf input & text output
     std::stringstream pdfBuffer;
     std::stringstream textBuffer;
 
     public:
-    // useless constructor
-    Converter();
+    PDFConverter();
+
+    // convenience constructor for testing purposes
+    PDFConverter(std::stringstream *pdf);
 
     /**
      * Called by libcurl when data is received. We will not be converting the pdf
@@ -117,5 +80,46 @@ class Converter {
         std::stringstream *buf);  // buf will be a pointer to ``textBuffer``
 
     // apply conversion once pdf is downloaded
-    std::stringstream getText();
-}
+    std::string getText();
+};
+
+class Papers {
+    /**
+     * Manages the download of paper pdf's and constructs the necessary
+     * information from the results. Necessary as we will make concurrent
+     * requests to arxiv.
+     * 
+     * Given a vector of paper IDs, construct for each paper:
+     *  - a references object
+     *  - a summary object
+     * 
+     * With this information the ``Crawler`` object can build edges easily and
+     * the TF-IDF component can build its frequency matrices.
+     */
+
+    private:
+    const std::vector<std::string> ids;
+
+    // in-object convenience
+    std::map<std::string, Paper> papers;
+    std::map<Paper, std::shared_ptr<References>> references;
+
+    // pdf conversion objects
+    std::map<Paper, std::shared_ptr<PDFConverter>> PDFConverters;
+
+    // curl stuff
+    void initialize();
+    void perform();
+    void cleanup();  // should be idem potent
+
+
+    public:
+    std::vector<Edge> edges;
+
+    /**
+     * All the work should be done here. To make the use of this object simple,
+     * when this constructor returns, the ``edges`` attributed should be
+     * finalized.
+     */
+    Papers(std::vector<std::string> ids) : ids(ids) {}
+};

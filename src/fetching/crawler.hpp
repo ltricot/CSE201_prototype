@@ -1,4 +1,6 @@
-#include "primitives.hpp"
+#include "references.hpp"
+// #include "bloom.hpp"
+
 #include <vector>
 #include <list>
 
@@ -8,6 +10,7 @@
 // ``fromAuthors`` should be modified to use them.
 static std::string papersUrl(std::vector<std::string> ids);
 static std::string authorsUrl(std::vector<std::string> aus);
+std::string getID(std::string link);
 
 
 class Crawler {
