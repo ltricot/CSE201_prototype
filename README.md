@@ -4,9 +4,20 @@
 
 Inside the ``src`` folder you will find the 4 main divisions of our project. The data gathering team works with ``fetching``, the data engineering, algorithms and GUI teams work respectively with ``database``, ``engine`` and ``GUI``. The ``tests`` folder contains tests for each division above.
 
-## Commenting conventions
+## Documentation
 
-We use doxygen as a documentation system. The template for a comment documentating a function is as follows:
+### Doxygen
+
+We use doxygen as a documentation system. It is configured to generate a ``html`` folder which essentially contains all the documentation in a format that can be explored by a web browser. Use
+```
+doxygen Doxyfile
+```
+
+to generate the documentation. Open the ``pages`` file inside the ``html`` in your web browser and you are set to explore the documentation.
+
+### Commenting conventions
+
+The template for a comment documentating a function is as follows:
 ```cpp
 /** @brief can we build a wall?
  * 
@@ -64,6 +75,8 @@ cd build/tests/fetching
 
 ## Adding an executable
 
+### How it works
+
 ``cmake`` uses ``CmakeLists.txt`` files inside each directory containing files relevant to the build process (most often source code files). Suppose you have worked on some ``work.cpp`` file which contains a ``main`` function. Suppose ``work.cpp`` includes ``oldwork.hpp``. You may append the following code to the ``CMakeLists.txt`` file in ``work.cpp``'s folder:
 ```
 add_executable (work work.cpp oldwork.cpp)
@@ -81,9 +94,18 @@ target_link_libraries (work curl)
 
 where ``work`` is a target (executable or even another library). Once this is added to ``CMakeLists.txt``, your ``.cpp`` files need only include curl as they always do.
 
-## Libraries
+### Our case
 
-We use a number of header libraries in our code:
-- ``Rapidxml`` for XML parsing
-- ``Eigen`` for linear algebra
-- ``Catch`` as a testing framework
+``Eigen`` is a header only library. It is included in this repository as a submodule (essentially a link to anothr git repository). The top-level ``CMakeLists.txt`` file includes it for the whole project to use, so that you need only write
+```cpp
+#include <Eigen/Dense>
+```
+at the top of your file to use the ``Dense`` part of the ``Eigen`` library.
+
+``rapidxml`` is treated the same way but is only included for specific targets, i.e. the crawler.
+
+``catch`` is also a header only library and is used only by the ``tests`` folder, so is included only for test targets.
+
+``curl`` is included at the ``fetching`` level ``CMakeLists.txt`` file. It is not header only, but is well integrated with ``cmake`` so that there is no need to do anything else than ``#include`` it as you would for the 3 latter libraries.
+
+``zlib`` is treated the same way as ``curl``.
