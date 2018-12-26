@@ -22,6 +22,39 @@ cmake ..
 make
 ```
 
+## Running the tests
+
+Once the build is over, inside the ``build`` folder, run
+```
+cd build
+ctest
+```
+
+or run the test executable itself for a more detailed output. An example:
+```
+cd build/tests/fetching
+./testcrawler
+```
+
+## Adding an executable
+
+``cmake`` uses ``CmakeLists.txt`` files inside each directory containing files relevant to the build process (most often source code files). Suppose you have worked on some ``work.cpp`` file which contains a ``main`` function. Suppose ``work.cpp`` includes ``oldwork.hpp``. You may append the following code to the ``CMakeLists.txt`` file in ``work.cpp``'s folder:
+```
+add_executable (work work.cpp oldwork.cpp)
+```
+
+to create an executable ``cmake`` will refer to as ``work``. If your work does not contain a ``main`` function, it is called a library and added to the build in the following way:
+```
+add_library (worklib workwithoutmain.cpp)
+```
+
+Observe we only list the ``.cpp`` files instead of the headers. If you use an external library such as ``curl``, you should manage this in the top-level ``CMakeLists.txt`` file (or the lowest level folder such that all ``.cpp`` files using the library). How cmake includes such libraries depends on its nature. You may study the ``CMakeLists.txt`` files of the project to observe how we manage external libraries. In any case, once the library is available, suppose it is store in some variable ``curl``, adding it as a dependency is as simple as:
+```
+target_link_libraries (work curl)
+```
+
+where ``work`` is a target (executable or even another library).
+
 ## Libraries
 
 We use a number of header libraries in our code:
