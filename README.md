@@ -53,7 +53,7 @@ Observe we only list the ``.cpp`` files instead of the headers. If you use an ex
 target_link_libraries (work curl)
 ```
 
-where ``work`` is a target (executable or even another library).
+where ``work`` is a target (executable or even another library). Once this is added to ``CMakeLists.txt``, your ``.cpp`` files need only include curl as they always do.
 
 ## Libraries
 

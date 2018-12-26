@@ -4,6 +4,7 @@
 #include <memory>
 #include <sstream>
 #include <map>
+#include <curl/curl.h>
 
 
 class References {
@@ -41,16 +42,10 @@ class References {
     void getReferences();
 
     /**
-     * Constructor.
-     * 
-     * Must call arxiv to download the pdf and convert it to text through
-     * ``fillBuffer``. Once this process is over, the constructor must call
-     * ``getReferences`` to fill up the ``references`` vector.
-     * 
      * The constructor ensures that the object may be iterated over and
      * immediately yield all found references in ``paper``.
      */
-    References(Paper paper, std::string pdf) : textBuffer(pdf) {}
+    References(Paper paper, std::string text) : textBuffer(text) {}
 };
 
 
@@ -59,9 +54,10 @@ class PDFConverter {
     // where we store the pdf input & text output
     std::stringstream pdfBuffer;
     std::stringstream textBuffer;
+    const CURL *handle;
 
     public:
-    PDFConverter();
+    PDFConverter(CURL *handle) : handle(handle) {}
 
     // convenience constructor for testing purposes
     PDFConverter(std::stringstream *pdf);
@@ -107,11 +103,13 @@ class Papers {
     // pdf conversion objects
     std::map<Paper, std::shared_ptr<PDFConverter>> PDFConverters;
 
-    // curl stuff
+    // curl multi handle
+    CURLM *mhandle;
+
+    // curl stuff - you may change this structure as you will
     void initialize();
     void perform();
     void cleanup();  // should be idem potent
-
 
     public:
     std::vector<Edge> edges;
@@ -120,6 +118,14 @@ class Papers {
      * All the work should be done here. To make the use of this object simple,
      * when this constructor returns, the ``edges`` attributed should be
      * finalized.
+     * 
+     * For each id in ids, create a PDFConverter object along with a curl easy handle.
+     * Manage those with a curl multi handle and launch all downloads. Using the
+     * ``select`` functionality, notice when each download finishes and immediately
+     * call the associated PDFConverter's ``getText`` method to convert the pdf to text.
+     * 
+     * For every pdf converted to text this way, construct a ``References`` object
+     * which will be responsible for reference pattern matching.
      */
     Papers(std::vector<std::string> ids) : ids(ids) {}
 };

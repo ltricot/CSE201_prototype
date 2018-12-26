@@ -10,7 +10,6 @@
 #include <ctype.h>
 #include <string.h>
 
-#include <curl/curl.h>
 #include "zlib.h"   // zlib compression library
 
 #include "references.hpp"
