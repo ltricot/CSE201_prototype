@@ -4,6 +4,32 @@
 
 Inside the ``src`` folder you will find the 4 main divisions of our project. The data gathering team works with ``fetching``, the data engineering, algorithms and GUI teams work respectively with ``database``, ``engine`` and ``GUI``. The ``tests`` folder contains tests for each division above.
 
+## Commenting conventions
+
+We use doxygen as a documentation system. The template for a comment documentating a function is as follows:
+```cpp
+/** @brief can we build a wall?
+ * 
+ * @details evaluate whether the US can build a wall at the Mexican
+ * border given their ambitions and budget. If the function returns
+ * false, the US government shuts down.
+ * 
+ * @param height the height of the wanted wall in meters
+ * @param budget the budget of the government in dollars
+ * @return whether the government succed or not
+ */
+bool buildWall(int height, int budget) {
+    if(height > 1e6 * budget) {
+        // government shutdown
+        return false;
+    }
+
+    return true;
+}
+```
+
+The ``@brief`` tag is followed by a brief description of the function's responsobilities. The ``@details`` tag is _optional_ and should only be filled for non-trivial functions. The ``@param`` tag is followed by the name of a parameter along with its description. It is not optional. The ``@return`` tag must always be filled for non-void functions and describes the significance of the return value.
+
 ## Building
 
 We use ``cmake`` to build our project. As of now we wish to build 4 executables:
