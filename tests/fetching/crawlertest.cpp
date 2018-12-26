@@ -51,6 +51,13 @@ TEST_CASE("fetching/crawler/getID", "test getID on different arxiv urls") {
     }
 }
 
+TEST_CASE("fetching/crawler/fromAuthors", "test arxiv query with author as parameter") {
+    Crawler crawler;
+    std::vector<Author> authors = {Author("kortchemski")};
+    auto edges = crawler.fromAuthors(authors);
+    REQUIRE(edges.size() == 12);
+}
+
 /*
 TEST_CASE("fetching/references/getText", "can ``Converter`` convert a pdf to text") {
     std::ifstream pdf("kortchemski.pdf");

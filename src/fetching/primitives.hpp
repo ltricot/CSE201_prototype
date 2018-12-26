@@ -1,10 +1,10 @@
+#pragma once
 #include <algorithm>
 #include <string>
 
 
 class Author {
-    /**
-     * Contains all information on a paper we ever need to store, or use.
+    /** @brief Contains all information on a paper we ever need to store or use.
      */
 
     public:
@@ -14,9 +14,9 @@ class Author {
 };
 
 class Paper {
-    /**
-     * Contains all information on a paper we ever need to store, or use.
-     * We do not store paper authors or references to other papers here as
+    /** @brief Contains all information on a paper we ever need to store, or use.
+     * 
+     * @details We do not store paper authors or references to other papers here as
      * those are only used to construct edges.
      */
 
@@ -27,8 +27,18 @@ class Paper {
     Paper(std::string id, std::string summary="") : id(id), summary(summary) {}
 };
 
+class Edge {
+    /** @brief Store an edge between a paper and an author.
+     */
+
+    public:
+    Author author;
+    Paper paper;
+    double weight;
+
+    Edge(Author author, Paper paper, double weight=1.0)
+        : author(author), paper(paper), weight(weight) {}
+};
+
 // from: first. to: second.
 typedef std::pair<Paper, Paper> Reference;
-
-// type of an edge between and author and a paper
-typedef std::pair<Author, Paper> Edge;
