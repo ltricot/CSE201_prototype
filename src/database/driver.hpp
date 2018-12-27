@@ -1,11 +1,12 @@
 #include <vector>
 #include <string>
 
+#include "primitives.h"
 
-template <typename F, typename T> class Edge {
-    /** @brief Template for a generic undirected edge representation
-     */
 
+/** @brief Template for a generic undirected edge representation
+ */
+template <typename F, typename T> class Edge_t {
     public:
     F from;
     T to;
@@ -15,20 +16,43 @@ template <typename F, typename T> class Edge {
         : from(from), to(to), weight(weight) {}
 };
 
+
+template <typename F, typename T> class Driver {
+    public:
+
+    // convenience
+    typedef Edge_t<F, T> Edge;
+
+    // constructor
+    Driver(std::string directory);
+
+    /// @brief get all edges outwards from ``from``
+    std::vector<Edge> getFrom(F from);
+    bool writeEdge(Edge edge);  // overwrites
+    bool removeEdge(Edge edge);
+
+    // batch equivalents of above
+    std::vector<Edge> getFroms(std::vector<F> froms)
+    bool writeEdges(std::vector<Edge> edges);
+    bool removeEdges(std::vector<Edge> edges);
+};
+
+
+/** @brief Interface between the recommendation algorithms and the
+ * database storing an interaction matrix.
+ * 
+ * @details This class solves 2 problems:
+ *  - it decides of the order of updates (which edge should our
+ *    system see and when)
+ *  - it optimizes database interaction through some sort of batching
+ * Its main interface is an infinite iterator.
+ */
 class EdgeAccessor {
-    /** @brief Interface between the recommendation algorithms and the
-     * database storing an interaction matrix.
-     * 
-     * @details This class solves 2 problems:
-     *  - it decides of the order of updates (which edge should our
-     *    system see and when)
-     *  - it optimizes database interaction through some sort of batching
-     * Its main interface is an infinite iterator.
-     */
     private:
+    Driver<std::string, std::string> driver;
+
     /// stores the size of the internal buffer
     unsigned int bufferSize;
-    typedef Edge<std::string, std::string> Edge_t;
 
     /// stores edges to send when ``getBatch`` is called
     /// there is no need for this to be a vector. maybe making it some sort
@@ -48,7 +72,8 @@ class EdgeAccessor {
     void updateBuffer(float proportion);
 
     public:
-    EdgeAccessor(unsigned int size) : bufferSize(size) {
+    EdgeAccessor(std::string directory, unsigned int size)
+        : driver(Driver(directory)), bufferSize(size) {
         updateBuffer(1.0);  // initialize buffer
     }
 

@@ -20,7 +20,7 @@ TEST_CASE("fetching/crawler/getPairs",
 
 TEST_CASE("fetching/crawler/getID", "test getID on different arxiv urls") {
     std::vector<std::string> urls = {
-         "http://arxiv.org/abs/0804.0446v3", "http://arxiv.org/abs/1106.0271v4",
+        "http://arxiv.org/abs/0804.0446v3", "http://arxiv.org/abs/1106.0271v4",
         "http://arxiv.org/abs/1109.4138v3", "http://arxiv.org/abs/1110.2163v4",
         "http://arxiv.org/abs/1205.3145v4", "http://arxiv.org/abs/1312.4933v2",
         "http://arxiv.org/abs/1312.5678v3", "http://arxiv.org/abs/1504.04358v2",
