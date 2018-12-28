@@ -54,10 +54,11 @@ class PDFConverter {
     // where we store the pdf input & text output
     std::stringstream pdfBuffer;
     std::stringstream textBuffer;
-    const CURL *handle;
 
     public:
-    PDFConverter(CURL *handle) : handle(handle) {}
+    const CURL *handle;
+
+    PDFConverter(std::string *id) {}
 
     // convenience constructor for testing purposes
     PDFConverter(std::stringstream *pdf);

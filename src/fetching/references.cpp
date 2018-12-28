@@ -1,6 +1,6 @@
 /** Fetching an arxiv paper's references.
  * 
- * Most the functionality in the ``PDFConverter`` class comes from an external
+ * Most of the functionality in the ``PDFConverter`` class comes from an external
  * source. It was simply adapted to our purposes.
  */
 
@@ -228,6 +228,42 @@ void extractText(stringstream &istr, outstream &ostr) {
     }
 }
 
+/**
+ * Callback function passed to CURLOPT_WRITEFUNCTION
+ * Writes the content of the pdf into std::stringstream pdfBuffer;
+ */
+size_t write_data(char *ptr, size_t size, size_t nmemb, std::stringstream buffer { // not sure how to access pdfBuffer
+	buffer << ptr->str();	// what exactly does ->str() do ?
+	// function should return the number of bytes actually taken care of
+}
+
+/**
+ * Launches the curl_easy_setopt (URL, writefunction etc)
+ * Input : a CURL *handle that we will use as input for the libcurl functions we will use
+ * 				so the libcurl easy has been started already?
+ * 		   the id of the pdf we want to convert. We have to check whether we've already converted it with the Bulk method.
+ * 				so has to have access to the attributes of the BulkDownloader class
+ */
+PDFConverter(std::string *id) {
+
+	handle(handle) ;
+
+	curl_global_init(CURL_GLOBAL_ALL); // i'm not sure if we should do it here, we only need to do it once per program
+	handle = curl_easy_init();
+
+	// creating the url 
+	std::string URL = 'https://arxiv.org/pdf/'+id
+
+	curl_easy_setopt(handle, CURLOPT_URL, URL);
+	curl_easy_setopt(curl_handle, CURLOPT_VERBOSE, 1L);	// very useful for libcurl and/or protocol debugging and understanding
+	curl_easy_setopt(curl_handle, CURLOPT_NOPROGRESS, 1L); // tells the library to shut off the progress meter completely for requests done with this handle. 
+	
+	curl_easy_setopt(curl_handle, CURLOPT_WRITEFUNCTION, write_data); // set callback for writing received data (pass a pointer to your callback function)
+	curl_easy_setopt(curl_handle, CURLOPT_WRITEDATA, pdfBuffer); // will write the data to the pdfBuffer given with this option
+
+
+}
+
 PDFConverter::PDFConverter(std::stringstream *pdf) {
 	pdfBuffer << pdf->str();
 }
@@ -242,3 +278,18 @@ string PDFConverter::getText() {
 	std::string temp = textBuffer.str();
 	return temp;
 }
+
+
+
+
+Papers(std::vector<std::string> ids) : ids(ids) {
+
+	// For each id in ids, create a PDFConverter object along with a curl easy handle.
+	for(std::vector<T>::iterator it = ids.begin() ; it != ids.end() ; it++){
+
+
+	}
+
+
+
+]
