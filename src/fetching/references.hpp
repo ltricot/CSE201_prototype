@@ -13,7 +13,7 @@ class References {
      * 
      * A ``References`` object is given a ``Paper`` P and its PDF text and must
      * create a list of ``References``s associated to P. It must execute pattern
-     * search algoritms to find said references.
+     * search algorithms to find said references.
      */
 
     private:
@@ -22,7 +22,7 @@ class References {
      *      - ``references``: holds parsed references.
      *      - ``textBuffer``: text of paper's pdf.
      */
-    std::vector<Reference> references;
+    std::vector<References> references;
     const std::string textBuffer;
 
     public:
@@ -31,7 +31,7 @@ class References {
      * Simple delegation to the underlying ``references`` vector. Give this no
      * thought when developing this object, only when using it.
      */
-    typedef std::vector<Reference>::iterator iterator;
+    typedef std::vector<References>::iterator iterator;
     iterator begin() { return this->references.begin(); }
     iterator end() { return this->references.end(); }
 
@@ -58,6 +58,7 @@ class PDFConverter {
     public:
     const CURL *handle;
 
+    // constructor that launches the curl_easy_setopt for the pdf with the provided id, and stores the result in pdfBuffer
     PDFConverter(std::string *id) {}
 
     // convenience constructor for testing purposes
@@ -88,7 +89,7 @@ class Papers {
      * 
      * Given a vector of paper IDs, construct for each paper:
      *  - a references object
-     *  - a summary object
+     *  - a PDFConverter object
      * 
      * With this information the ``Crawler`` object can build edges easily and
      * the TF-IDF component can build its frequency matrices.
@@ -105,12 +106,14 @@ class Papers {
     std::map<Paper, std::shared_ptr<PDFConverter>> PDFConverters;
 
     // curl multi handle
-    CURLM *mhandle;
+    CURLM *mhandle; // maybe should be public like for thr PDFConverter class?
 
     // curl stuff - you may change this structure as you will
     void initialize();
     void perform();
     void cleanup();  // should be idem potent
+
+    int *stillRunning ; 
 
     public:
     std::vector<Edge> edges;
@@ -120,7 +123,7 @@ class Papers {
      * when this constructor returns, the ``edges`` attributed should be
      * finalized.
      * 
-     * For each id in ids, create a PDFConverter object along with a curl easy handle.
+     * For each id in ids, create a PDFConverter object.
      * Manage those with a curl multi handle and launch all downloads. Using the
      * ``select`` functionality, notice when each download finishes and immediately
      * call the associated PDFConverter's ``getText`` method to convert the pdf to text.
@@ -130,3 +133,36 @@ class Papers {
      */
     Papers(std::vector<std::string> ids) : ids(ids) {}
 };
+
+
+
+
+class BulkDownloader()  {
+    /**
+     * Second PDF downloader component,
+     * doesn't choose the pdfs downloaded, but much faster.
+     * 
+     * Downloads the pdfs from S3, somewhere where 
+     * arxiv stores data massively.
+     * 
+     * Necessary because arxiv blocks us after the 
+     * download of ~1000 pdfs using the first method
+     * over a small time period.
+     * 
+     * As soon as we have the pdf, we want to store
+     * the references in it.
+     * 
+     * Our crawler will then upload them once it 
+     * "discovers" the article.  
+     * 
+     */
+
+    private:
+    void downloadTar() ; // downloads a file .tar.gz and stores it in the folder "./pdfs"
+    void decompress() ;  // decompress the file 
+
+    public:
+
+
+
+}; 

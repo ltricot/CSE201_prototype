@@ -228,27 +228,17 @@ void extractText(stringstream &istr, outstream &ostr) {
     }
 }
 
-/**
- * Callback function passed to CURLOPT_WRITEFUNCTION
- * Writes the content of the pdf into std::stringstream pdfBuffer;
- */
-size_t write_data(char *ptr, size_t size, size_t nmemb, std::stringstream buffer { // not sure how to access pdfBuffer
-	buffer << ptr->str();	// what exactly does ->str() do ?
-	// function should return the number of bytes actually taken care of
-}
 
 /**
  * Launches the curl_easy_setopt (URL, writefunction etc)
- * Input : a CURL *handle that we will use as input for the libcurl functions we will use
- * 				so the libcurl easy has been started already?
- * 		   the id of the pdf we want to convert. We have to check whether we've already converted it with the Bulk method.
- * 				so has to have access to the attributes of the BulkDownloader class
+ * Input : the id of the pdf we want to convert. We have to check whether we've already converted it with the Bulk method.
+ * 				so has to have access to the attributes of the BulkDownloader class ? 
  */
 PDFConverter(std::string *id) {
 
-	handle(handle) ;
+	handle(this->handle) ; // or just handle(handle) ? 
 
-	curl_global_init(CURL_GLOBAL_ALL); // i'm not sure if we should do it here, we only need to do it once per program
+	// curl_global_init(CURL_GLOBAL_ALL);  i'm not sure if we should do it here, we only need to do it once per program
 	handle = curl_easy_init();
 
 	// creating the url 
@@ -258,17 +248,24 @@ PDFConverter(std::string *id) {
 	curl_easy_setopt(curl_handle, CURLOPT_VERBOSE, 1L);	// very useful for libcurl and/or protocol debugging and understanding
 	curl_easy_setopt(curl_handle, CURLOPT_NOPROGRESS, 1L); // tells the library to shut off the progress meter completely for requests done with this handle. 
 	
-	curl_easy_setopt(curl_handle, CURLOPT_WRITEFUNCTION, write_data); // set callback for writing received data (pass a pointer to your callback function)
-	curl_easy_setopt(curl_handle, CURLOPT_WRITEDATA, pdfBuffer); // will write the data to the pdfBuffer given with this option
+	curl_easy_setopt(curl_handle, CURLOPT_WRITEFUNCTION, PDFConverter::fillBuffer); // set callback for writing received data (pass a pointer to your callback function)
+	curl_easy_setopt(curl_handle, CURLOPT_WRITEDATA, this->pdfBuffer); // will write the data to the pdfBuffer given with this option
+	// not sure how to access pdfBuffer though
 
-
+	// only things missing for libcurl, that will be taken care of by the Papers object : 
+	// curl_easy_perform(curl_handle);
+	// curl_easy_cleanup(curl_handle);
+	// curl_global_cleanup(); 
 }
 
 PDFConverter::PDFConverter(std::stringstream *pdf) {
 	pdfBuffer << pdf->str();
 }
 
-// I am ashamed by how simple this function is
+/**
+ * Callback function passed to CURLOPT_WRITEFUNCTION
+ * Writes the content of the pdf into std::stringstream pdfBuffer;
+ */
 size_t PDFConverter::fillBuffer(char *contents, size_t size, size_t nmemb, stringstream *buf) {
     *buf << contents;
 }
@@ -280,16 +277,65 @@ string PDFConverter::getText() {
 }
 
 
+/**
+ * Constructor of the Papers class
+ */
+
+
+/**
+     * All the work should be done here. To make the use of this object simple,
+     * when this constructor returns, the ``edges`` attributed should be
+     * finalized.
+     * 
+     * For each id in ids, create a PDFConverter object.
+     * Manage those with a curl multi handle and launch all downloads. Using the
+     * ``select`` functionality, notice when each download finishes and immediately
+     * call the associated PDFConverter's ``getText`` method to convert the pdf to text.
+     * 
+     * For every pdf converted to text this way, construct a ``References`` object
+     * which will be responsible for reference pattern matching.
+     */
+
+
+void Papers::initialize() {
+	this->mhandle = curl_multi_init() ; 
+}
+
+void Papers::perform() {
+	curl_multi_perform(this->mhandle, stillRunning) ; 
+}
+
+void Papers::cleanup() {
+	curl_multi_cleanup(this->mhandle) ; 
+}
 
 
 Papers(std::vector<std::string> ids) : ids(ids) {
 
-	// For each id in ids, create a PDFConverter object along with a curl easy handle.
-	for(std::vector<T>::iterator it = ids.begin() ; it != ids.end() ; it++){
+	initialize() ; 
 
-
+	// For each id in ids, create a PDFConverter object 
+	for(std::vector<T>::iterator id = ids.begin() ; id != ids.end() ; id++){
+		PDFConverter::PDFConverter(*id) ; 
+		CURL *easy_handle = PDFConverter::handle(handle) ; 
+		curl_multi_add_handle( mhandle,  easy_handle  ) ;  
 	}
 
+	perform() ; // or Papers::perform ? 
+	//  will write the number of handles that still transfer data in stillRunning 
 
+	// kinda lost with the select thingy to know when a tranfer is done and when we can get the data (i.e. call getText right?)
+
+	cleanup() ; // or  Papers::cleanup()?
 
 ]
+
+
+
+void BulkDownloader::downloadTar() {
+	system("aws s3 cp --request-payer requester s3://arxiv/pdf/${name} ./pdfs");
+}
+
+void BulkDownloader::decompress() {
+	system("tar -xvf ./pdfs/${name}");
+}
