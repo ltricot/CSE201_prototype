@@ -112,7 +112,7 @@ std::vector<Edge> Crawler::getPairs(std::string xmlstr) {
                 author = author->next_sibling()) {
             name = author->first_node("name")->value();
 
-            pairs.push_back(std::make_pair(Author(name), Paper(article)));
+            pairs.push_back(Edge(Author(name), Paper(article)));
         }
     }
 

@@ -333,6 +333,7 @@ Papers(std::vector<std::string> ids) : ids(ids) {
 
 
 void BulkDownloader::downloadTar() {
+	// aws cli must be configured with an aws account
 	system("aws s3 cp --request-payer requester s3://arxiv/pdf/${name} ./pdfs");
 }
 
