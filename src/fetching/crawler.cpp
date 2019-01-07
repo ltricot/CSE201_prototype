@@ -234,3 +234,40 @@ iterator& Crawler::iterator::operator++() {
         
     }
 }
+
+std::vector<Edge> Crawler::getSummary(std::string xmlstr) {
+    // return value
+    std::vector<Edge> summ;
+    
+    /* We initialize here a number of variable used when traversing the
+     * XML tree.
+     * - ``xmlstr`` is the string containing xml data
+     * - ``doc`` is the XML tree
+     * - ``root`` is essentially the XML tree's root
+     * - ``entry`` are XML tree nodes, and are our iteration variables
+     * - ``article`` and ``summary` are the values we wish to return
+     */
+    rapidxml::xml_document<> doc;
+    std::vector<char> xmlcharvec(xmlstr.begin(), xmlstr.end());
+    xmlcharvec.push_back('\0');
+    doc.parse<0>(&xmlcharvec[0]);
+    
+    rapidxml::xml_node<> *root = doc.first_node("feed"),
+    *entry,
+    *summary;
+    
+    std::string summary, article;
+    
+    // iteration over entries (representing articles)
+    for(entry = root->first_node("entry");
+        entry && entry->name() == std::string("entry");
+        entry = entry->next_sibling()) {
+        article = entry->first_node("id")->value();
+        summary = entry->first_node("summary")->value();
+            
+        summ.push_back(Edge(Paper(article, summary)));
+        
+    }
+    
+    return summ;
+}
