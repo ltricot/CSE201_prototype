@@ -8,7 +8,7 @@
 #include <curl/curl.h>
 
 #include "crawler.hpp"
-
+#include "bloom.cpp"
 
 /** ``writefunction`` parameter of a curl call
  * 
@@ -185,4 +185,88 @@ std::string getID(std::string link) {
     std::stringstream link_s(link);
     while(std::getline(link_s, temp, '/'));
     return temp;
+}
+
+
+
+Crawler::iterator::iterator(Crawler crawler) {
+    this->parent = crawler;
+}
+
+bool Crawler::iterator::operator==(iterator other) const {
+    return false;
+}
+
+bool Crawler::iterator::operator!=(iterator other) const {
+    return true;
+}
+/**
+ * @return an Edge
+ */
+Edge Crawler::iterator::operator*() const {
+    return *cursor;
+}
+
+iterator& Crawler::iterator::operator++() {
+    /* @brief implementation of the incrementation operator of the cursor iterator.
+     * @details the buffer is the place where we store the Edges fetched by the crawler.
+     * The while loop checks two conditions: 
+     *      1) if the Edge pointed by the cursor is already in the bloom (it was seen)
+     *      2) and if the cursor is not already at the end of the buffer
+     * then we have to increment again the iterator i.e. go to the next Edge.
+     * 
+     * otherwise, if the current Edge was not seen in the buffer, we add it to the buffer
+     * and if the cursor is at the end of the buffer, we have to empty it and call the crawler to fetch new Edges
+     * which we will put in the buffer.
+     */
+    while (bloom.seen(*cursor) && cursor != buffer.end()) {
+        cursor++();
+    }
+
+    if (!bloom.seen(*cursor)) {
+        bloom.add(Hashable info);
+    }
+    if (cursor == buffer.end()) {
+        std::vector<Edge> edges = parent.crawl();
+        for (Edge edge : edges) {
+            buffer.push_back(edge)
+        }
+        
+    }
+}
+
+std::vector<Edge> Crawler::getSummary(std::string xmlstr) {
+    // return value
+    std::vector<Edge> summ;
+    
+    /* We initialize here a number of variable used when traversing the
+     * XML tree.
+     * - ``xmlstr`` is the string containing xml data
+     * - ``doc`` is the XML tree
+     * - ``root`` is essentially the XML tree's root
+     * - ``entry`` are XML tree nodes, and are our iteration variables
+     * - ``article`` and ``summary` are the values we wish to return
+     */
+    rapidxml::xml_document<> doc;
+    std::vector<char> xmlcharvec(xmlstr.begin(), xmlstr.end());
+    xmlcharvec.push_back('\0');
+    doc.parse<0>(&xmlcharvec[0]);
+    
+    rapidxml::xml_node<> *root = doc.first_node("feed"),
+    *entry,
+    
+    std::string summary, article;
+    
+    // iteration over entries (representing articles)
+    for(entry = root->first_node("entry");
+        entry && entry->name() == std::string("entry");
+        entry = entry->next_sibling()) {
+        article = entry->first_node("id")->value();
+        summary = entry->first_node("summary")->value();
+            
+        summ.push_back(Edge(Paper(article, summary)));
+        
+    }
+    
+    return summ;
 }
