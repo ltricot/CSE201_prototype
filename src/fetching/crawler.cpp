@@ -254,7 +254,6 @@ std::vector<Edge> Crawler::getSummary(std::string xmlstr) {
     
     rapidxml::xml_node<> *root = doc.first_node("feed"),
     *entry,
-    *summary;
     
     std::string summary, article;
     
