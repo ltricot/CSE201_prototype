@@ -1,6 +1,8 @@
 #include <vector>
 #include <string>
 
+#include <Eigen/Eigen>
+
 #include "primitives.h"
 
 
@@ -86,3 +88,15 @@ class EdgeAccessor {
     iterator begin();
     iterator end();
 };
+
+
+template <int rank> class VectorAccessor {
+    typedef Matrix<double, rank, 1> vec;
+
+    vec get_vector(Author author);
+    vec get_vector(Paper paper);
+
+    bool send_vector(Author author, vec);
+    bool send_vector(Paper paper, vec);
+};
+
