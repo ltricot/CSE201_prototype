@@ -58,6 +58,9 @@ class PDFConverter {
     public:
     const CURL *handle;
 
+    // constructor that takes as input a pdf file and stores the result in pdfBuffer
+    PDFConverter(PDF pdf) {} 
+
     // constructor that launches the curl_easy_setopt for the pdf with the provided id, and stores the result in pdfBuffer
     PDFConverter(std::string *id) {}
 
@@ -132,6 +135,12 @@ class Papers {
      * which will be responsible for reference pattern matching.
      */
     Papers(std::vector<std::string> ids) : ids(ids) {}
+
+    /**
+     * We need a second Papers constructor, which takes as argument the PDF files directly
+     * no need to do a curl request 
+    */
+    Papers(PDF pdf) {}
 };
 
 

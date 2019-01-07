@@ -229,6 +229,10 @@ void extractText(stringstream &istr, outstream &ostr) {
 }
 
 
+////////////////////////
+// PDFConverter Class //
+////////////////////////
+
 /**
  * Launches the curl_easy_setopt (URL, writefunction etc)
  * Input : the id of the pdf we want to convert. We have to check whether we've already converted it with the Bulk method.
@@ -262,6 +266,32 @@ PDFConverter::PDFConverter(std::stringstream *pdf) {
 	pdfBuffer << pdf->str();
 }
 
+PDFConverter::PDFConverter(PDF pdf) {
+	// maybe an easy way to do this is : 
+	std::ifstream input( pdf, std::ios::binary );
+    std::vector<unsigned char> pdfBuffer(std::istreambuf_iterator<char>(input), {}); 	// copies all data into buffer
+
+
+	/* that doesnt look efficient to me 
+
+	fstream file ; 
+	f = file.open ( pdf, ios::in ) ; 
+	if(!file){
+		cout << "Error encountered while opening file" << endl ; 
+	}
+	char ch ; 
+
+	while(!file.eof()){
+		file >> ch;
+		pdfBuffer << ch ; 
+	}
+
+	file.close();
+
+	*/ 
+}
+
+
 /**
  * Callback function passed to CURLOPT_WRITEFUNCTION
  * Writes the content of the pdf into std::stringstream pdfBuffer;
@@ -275,6 +305,13 @@ string PDFConverter::getText() {
 	std::string temp = textBuffer.str();
 	return temp;
 }
+
+
+
+////////////////////////
+//    Papers Class    //
+////////////////////////
+
 
 
 /**
@@ -310,7 +347,7 @@ void Papers::cleanup() {
 }
 
 
-Papers(std::vector<std::string> ids) : ids(ids) {
+Papers::Papers(std::vector<std::string> ids) : ids(ids) {
 
 	initialize() ; 
 
@@ -330,9 +367,21 @@ Papers(std::vector<std::string> ids) : ids(ids) {
 
 ]
 
+Papers::Papers(PDF pdf) {
+	PDFConverter::PDFConverter(pdf) ; 
+
+
+}
+
+
+
+/////////////////////////////////
+//    BulkDownloader Class    //
+////////////////////////////////
 
 
 void BulkDownloader::downloadTar() {
+	// aws cli must be configured with an aws account
 	system("aws s3 cp --request-payer requester s3://arxiv/pdf/${name} ./pdfs");
 }
 

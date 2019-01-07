@@ -104,10 +104,11 @@ class Crawler {
          */
         std::list<Edge> buffer;
         std::list<Edge>::iterator cursor;
+        Crawler *crawler;
 
         public:
         // crawler is the parent crawler
-        iterator(Crawler crawler);
+        iterator(Crawler *crawler) : crawler(crawler) {}
 
         /**
          * Increment the ``cursor`` position.
@@ -130,4 +131,14 @@ class Crawler {
          */
         Edge operator*() const;
     };
+
+    iterator begin() {
+        iterator it(this);
+        return it;
+    }
+
+    iterator end() {
+        iterator it(this);
+        return it;
+    }
 };
