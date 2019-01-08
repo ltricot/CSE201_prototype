@@ -55,7 +55,7 @@ class Crawler {
      * @param xmlstr string of arxiv's response representing an xml structure.
      * @return a string of the paper's abstract
      */
-    static std::string getSummary(std::string xmlstr);
+    static std::vector<Paper> getSummary(std::string xmlstr);
 
     /**
      * Crawl arxiv from author names.
@@ -104,6 +104,7 @@ class Crawler {
          */
         std::list<Edge> buffer;
         std::list<Edge>::iterator cursor;
+        // Bloom<Edge> bloom;
         Crawler *crawler;
 
         public:

@@ -1,4 +1,5 @@
 #include "primitives.hpp"
+#include "bloom.hpp"
 
 #include <vector>
 #include <memory>
@@ -56,16 +57,13 @@ class PDFConverter {
     std::stringstream textBuffer;
 
     public:
-    const CURL *handle;
-
-    // constructor that takes as input a pdf file and stores the result in pdfBuffer
-    PDFConverter(PDF pdf) {} 
+    CURL *handle;
 
     // constructor that launches the curl_easy_setopt for the pdf with the provided id, and stores the result in pdfBuffer
-    PDFConverter(std::string *id) {}
+    PDFConverter(std::string id);
 
     // convenience constructor for testing purposes
-    PDFConverter(std::stringstream *pdf);
+    // PDFConverter(std::string pdf);
 
     /**
      * Called by libcurl when data is received. We will not be converting the pdf
@@ -134,19 +132,17 @@ class Papers {
      * For every pdf converted to text this way, construct a ``References`` object
      * which will be responsible for reference pattern matching.
      */
-    Papers(std::vector<std::string> ids) : ids(ids) {}
+    Papers(std::vector<std::string> ids);
 
     /**
      * We need a second Papers constructor, which takes as argument the PDF files directly
      * no need to do a curl request 
     */
-    Papers(PDF pdf) {}
+    Papers(std::string pdf);
 };
 
 
-
-
-class BulkDownloader()  {
+class BulkDownloader {
     /**
      * Second PDF downloader component,
      * doesn't choose the pdfs downloaded, but much faster.

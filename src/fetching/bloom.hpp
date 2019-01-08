@@ -46,8 +46,8 @@ template <class Hashable> class Bloom {
     bool seen(Hashable info);
     bool add(Hashable info);
     void reset();
-    Bloom * import(std::string path);
-    void export(std::string path);
+    Bloom * importBloom(std::string path);
+    void exportBloom(std::string path);
     void setPath(std::string path);
     std::string getPath();
     ~Bloom();
@@ -76,10 +76,9 @@ template <class Hashable> class Bloom {
     std::string path;
     int hashers;
     int bitsize;
-    std::bitset bset(bitsize);
-    
-    int[hashers] * hash(Hashable info);
-    int[hashers] * getBits(std::vector<unsigned long int>  locs);
+    // std::bitset bset(bitsize);
+
+    // int[hashers] * hash(Hashable info);
+    // int[hashers] * getBits(std::vector<unsigned long int>  locs);
     void setBits(std::vector<unsigned long int> locs);
-    
 };

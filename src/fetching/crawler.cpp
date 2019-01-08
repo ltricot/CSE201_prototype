@@ -8,7 +8,6 @@
 #include <curl/curl.h>
 
 #include "crawler.hpp"
-#include "bloom.cpp"
 
 /** ``writefunction`` parameter of a curl call
  * 
@@ -189,6 +188,7 @@ std::string getID(std::string link) {
 
 
 
+#ifdef UGH
 Crawler::iterator::iterator(Crawler crawler) {
     this->parent = crawler;
 }
@@ -207,7 +207,7 @@ Edge Crawler::iterator::operator*() const {
     return *cursor;
 }
 
-iterator& Crawler::iterator::operator++() {
+Crawler::iterator& Crawler::iterator::operator++() {
     /* @brief implementation of the incrementation operator of the cursor iterator.
      * @details the buffer is the place where we store the Edges fetched by the crawler.
      * The while loop checks two conditions: 
@@ -220,19 +220,22 @@ iterator& Crawler::iterator::operator++() {
      * which we will put in the buffer.
      */
     while (bloom.seen(*cursor) && cursor != buffer.end()) {
-        cursor++();
+        cursor++;
     }
 
-    if (!bloom.seen(*cursor)) {
-        bloom.add(Hashable info);
+    auto edge = *cursor;
+    if (!bloom.seen(edge)) {
+        bloom.add(edge);
     }
+
     if (cursor == buffer.end()) {
-        std::vector<Edge> edges = parent.crawl();
+        std::vector<Edge> edges = crawler->crawl(2);
         for (Edge edge : edges) {
-            buffer.push_back(edge)
+            buffer.push_back(edge);
         }
     }
 }
+#endif
 
 std::vector<Paper> Crawler::getSummary(std::string xmlstr) {
     // return value

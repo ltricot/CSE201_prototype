@@ -44,18 +44,19 @@ TEST_CASE("fetching/crawler/fromAuthors", "test arxiv query with author as param
 }
 
 TEST_CASE("fetching/crawler/getSummary", "test if getSummary gets all the summaries") {
-    Crawler crawler ; 
-    std::string kortchemski ; 
-    auto summaries = crawler.getSummary(kortchemski) ; 
+    Crawler crawler;
+    std::vector<Paper> summaries = crawler.getSummary(kortchemski);
+    std::cout << "i am here" << summaries.size() << std::endl;
+
     REQUIRE(summaries.size() == 10);
+
     std::vector<std::string> summ = {
         summary1, summary2, summary3, summary4, summary5, 
         summary6, summary7, summary8, summary9, summary10};
 
     for (int i = 0; i != summ.size(); i++) {
-        REQUIRE(summaries[i] == summ[i]);
+        REQUIRE(summaries[i].summary == summ[i]);
     }
-
 }
 
 /*
