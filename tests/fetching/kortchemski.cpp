@@ -110,16 +110,41 @@ processes with Poisson processes thanks to Kendall's representation of Yule
 processes.
 )";
 
-std::string summary8 = R"()";
+std::string summary8 = R"(  We establish uniform sub-exponential tail bounds for the width, height and
+maximal outdegree of critical Bienaym\'e-Galton-Watson trees conditioned on
+having a large fixed size, whose offspring distribution belongs to the domain
+of attraction of a stable law. This extends results obtained for the height and
+width by Addario-Berry, Devroye &amp; Janson in the finite variance case.
+)";
 
-std::string summary9 = R"()";
+std::string summary9 = R"(  We study site percolation on Angel &amp; Schramm's uniform infinite planar
+triangulation. We compute several critical and near-critical exponents, and
+describe the scaling limit of the boundary of large percolation clusters in all
+regimes (subcritical, critical and supercritical). We prove in particular that
+the scaling limit of the boundary of large critical percolation clusters is the
+random stable looptree of index 3/2, which was introduced in a companion paper.
+We also give a conjecture linking looptrees of any index in (1,2) with scaling
+limits of cluster boundaries in random triangulations decorated with O(N)
+models.
+)";
 
-std::string summary10 = R"()";
-
-std::string summary11 = R"()";
-
-std::string summary12 = R"()";
-
+std::string summary10 = R"(  We are interested in the asymptotic behavior of Markov chains on the set of
+positive integers for which, loosely speaking, large jumps are rare and occur
+at a rate that behaves like a negative power of the current state, and such
+that small positive and negative steps of the chain roughly compensate each
+other. If $X_{n}$ is such a Markov chain started at $n$, we establish a limit
+theorem for $\frac{1}{n}X_{n}$ appropriately scaled in time, where the scaling
+limit is given by a nonnegative self-similar Markov process. We also study the
+asymptotic behavior of the time needed by $X_{n}$ to reach some fixed finite
+set. We identify three different regimes (roughly speaking the transient, the
+recurrent and the positive-recurrent regimes) in which $X_{n}$ exhibits
+different behavior. The present results extend those of Haas &amp; Miermont who
+focused on the case of non-increasing Markov chains. We further present a
+number of applications to the study of Markov chains with asymptotically zero
+drifts such as Bessel-type random walks, nonnegative self-similar Markov
+processes, invariance principles for random walks conditioned to stay positive,
+and exchangeable coalescence-fragmentation processes.
+)";
 
 std::string kortchemski = R"(<?xml version="1.0" encoding="UTF-8"?>
 <feed xmlns="http://www.w3.org/2005/Atom">
