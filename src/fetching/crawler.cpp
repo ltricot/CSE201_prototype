@@ -252,7 +252,7 @@ std::vector<Paper> Crawler::getSummary(std::string xmlstr) {
     doc.parse<0>(&xmlcharvec[0]);
     
     rapidxml::xml_node<> *root = doc.first_node("feed"),
-    *entry,
+    *entry;
     
     std::string summary, article;
     
