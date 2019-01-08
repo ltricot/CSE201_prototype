@@ -99,4 +99,3 @@ template <int rank> class VectorAccessor {
     bool send_vector(Author author, vec);
     bool send_vector(Paper paper, vec);
 };
-

@@ -231,13 +231,12 @@ iterator& Crawler::iterator::operator++() {
         for (Edge edge : edges) {
             buffer.push_back(edge)
         }
-        
     }
 }
 
-std::vector<Edge> Crawler::getSummary(std::string xmlstr) {
+std::vector<Paper> Crawler::getSummary(std::string xmlstr) {
     // return value
-    std::vector<Edge> summ;
+    std::vector<Paper> summ;
     
     /* We initialize here a number of variable used when traversing the
      * XML tree.
@@ -263,8 +262,8 @@ std::vector<Edge> Crawler::getSummary(std::string xmlstr) {
         entry = entry->next_sibling()) {
         article = entry->first_node("id")->value();
         summary = entry->first_node("summary")->value();
-            
-        summ.push_back(Edge(Paper(article, summary)));
+
+        summ.push_back(Paper(article, summary));
         
     }
     
