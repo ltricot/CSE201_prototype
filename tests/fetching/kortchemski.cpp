@@ -1,5 +1,126 @@
 #include <string>
 
+std::string summary1 = R"(  We study the asymptotic behavior of two statistics defined on the symmetric
+group S_n when n tends to infinity: the number of elements of S_n having k
+records, and the number of elements of S_n for which the sum of the positions
+of their records is k. We use a probabilistic argument to show that the scaled
+asymptotic behavior of these statistics can be described by remarkably simple
+functions.
+)"; 
+
+std::string summary2 = R"(  We study large random dissections of polygons. We consider random dissections
+of a regular polygon with $n$ sides, which are chosen according to Boltzmann
+weights in the domain of attraction of a stable law of index $\theta\in(1,2]$.
+As $n$ goes to infinity, we prove that these random dissections converge in
+distribution toward a random compact set, called the random stable lamination.
+If $\theta=2$, we recover Aldous' Brownian triangulation. However, if
+$\theta\in(1,2)$, large faces remain in the limit and a different random
+compact set appears. We show that the random stable lamination can be coded by
+the continuous-time height function associated to the normalized excursion of a
+strictly stable spectrally positive L\'{e}vy process of index $\theta$. Using
+this coding, we establish that the Hausdorff dimension of the stable random
+lamination is almost surely $2-1/\theta$.
+)";
+
+std::string summary3 = R"(  We give a simple new proof of a theorem of Duquesne, stating that the
+properly rescaled contour function of a critical aperiodic Galton-Watson tree,
+whose offspring distribution is in the domain of attraction of a stable law of
+index $\theta \in (1,2]$, conditioned on having total progeny $n$, converges in
+the functional sense to the normalized excursion of the continuous-time height
+function of a strictly stable spectrally positive L\'evy process of index
+$\theta$. To this end, we generalize an idea of Le Gall which consists in using
+an absolute continuity relation between the conditional probability of having
+total progeny exactly $n$ and the conditional probability of having total
+progeny at least $n$. This new method is robust and can be adapted to establish
+invariance theorems for Galton-Watson trees having $n$ vertices whose degrees
+are prescribed to belong to a fixed subset of the positive integers.
+)";
+
+std::string summary4 = R"(  We are interested in the asymptotic behavior of critical Galton-Watson trees
+whose offspring distribution may have infinite variance, which are conditioned
+on having a large fixed number of leaves. We first find an asymptotic estimate
+for the probability of a Galton-Watson tree having $n$ leaves. Secondly, we let
+$t_n$ be a critical Galton-Watson tree whose offspring distribution is in the
+domain of attraction of a stable law, and conditioned on having exactly $n$
+leaves. We show that the rescaled Lukasiewicz path and contour function of
+$t_n$ converge respectively to $X^{exc}$ and $H^{exc}$, where $X^{exc}$ is the
+normalized excursion of a strictly stable spectrally positive L\'evy process
+and $H^{exc}$ is its associated continuous-time height function. As an
+application, we investigate the distribution of the maximum degree in a
+critical Galton-Watson tree conditioned on having a large number of leaves. We
+also explain how these results can be generalized to the case of Galton-Watson
+trees which are conditioned on having a large fixed number of vertices with
+degree in a given set, thus extending results obtained by Aldous, Duquesne and
+Rizzolo.
+)";
+
+std::string summary5 = R"(  We study a particular type of subcritical Galton--Watson trees, which are
+called non-generic trees in the physics community. In contrast with the
+critical or supercritical case, it is known that condensation appears in
+certain large conditioned non-generic trees, meaning that with high probability
+there exists a unique vertex with macroscopic degree comparable to the total
+size of the tree. Using recent results concerning subexponential distributions,
+we investigate this phenomenon by studying scaling limits of such trees and
+show that the situation is completely different from the critical case. In
+particular, the height of such trees grows logarithmically in their size. We
+also study fluctuations around the condensation vertex.
+)";
+
+std::string summary6 = R"(  We are interested in predator-prey dynamics on infinite trees, which can
+informally be seen as particular two-type branching processes where individuals
+may die (or be infected) only after their parent dies (or is infected). We
+study two types of such dynamics: the chase-escape process, introduced by
+Kordzakhia with a variant by Bordenave, and the birth-and-assassination
+process, introduced by Aldous &amp; Krebs. We exhibit a coupling between these
+processes and branching random walks starting from a random point and killed at
+the barrier 0. This sheds new light on the chase-escape and
+birth-and-assassination processes, which allows us to recover by probabilistic
+means previously known results and also to obtain new results. For instance, we
+find the asymptotic behavior of tail of the number of infected individuals in
+both the subcritical and critical regimes for the chase-escape process, and
+show that the birth-and-assassination process ends almost surely at
+criticality.
+)";
+
+std::string summary7 = R"(  We are interested in a variation of the SIR (Susceptible/Infected/Recovered)
+dynamics on the complete graph, in which infected individuals may only spread
+to neighboring susceptible individuals at fixed rate $\lambda&gt;0$ while
+recovered individuals may only spread to neighboring infected individuals at
+fixed rate $1$. This is also a variant of the so-called chase-escape process
+introduced by Kordzakhia and then Bordenave &amp; Ganesan. Our work is the first
+study of this dynamics on complete graphs. Starting with one infected and one
+recovered individuals on the complete graph with $N+2$ vertices, and stopping
+the process when one type of individuals disappears, we study the asymptotic
+behavior of the probability that the infection spreads to the whole graph as
+$N\rightarrow\infty$ and show that for $\lambda\in (0,1)$ (resp. for
+$\lambda&gt;1$), the infection dies out (resp. does not die out) with probability
+tending to one as $N\rightarrow\infty$, and that the probability that the
+infection dies out tends to $1/2$ for $\lambda=1$. We also establish limit
+theorems concerning the asymptotic state of the system in all regimes and show
+that two additional phase transitions occur in the subcritical phase
+$\lambda\in (0,1)$: at $\lambda=1/2$ the behavior of the expected number of
+remaining infected individuals changes, while at $\lambda=(\sqrt {5}-1)/2$ the
+behavior of the expected number of remaining recovered individuals changes. We
+also study the outbreak sizes of the infection, and show that the outbreak
+sizes are small if $\lambda \in(0,1/2]$, exhibit a power-law behavior for
+$1/2&lt;\lambda&lt;1$, and are pandemic for $\lambda\geq 1$. Our method relies on
+different couplings: we first couple the dynamics with two independent Yule
+processes by using an Athreya-Karlin embedding, and then we couple the Yule
+processes with Poisson processes thanks to Kendall's representation of Yule
+processes.
+)";
+
+std::string summary8 = R"()";
+
+std::string summary9 = R"()";
+
+std::string summary10 = R"()";
+
+std::string summary11 = R"()";
+
+std::string summary12 = R"()";
+
+
 std::string kortchemski = R"(<?xml version="1.0" encoding="UTF-8"?>
 <feed xmlns="http://www.w3.org/2005/Atom">
   <link href="http://arxiv.org/api/query?search_query%3Dau%3AKortchemski%26id_list%3D%26start%3D0%26max_results%3D10" rel="self" type="application/atom+xml"/>
