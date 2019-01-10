@@ -272,3 +272,66 @@ std::vector<Paper> Crawler::getSummary(std::string xmlstr) {
     
     return summ;
 }
+
+
+/** @brief Functions that takes care of the crawling.
+ * 
+ * @details 
+ * @params steps the number of times we'll repeat the process
+ * @params from if set to 1 comes from papers, if set to 0 
+ * comes from authors
+ * 
+ * @return a vector of (author, paper) pairs.
+ */
+std::vector<Edge> Crawler::crawl(int steps){
+    std::vector<Edge> buffer ; 
+    while(steps --> 0){
+
+        // case where from = 1, i.e. request comes from papers
+        // then, we call fromPapers()
+        if(from){ 
+            from = !from ; 
+
+            std::vector<Paper> start = {source} ; // vector of one Paper with value source
+            buffer = fromPapers(start); // initialized before the while loop
+
+            std::vector<Paper> papers ;
+            for(std::vector<Edge>::iterator edge = buffer.begin(); edge != buffer.end(); edge++) {
+                papers.push_back(edge->paper);
+            }
+
+            std::vector<std::pair<Paper, Paper>> references = getReferences(papers);
+
+            std::vector<Edge> newEdges ; 
+
+            for (int i = 0; i != buffer.size() ; i++) {
+                if(buffer[i]->paper == references[i][0]){
+                    newEdges.push_back(  Edge(    buffer[i]->author,   references[i][1]   )    ) ; 
+                }
+            }
+
+            // Move elements from newEdges to buffer.
+            buffer.insert(
+                buffer.end(),
+                std::make_move_iterator(newEdges.begin()),
+                std::make_move_iterator(newEdges.end())
+            );
+
+        }
+
+        // case where from = 0, i.e. request comes from authors
+        // then, we call fromAuthors()
+        else {
+            std::vector<Author> authors ; 
+            for(std::vector<Edge>::iterator edge = buffer.begin(); edge != buffer.end(); edge++) {
+                authors.push_back(edge->author);
+            }
+            
+        buffer.push_back(fromAuthors(authors)) ; 
+        
+        }
+
+    }
+
+    return buffer ; 
+}

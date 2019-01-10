@@ -9,6 +9,7 @@
 
 #include <curl/curl.h>
 
+std::vector<std::pair<Paper, Paper>> getReferences(std::vector<Paper>);
 
 class References {
     /**
