@@ -53,6 +53,8 @@ class References {
 };
 
 
+class PDF : public std::string {};
+
 class PDFConverter {
     private:
     // where we store the pdf input & text output
@@ -66,7 +68,7 @@ class PDFConverter {
     PDFConverter(PDF pdf) {} 
 
     // constructor that launches the curl_easy_setopt for the pdf with the provided id, and stores the result in pdfBuffer
-    PDFConverter(std::string *id) {}
+    PDFConverter(std::string id) {}
 
     // convenience constructor for testing purposes
     PDFConverter(std::stringstream *pdf); // PDFConverter(std::string pdf);
