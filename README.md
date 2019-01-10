@@ -4,6 +4,33 @@
 
 Inside the ``src`` folder you will find the 4 main divisions of our project. The data gathering team works with ``fetching``, the data engineering, algorithms and GUI teams work respectively with ``database``, ``engine`` and ``GUI``. The ``tests`` folder contains tests for each division above.
 
+## Architecture
+
+### Crawler
+
+The crawler's goal is to amass data from arxiv. We build a bipartite graph from authors and papers according to the following rule: there is an edge between an author and a paper if
+1. the author published the paper
+2. the author cited the paper in a publication of his
+
+The data we must obtain from arxiv is therefore two-fold. We use the arxiv API to request author metadata for edges of type (1.). We use arxiv's S3 bucket to download PDFs _en masse_ and extract citations from the text using pattern matching.
+
+### Database
+
+The database is subdivided in a number of storage units:
+1. the academic graph as a key-value store       (custom)
+2. the user/paper vectors as a key-value store (custom)
+3. the user likes as a key-value store on Azure Cosmos
+4. the cluster labels as a csv
+
+### Recommendation
+
+A number of algorithms come together to produce the final recommendations. We implement the following:
+1. MinHash
+2. Label propagation for clustering
+3. KNN for candidate production
+4. Matrix Factorization for match scoring and user/paper embedding
+5. TF-IDF for content based embedding
+
 ## Documentation
 
 ### Doxygen
@@ -27,7 +54,7 @@ The template for a comment documentating a function is as follows:
  * 
  * @param height the height of the wanted wall in meters
  * @param budget the budget of the government in dollars
- * @return whether the government succed or not
+ * @return whether the government succeeds or not
  */
 bool buildWall(int height, int budget) {
     if(height > 1e6 * budget) {
