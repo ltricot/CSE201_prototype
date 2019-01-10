@@ -19,6 +19,18 @@
 using namespace std;
 
 
+//////////////////////////////////////////////
+// for void BulkDownloader::constructPapers()
+
+#include <string>
+#include <vector>
+#include <fstream>
+#include <iostream>
+#include <map>
+#include <dirent.h>
+
+///////////////////////////////////////////////
+
 // Find a string in a buffer:
 static size_t FindStringInBuffer(char* buffer, char* search, size_t buffersize) {
 	char* buffer0 = buffer;
@@ -239,8 +251,11 @@ void extractText(stringstream &istr, outstream &ostr) {
  * 				so has to have access to the attributes of the BulkDownloader class ? 
  */
 PDFConverter::PDFConverter(std::string id) {
+
+	handle(this->handle) ; // or just handle(handle) ? 
+
 	// curl_global_init(CURL_GLOBAL_ALL);  i'm not sure if we should do it here, we only need to do it once per program
-	CURL *handle = curl_easy_init();
+	handle = curl_easy_init(); 
 
 	// creating the url
 	std::string URL = "https://arxiv.org/pdf/" + id;
@@ -258,6 +273,32 @@ PDFConverter::PDFConverter(std::string id) {
 	// curl_easy_cleanup(curl_handle);
 	// curl_global_cleanup(); 
 }
+
+PDFConverter::PDFConverter(std::stringstream *pdf) {
+	pdfBuffer << pdf->str();
+}
+
+PDFConverter::PDFConverter(PDF pdf) {
+	// maybe an easy way to do this is : 
+	std::ifstream input( pdf, std::ios::binary );
+    std::vector<unsigned char> pdfBuffer(std::istreambuf_iterator<char>(input), {}); 	// copies all data into buffer
+
+
+	/* that doesnt look efficient to me 
+	fstream file ; 
+	f = file.open ( pdf, ios::in ) ; 
+	if(!file){
+		cout << "Error encountered while opening file" << endl ; 
+	}
+	char ch ; 
+	while(!file.eof()){
+		file >> ch;
+		pdfBuffer << ch ; 
+	}
+	file.close();
+	*/ 
+}
+
 
 /**
  * Callback function passed to CURLOPT_WRITEFUNCTION
@@ -319,9 +360,10 @@ Papers::Papers(std::vector<std::string> ids) : ids(ids) {
 	initialize();
 
 	// For each id in ids, create a PDFConverter object 
-	for(auto id = ids.begin() ; id != ids.end() ; id++) {
-		PDFConverter pdfc = PDFConverter(*id);
-		curl_multi_add_handle(mhandle,  pdfc.handle);
+	for(std::vector<T>::iterator id = ids.begin() ; id != ids.end() ; id++){
+		PDFConverter::PDFConverter(*id) ; 
+		CURL *easy_handle = PDFConverter::handle(handle) ; 
+		curl_multi_add_handle( mhandle,  easy_handle  ) ;  
 	}
 
 	perform(); // or Papers::perform ? 
@@ -332,9 +374,9 @@ Papers::Papers(std::vector<std::string> ids) : ids(ids) {
 	cleanup(); // or  Papers::cleanup()?
 }
 
-// Papers::Papers(std::string pdf) {
-// 	PDFConverter(pdf);
-// }
+Papers::Papers(PDF pdf) {
+	PDFConverter::PDFConverter(pdf) ; 
+}
 
 /////////////////////////////////
 //    BulkDownloader Class    //
@@ -348,4 +390,34 @@ void BulkDownloader::downloadTar() {
 
 void BulkDownloader::decompress() {
 	system("tar -xvf ./pdfs/${name}");
+}
+
+/** 
+ * opening any folder and saving all file-names in a vector<string>
+ * used in BulkDownloader::constructPapers()
+ */
+vector<string> openDir(string path) {
+	DIR    *dir;
+    dirent *pdir;
+    vector<string> files;
+    dir = opendir(path.c_str());
+    while ((pdir = readdir(dir) ))
+    {
+        files.push_back(pdir->d_name);
+    }
+    return files;
+}
+
+void BulkDownloader::constructPapers() {
+	vector<string> f ;
+    fstream file;
+    map<string, int> m_query;
+    string c;
+
+	f = openDir(this->folder); // might need to give the path? 
+	for (vector<string>::iterator s = f.begin(); s != f.end(); s++)
+    {
+		Papers::Papers(*s) ; // creates a Papers object for each file in the folder 
+		remove(*s) ; 		 // deletes the file 
+    }
 }
