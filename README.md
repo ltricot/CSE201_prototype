@@ -14,6 +14,14 @@ The crawler's goal is to amass data from arxiv. We build a bipartite graph from 
 
 The data we must obtain from arxiv is therefore two-fold. We use the arxiv API to request author metadata for edges of type (1.). We use arxiv's S3 bucket to download PDFs _en masse_ and extract citations from the text using pattern matching.
 
+@ghjuliasialelli
+@YassineMarrakchi
+@mariabenkhadra
+@deivisbanys
+@TotoJean
+@Smakson
+@ltricot
+
 ### Database
 
 The database is subdivided in a number of storage units:
@@ -22,14 +30,24 @@ The database is subdivided in a number of storage units:
 3. the user likes as a key-value store on Azure Cosmos
 4. the cluster labels as a csv
 
+@Abdelrahmansameh
+
+### Server & API: (to come)
+
+An API to the recommendation service.
+
+@deivisbanys
+@TotoJean
+@ltricot
+
 ### Recommendation
 
 A number of algorithms come together to produce the final recommendations. We implement the following:
-1. MinHash
-2. Label propagation for clustering
-3. KNN for candidate production
-4. Matrix Factorization for match scoring and user/paper embedding
-5. TF-IDF for content based embedding
+1. MinHash @jjbl99
+2. Label propagation for clustering @MarineHoche
+3. KNN for candidate production @clemie
+4. Matrix Factorization for match scoring and user/paper embedding @shrey183
+5. TF-IDF for content based embedding @MarineHoche
 
 ## Documentation
 
