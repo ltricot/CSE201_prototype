@@ -2,16 +2,20 @@
 
 window_home::window_home()
 {
+    // Create the window
+    home = new QWidget;
+    home->move(QApplication::desktop()->screen()->rect().center() - home->rect().center());
+    home->setWindowTitle("Interests");
+    home->setMinimumSize(500, 200);
 
-    home = new QWidget; // The window
-    home->move(QApplication::desktop()->screen()->rect().center() - home->rect().center()); // center the window
-    QVBoxLayout *layout = new QVBoxLayout; // its layout
-    // Create the text that is going to be displayed in the window home
-    QLabel *title = new QLabel; // the title and its parameters
+    // Layout
+    QVBoxLayout *layout = new QVBoxLayout;
+
+    // A Label for the text
+    QLabel *title = new QLabel;
     title->setText("What are you ineterested in?");
     title->setFont(QFont("Courrier", 15, QFont::Bold));
-    // Give a title to the window home
-    home->setWindowTitle("Interests");
+
     // Create some checkboxes associated tot the topics of arXiv
     physics = new QCheckBox("Physics");
     math = new QCheckBox("Mathematics");
@@ -21,8 +25,10 @@ window_home::window_home()
     stat = new QCheckBox("Statistics");
     eess = new QCheckBox("Electrical Engineering and Systems Science");
     econ = new QCheckBox("Economics");
+
     // Create the button to valilade
     validate_button = new QPushButton("Validate");
+
     // Add all the elements to the layout (button, checkboxes and text)
     layout->addWidget(title);
     layout->addWidget(physics);
@@ -34,7 +40,7 @@ window_home::window_home()
     layout->addWidget(eess);
     layout->addWidget(econ);
     layout->addWidget(validate_button);
-    // Set the layout in the window and its minimal size
+
+    // Set the layout
     home->setLayout(layout);
-    home->setMinimumSize(500, 200);
 }

@@ -12,15 +12,14 @@ class info_user{
         // generator fill up the storage with 0
         info_user();
 
-        // the update function take the checkboxes in input and fill the storage info with 0 and 1
+        // Iterating over the checkboxes list and fills the storage accordingly i.e. 0 for unchecked and 1 for checked
         void update();
 
-        // take the list of 0 and 1 (equivalent to info) from the server and update checkboxes
+        // Iterating over the storage list it updates the status of the checkboxes i.e. checks it if 1 and unchecks it if 0
         void update_from_server(int a[154]);
 
         // give the associated checkbox
         QCheckBox* give_check(int a);
-
 
     private:
         // Create a list of 0 and 1

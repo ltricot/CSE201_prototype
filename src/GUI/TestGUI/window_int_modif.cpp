@@ -23,6 +23,8 @@ window_int_modif::window_int_modif(info_user &info)
     modif_inter->setMinimumSize(400, 400);
     QVBoxLayout *modif_lay = new QVBoxLayout;
     QTabWidget *tabs_int = new QTabWidget;
+
+    // Add the widgets
     for (int i = 0; i < 51; i ++)
     {
         l_mod_phy->addWidget(info.checkboxes[i]);
@@ -71,10 +73,16 @@ window_int_modif::window_int_modif(info_user &info)
     }
     modif_econ->setLayout(l_mod_econ);
     tabs_int->addTab(modif_econ, "Economics");
+
+    // Add the tabs
     modif_lay->addWidget(tabs_int);
+
+    // Create the button
     QPushButton *save_int_button = new QPushButton;
     save_int_button->setText("Save");
     modif_lay->addWidget(save_int_button);
+
+    // Layout and button connection
     modif_inter->setLayout(modif_lay);
     QObject::connect(save_int_button, SIGNAL(clicked()), modif_inter, SLOT(hide()));
 }

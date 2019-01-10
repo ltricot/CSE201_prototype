@@ -24,7 +24,7 @@ int main(int argc, char *argv[])
     // CREATION OF THE APPLICATION
     QApplication app(argc, argv);
 
-    // User profile
+    // User profile and create some windows
     info_user info;
     windows_precise windows_precise;
     window_home window_home;
@@ -39,6 +39,7 @@ int main(int argc, char *argv[])
 
     // BEGINNIN OF THE APPLICATION
     int ok = QMessageBox::question(home, "Hello", "Welcome to our app, let's start", QMessageBox::Ok); // Display a message box
+
     if (ok == QMessageBox::Ok) // Check that the button has been clicked and manage the different cases
     {
         int answer = QMessageBox::question(home, "Log in", "Have you an account?", QMessageBox::Yes | QMessageBox::No); // Open a message box that ask if the user want to log in or sign in
@@ -64,6 +65,7 @@ int main(int argc, char *argv[])
                 main.main->move(QApplication::desktop()->screen()->rect().center() - main.main->rect().center()); // center it
                 main.main->show();
             }
+
             // If the ID is empty
             else
             {
@@ -71,14 +73,13 @@ int main(int argc, char *argv[])
                 QMessageBox::critical(home, "Error", "ID error");
             }
         }
+
         else // Second case : it is a new user
         {
             QMessageBox::information(home, "Sign in", "We are going to ask you a few questions about your interests, please answer carefully"); // Display an information box
 
             // Home window appears
             home->show();
-
-
 
             // check if the user has finished its choice
             QObject::connect(window_home.validate_button, SIGNAL(clicked()), home, SLOT(hide()));
@@ -102,6 +103,7 @@ int main(int argc, char *argv[])
                     bool t_stat = window_home.stat->isChecked();
                     bool t_elec = window_home.eess->isChecked();
                     bool t_econ = window_home.econ->isChecked();
+
                     // if the user selected at least one of them
                     if (t_phy or t_math or t_cs or t_bio or t_fin or t_stat or t_elec or t_econ)
                     {
@@ -211,6 +213,7 @@ int main(int argc, char *argv[])
                             }
                         }
                     }
+
                     // display an error if none has been selected
                     else
                     {
@@ -221,6 +224,7 @@ int main(int argc, char *argv[])
                             a = true;
                         }
                     }
+
                  info.update(); // update the user info
                  // Give it to the server
                 }
