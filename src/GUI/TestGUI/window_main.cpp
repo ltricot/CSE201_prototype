@@ -2,17 +2,20 @@
 
 window_main::window_main(info_user &info)
 {
-
+    // Take infos
     window_int_modif mod(info);
     modif_inter = mod.modif_inter;
     window_id id;
     info_id = id.id_info;
+    past_likes likes_0;
+    likes = likes_0.likes;
 
     // CREATION OF THE MAIN WINDOW
     main = new QWidget; // The window
     main->setWindowTitle("App name"); // Its title
     main->setMinimumSize(800, 800); // Its size
     QVBoxLayout *l_main = new QVBoxLayout;
+
     // tabs and scrolls
     QTabWidget *tabs = new QTabWidget(main);
     QScrollArea *page_info_scroll = new QScrollArea;
@@ -23,22 +26,31 @@ window_main::window_main(info_user &info)
     QVBoxLayout *l_recom = new QVBoxLayout;
     QScrollArea *page_param_scroll = new QScrollArea;
     QGridLayout *l_param = new QGridLayout;
-    // Interior (buttons, text, webpages...)
+
+    // Like buttons
     QPushButton *like_button = new QPushButton;
     like_button->setIcon(QIcon("/Users/damienbradelle/TestGUI/like.png"));
     QPushButton *dislike_button = new QPushButton;
     dislike_button->setIcon(QIcon("/Users/damienbradelle/TestGUI/dislike.png"));
     QPushButton *indiff_button = new QPushButton;
+    indiff_button->setIcon(QIcon("/Users/damienbradelle/TestGUI/indiff.png"));
+
+    // Webpage display
     QWebEngineView *view = new QWebEngineView;
     view->load(QUrl("https://arxiv.org/abs/1812.03184"));
+
+    // Layout of the like page
     l_like->addWidget(view, 0, 0, 1, 0);
     l_like->addWidget(like_button,1,2);
     l_like->addWidget(dislike_button,1,0);
     l_like->addWidget(indiff_button,1,1);
-    indiff_button->setIcon(QIcon("/Users/damienbradelle/TestGUI/indiff.png"));
+
+    // For the info page
     QLabel *text_info = new QLabel;
     text_info->setText("Lol, coming soon (before 2024)");
     l_info->addWidget(text_info);
+
+    // For the likeable page
     QTextEdit *rec_1_lab = new QTextEdit;
     rec_1_lab->setText("[1812.03857] The role of the time delay in the reflection and transmission of ultrashort electromagnetic pulses on a system of parallel current sheets");
     QPushButton *recom_1 = new QPushButton;
@@ -57,6 +69,9 @@ window_main::window_main(info_user &info)
     l_recom->addWidget(recom_2);
     l_recom->addWidget(rec_3_lab);
     l_recom->addWidget(recom_3);
+
+    // Parameters
+    // Buttons
     QPushButton *my_id = new QPushButton;
     my_id->setText("My ID");
     QPushButton *my_like = new QPushButton;
@@ -66,16 +81,20 @@ window_main::window_main(info_user &info)
     l_param->addWidget(my_id, 0, 0, Qt::AlignCenter);
     l_param->addWidget(my_like, 1, 0, Qt::AlignCenter);
     l_param->addWidget(my_inte, 2, 0, Qt::AlignCenter);
+    // Logo
     QLabel *logo_label = new QLabel;
     QPixmap logo_pix =  QPixmap("/Users/damienbradelle/TestGUI/logo_2.png");
     logo_pix.scaledToWidth(100);
     logo_pix.scaledToHeight(100);
     logo_label->setPixmap(logo_pix);
     l_param->addWidget(logo_label, 3, 0, 5, 0, Qt::AlignCenter);
+    // Layout
     page_info_scroll->setLayout(l_info);
     page_like_scroll->setLayout(l_like);
     page_recom_scroll->setLayout(l_recom);
     page_param_scroll->setLayout(l_param);
+
+    // Set up the tabs
     tabs->addTab(page_info_scroll, "Information");
     tabs->addTab(page_like_scroll, "Let's like!");
     tabs->addTab(page_recom_scroll, "Likeable");
@@ -83,5 +102,6 @@ window_main::window_main(info_user &info)
     l_main->addWidget(tabs);
     main->setLayout(l_main);
     QObject::connect(my_inte, SIGNAL(clicked()), modif_inter, SLOT(show()));
-    QObject::connect(my_id, SIGNAL(clicked()), info_id, SLOT(show())); // Display the window
+    QObject::connect(my_id, SIGNAL(clicked()), info_id, SLOT(show()));
+    QObject::connect(my_like, SIGNAL(clicked()), likes, SLOT(show()));
 }

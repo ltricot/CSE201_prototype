@@ -2,10 +2,13 @@
 
 info_user::info_user()
 {
+    // Fill the info storage
     for (int i = 0; i < 154; i++)
     {
         info[i] = 0;
     }
+
+    // Create all the checkboxes
     QCheckBox *galax = new QCheckBox("Astrophysics of Galaxies");
     checkboxes[0]=galax;
     QCheckBox *cosmo = new QCheckBox("Cosmology and Nongalactic Astrophysics");
@@ -316,6 +319,7 @@ info_user::info_user()
     checkboxes[153] = theoretical_econ;
 }
 
+// Update of the storage list from the checkboxes
 void info_user::update()
 {
     for(int i = 0; i < 154; i ++)
@@ -331,6 +335,7 @@ void info_user::update()
     }
 }
 
+// Update the checkboxes from the storage list
 void info_user::update_from_server(int a[154])
 {
     for (int i = 0; i < 154; i ++)
@@ -339,6 +344,7 @@ void info_user::update_from_server(int a[154])
     }
 }
 
+// Checks a given checkbox
 QCheckBox* info_user::give_check(int a)
 {
     if (a > -1 or a < 154)

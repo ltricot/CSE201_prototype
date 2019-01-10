@@ -10,7 +10,8 @@ SOURCES += \
     info_user.cpp \
     window_int_modif.cpp \
     new_id.cpp \
-    display_id.cpp
+    display_id.cpp \
+    display_like.cpp
 
 HEADERS += \
     info_user.h \
@@ -19,4 +20,5 @@ HEADERS += \
     windows_precise.h \
     window_int_modif.h \
     new_id.h \
-    display_id.h
+    display_id.h \
+    display_like.h
