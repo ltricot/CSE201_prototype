@@ -211,7 +211,7 @@ Crawler::iterator& Crawler::iterator::operator++() {
     /* @brief implementation of the incrementation operator of the cursor iterator.
      * @details the buffer is the place where we store the Edges fetched by the crawler.
      * The while loop checks two conditions: 
-     *      1) if the Edge pointed by the cursor is already in the bloom (it was seen)
+     *      1) if the Edge pointed by the cursor is already in the Set (it was seen)
      *      2) and if the cursor is not already at the end of the buffer
      * then we have to increment again the iterator i.e. go to the next Edge.
      * 
@@ -219,13 +219,17 @@ Crawler::iterator& Crawler::iterator::operator++() {
      * and if the cursor is at the end of the buffer, we have to empty it and call the crawler to fetch new Edges
      * which we will put in the buffer.
      */
-    while (bloom.seen(*cursor) && cursor != buffer.end()) {
+
+    // while (bloom.seen(*cursor) && cursor != buffer.end())
+    while (crawler->Set.find(*cursor)!= Set.end() && cursor != buffer.end()) {
         cursor++;
     }
 
     auto edge = *cursor;
-    if (!bloom.seen(edge)) {
-        bloom.add(edge);
+
+    // if (!bloom.seen(edge))
+    if ( crawler->Set.find(edge) == Set.end()  ) {
+        // bloom.add(edge);
     }
 
     if (cursor == buffer.end()) {
@@ -285,18 +289,30 @@ std::vector<Paper> Crawler::getSummary(std::string xmlstr) {
  */
 std::vector<Edge> Crawler::crawl(int steps){
     std::vector<Edge> buffer ; 
+    std::vector<Edge> tempPapers ; 
+    std::vector<Edge> tempAuthors ; 
+
     while(steps --> 0){
 
         // case where from = 1, i.e. request comes from papers
         // then, we call fromPapers()
         if(from){ 
-            from = !from ; 
-
             std::vector<Paper> start = {source} ; // vector of one Paper with value source
-            buffer = fromPapers(start); // initialized before the while loop
+
+            std::vector<Paper> unseen ; // vector of Paper objects not already in the Set (i.e. we haven't seen them)
+
+            for(std::vector<Paper>::iterator paper = start.begin(); paper != start.end(); paper++) {
+                if( Set.find(paper.id) != Set.end()  ) {
+                    unseen.push_back(*paper) ; // do we need * here ?
+                }
+            }
+
+            tempPapers = fromPapers(unseen); 
+            
+            // we get the references of the papers we havent already seen 
 
             std::vector<Paper> papers ;
-            for(std::vector<Edge>::iterator edge = buffer.begin(); edge != buffer.end(); edge++) {
+            for(std::vector<Edge>::iterator edge = tempPapers.begin(); edge != tempPapers.end(); edge++) {
                 papers.push_back(edge->paper);
             }
 
@@ -306,15 +322,27 @@ std::vector<Edge> Crawler::crawl(int steps){
 
             for (int i = 0; i != buffer.size() ; i++) {
                 if(buffer[i]->paper == references[i][0]){
-                    newEdges.push_back(  Edge(    buffer[i]->author,   references[i][1]   )    ) ; 
+                    // we add this edge only if we havent seen the author nor the paper
+                    if(  Set.find(buffer[i]->author.name) == Set.end()   &&   Set.find(references[i][1].id) == Set.end()    ) {
+                        newEdges.push_back(  Edge(    buffer[i]->author,   references[i][1]   )    ) ; 
+                    } 
                 }
             }
 
-            // Move elements from newEdges to buffer.
-            buffer.insert(
-                buffer.end(),
+            // which one will we be needing to do?
+
+            // Move elements from newEdges to tempPapers.
+            tempPapers.insert(
+                tempPapers.end(),
                 std::make_move_iterator(newEdges.begin()),
                 std::make_move_iterator(newEdges.end())
+            );
+
+            // Move elements from tempPapers to buffer.
+            buffer.insert(
+                buffer.end(),
+                std::make_move_iterator(tempPapers.begin()),
+                std::make_move_iterator(tempPapers.end())
             );
 
         }
@@ -323,13 +351,25 @@ std::vector<Edge> Crawler::crawl(int steps){
         // then, we call fromAuthors()
         else {
             std::vector<Author> authors ; 
-            for(std::vector<Edge>::iterator edge = buffer.begin(); edge != buffer.end(); edge++) {
-                authors.push_back(edge->author);
+            for(std::vector<Edge>::iterator edge = tempPapers.begin(); edge != tempPapers.end(); edge++) {
+                // if we havent seen this author we take it 
+                if( Set.find(buffer[i]->author.name) == Set.end()  ){
+                    authors.push_back(edge->author);
+                }
             }
             
-        buffer.push_back(fromAuthors(authors)) ; 
+        tempAuthors = fromAuthors(authors) ; 
+
+        // Move elements from tempAuthors to buffer.
+            buffer.insert(
+                buffer.end(),
+                std::make_move_iterator(tempAuthors.begin()),
+                std::make_move_iterator(tempAuthors.end())
+            );
         
         }
+
+        from = !from ; 
 
     }
 

@@ -35,6 +35,8 @@ class Crawler {
 
     public:
 
+    std::set<std::string> Set ; 
+
     // constructor
     Crawler(Paper source) : source(source);
 
