@@ -47,28 +47,83 @@ window_main::window_main(info_user &info)
 
     // For the info page
     QLabel *text_info = new QLabel;
-    text_info->setText("Lol, coming soon (before 2024)");
+    text_info->setWordWrap(true);
+    text_info->setText("Welcome on the Tinder for researchers (God knows that need it!)\n \
+\n \
+Here is a brief presentation of the application. \n \
+To be simple, we will show you some arXiv articles according to the interests you gave us when you sign in. You will be able to react to them : like, dislike, indifferent.\n \
+According to what you like or not, we will recommend you articles : they will be selected just for you and should match with your interests. \
+And of course we keep track of all the articles you like.\n \
+\n \
+How to use the app?\n \
+You are currently in the “Information” section but you can move to three other sections.\n \
+In “Let’s like!”, we will show you arXiv articles fitting  with your interests. Give your opinion about them using three buttons at the bottom. Of course, only you can see if you like or not an article.\n \
+In the “Likeable” section, we give you some articles that you should like according to your past like, don’t hesitate to give your opinion about them!\n \
+Finally, in the “parameters”, you can see you ID, modify your interests and see the articles you liked.\n \n \
+Enjoy!");
     l_info->addWidget(text_info);
 
     // For the likeable page
-    QTextEdit *rec_1_lab = new QTextEdit;
+    QLabel *rec_1_lab = new QLabel;
+    QGridLayout *l_1 = new QGridLayout;
+    QWidget *w_1 = new QWidget;
+    rec_1_lab->setWordWrap(true);
     rec_1_lab->setText("[1812.03857] The role of the time delay in the reflection and transmission of ultrashort electromagnetic pulses on a system of parallel current sheets");
     QPushButton *recom_1 = new QPushButton;
     recom_1->setText("Let's see!");
-    QTextEdit *rec_2_lab = new QTextEdit;
+    likes_0.display_article("1812.03857");
+    QObject::connect(recom_1, SIGNAL(clicked()), likes_0.article, SLOT(show()));
+    QPushButton *like_button_1 = new QPushButton;
+    like_button_1->setIcon(QIcon("/Users/damienbradelle/TestGUI/like.png"));
+    QPushButton *dislike_button_1 = new QPushButton;
+    dislike_button_1->setIcon(QIcon("/Users/damienbradelle/TestGUI/dislike.png"));
+    l_1->addWidget(rec_1_lab, 0, 0, 1, 3);
+    l_1->addWidget(dislike_button_1, 1, 0);
+    l_1->addWidget(recom_1, 1, 1);
+    l_1->addWidget(like_button_1, 1, 2);
+    w_1->setLayout(l_1);
+    w_1->setMaximumSize(700, 100);
+    l_recom->addWidget(w_1);
+
+    QLabel *rec_2_lab = new QLabel;
+    QGridLayout *l_2 = new QGridLayout;
+    QWidget *w_2 = new QWidget;
     rec_2_lab->setText("[1812.03811] Semiconductor laser mode locking stabilization with optical feedback from a silicon PIC");
     QPushButton *recom_2 = new QPushButton;
+    likes_0.display_article("1812.03811");
+    QObject::connect(recom_2, SIGNAL(clicked()), likes_0.article, SLOT(show()));
     recom_2->setText("Let's see!");
-    QTextEdit *rec_3_lab = new QTextEdit;
+    QPushButton *like_button_2 = new QPushButton;
+    like_button_2->setIcon(QIcon("/Users/damienbradelle/TestGUI/like.png"));
+    QPushButton *dislike_button_2 = new QPushButton;
+    dislike_button_2->setIcon(QIcon("/Users/damienbradelle/TestGUI/dislike.png"));
+    l_2->addWidget(rec_2_lab, 0, 0, 1, 3);
+    l_2->addWidget(dislike_button_2, 1, 0);
+    l_2->addWidget(recom_2, 1, 1);
+    l_2->addWidget(like_button_2, 1, 2);
+    w_2->setLayout(l_2);
+    w_2->setMaximumSize(700, 100);
+    l_recom->addWidget(w_2);
+
+    QLabel *rec_3_lab = new QLabel;
+    QGridLayout *l_3 = new QGridLayout;
+    QWidget *w_3 = new QWidget;
     rec_3_lab->setText("[1812.03808] Ultrasensitive hybrid optical skin");
+    likes_0.display_article("1812.03808");
     QPushButton *recom_3 = new QPushButton;
     recom_3->setText("Let's see!");
-    l_recom->addWidget(rec_1_lab);
-    l_recom->addWidget(recom_1);
-    l_recom->addWidget(rec_2_lab);
-    l_recom->addWidget(recom_2);
-    l_recom->addWidget(rec_3_lab);
-    l_recom->addWidget(recom_3);
+    QObject::connect(recom_3, SIGNAL(clicked()), likes_0.article, SLOT(show()));
+    QPushButton *like_button_3 = new QPushButton;
+    like_button_3->setIcon(QIcon("/Users/damienbradelle/TestGUI/like.png"));
+    QPushButton *dislike_button_3 = new QPushButton;
+    dislike_button_3->setIcon(QIcon("/Users/damienbradelle/TestGUI/dislike.png"));
+    l_3->addWidget(rec_3_lab, 0, 0, 1, 3);
+    l_3->addWidget(dislike_button_3, 1, 0);
+    l_3->addWidget(recom_3, 1, 1);
+    l_3->addWidget(like_button_3, 1, 2);
+    w_3->setLayout(l_3);
+    w_3->setMaximumSize(700, 100);
+    l_recom->addWidget(w_3);
 
     // Parameters
     // Buttons
