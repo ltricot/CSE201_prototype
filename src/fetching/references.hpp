@@ -5,6 +5,8 @@
 #include <memory>
 #include <sstream>
 #include <map>
+#include <pair>
+
 #include <curl/curl.h>
 
 
@@ -139,6 +141,8 @@ class Papers {
      * no need to do a curl request 
     */
     Papers(std::string pdf);
+
+    std:vector<std::pair<Paper, Paper>> getReferences();
 };
 
 
@@ -167,7 +171,4 @@ class BulkDownloader {
     void decompress() ;  // decompress the file 
 
     public:
-
-
-
-}; 
+};

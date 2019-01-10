@@ -28,10 +28,15 @@ class Crawler {
      * the content of all papers he shares an edge with.
      */
 
+    private:
+
+    bool from;  // when false: from authors. when true: from papers.
+    const Paper source;
+
     public:
 
     // constructor
-    Crawler();
+    Crawler(Paper source) : source(source);
 
     /**
      * Facilitator function wrapping libcurl calls.

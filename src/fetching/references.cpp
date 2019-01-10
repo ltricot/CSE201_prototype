@@ -306,7 +306,7 @@ void Papers::initialize() {
 }
 
 void Papers::perform() {
-	curl_multi_perform(this->mhandle, stillRunning) ; 
+	curl_multi_perform(this->mhandle, stillRunning);
 }
 
 void Papers::cleanup() {
@@ -316,7 +316,7 @@ void Papers::cleanup() {
 
 Papers::Papers(std::vector<std::string> ids) : ids(ids) {
 
-	initialize() ; 
+	initialize();
 
 	// For each id in ids, create a PDFConverter object 
 	for(auto id = ids.begin() ; id != ids.end() ; id++) {
@@ -324,12 +324,12 @@ Papers::Papers(std::vector<std::string> ids) : ids(ids) {
 		curl_multi_add_handle(mhandle,  pdfc.handle);
 	}
 
-	perform() ; // or Papers::perform ? 
+	perform(); // or Papers::perform ? 
 	//  will write the number of handles that still transfer data in stillRunning 
 
 	// kinda lost with the select thingy to know when a tranfer is done and when we can get the data (i.e. call getText right?)
 
-	cleanup() ; // or  Papers::cleanup()?
+	cleanup(); // or  Papers::cleanup()?
 }
 
 // Papers::Papers(std::string pdf) {
