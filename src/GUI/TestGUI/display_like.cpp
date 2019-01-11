@@ -37,7 +37,6 @@ QWidget* past_likes::display_article(std::string ref)
     QPushButton *quit = new QPushButton;
     quit->setText("Back");
     QObject::connect(quit, SIGNAL(clicked()), article, SLOT(hide()));
-    QObject::connect(quit, SIGNAL(clicked()), likes, SLOT(show()));
     lay_art->addWidget(quit);
 
     article->setLayout(lay_art);
