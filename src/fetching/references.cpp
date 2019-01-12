@@ -428,6 +428,34 @@ Papers BulkDownloader::constructPapers() {
 // no time to do better
 std::map<std::string, std::vector<std::string>> allReferences;
 
+
+void writeFile(std::map<std::string, std::vector<std::string>> data , std::string filename){
+	std::string file = filename + ".txt" ; // also a prefix to say where its going? but VM details? 
+	std::ofstream fs(file);
+
+	if(!fs){
+		std::cerr<<"Cannot open the output file."<<std::endl;
+	}
+
+	for(std::map<std::string, std::vector<std::string>>::iterator pair = data.begin(); pair != data.end() ; pair++){
+		fs << pair->first << endl ; 
+		
+		for(std::vector<std::string>::iterator ref = pair->second.begin() ; ref != pair->second.end() ; ref++){
+			fs << *ref ; 
+		}
+
+		fs << endl ; 
+
+	}
+
+
+	fs.close() ; 
+
+}
+
+
+
+
 // must be called a number of times.
 void setUpReferences(std::string folder, std::vector<std::string> archives) {
     for(auto archive : archives) {
