@@ -20,7 +20,7 @@ class tfidf {
         //iterative part
         int counter=0; //to count the number of words and do the mapping in vocab
         std::map<std::string, int> vocab; // set containing all the words
-        std::vector<std::vector<int>> Occ2d; //iterative version of OccMat
+        std::vector<std::vector<double>> Occ2d; //iterative version of OccMat
         void update(const std::vector<std::string> & parsed_doc); //function that update vocab and Occ2d in real time
         void reader(int argc, char *argv[]); //function that get the abstract, parse them and then treat them with update()
 
@@ -39,6 +39,6 @@ class tfidf {
         /*function that creates a vector that stores for each word in how many documents it appears*/
         void createCountDoc(); 
 
-        void calweightMat(); //compute the tf-idf weight matrix
+        void calweightMat(int argc, char *argv[]); //compute the tf-idf weight matrix
 
 };

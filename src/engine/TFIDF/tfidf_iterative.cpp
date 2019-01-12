@@ -5,7 +5,6 @@
 #include "json.hpp"
 
 using namespace nlohmann;
-using namespace tfidf;
 
 //convert a string in a vector of words
 std::vector<std::string> textParse(const std::string & summary) { 
@@ -21,24 +20,24 @@ std::vector<std::string> textParse(const std::string & summary) {
 		return vec;
 }
 
-void update(const std::vector<std::string> & parsed_doc){
-    std::vector<int> OccVec(vocab.size(),0) //array that stores the number of occurences of a word
+void tfidf::update(const std::vector<std::string> & parsed_doc){
+    std::vector<double> OccVec(vocab.size(),0); //array that stores the number of occurences of a word
     for (std::string word : parsed_doc) {
         if ( vocab.find(word) == vocab.end() ) { //if it is the first time we encounter the word then insert it in the map
 		    vocab.insert(std::pair<std::string, int>(word,counter)); // a map that associates to each word an integer
-            OccVec.pushback(1); 
+            OccVec.push_back(1); 
 		    counter++;
 	    }	
         else {
             OccVec[vocab[word]]+=1;
         }
     }
-    Occ2d.pushback(OccVec);
+    Occ2d.push_back(OccVec);
     OccVec.clear();
 }
 
 
-void reader(int argc, char *argv[]) {
+void tfidf::reader(int argc, char *argv[]) {
     assert(argc == 2);
     std::ifstream infile(argv[1]);
     std::string line;
@@ -53,17 +52,18 @@ void reader(int argc, char *argv[]) {
     }
 }
 
-void createOccMat(){
-    nrow = Occ2d.size()
-    ncol = vocab.size()
+void tfidf::createOccMat(){
+    nrow = Occ2d.size();
+    ncol = vocab.size();
     OccMat.resize(nrow, ncol);
     for (int i = 0; i < nrow; ++i) {
             Occ2d[i].resize(ncol,0); //they all have the same size
-			OccMat.row(i)=Occ2d[i];
+            Eigen::Map<Eigen::VectorXd> vec(Occ2d[i].data(),Occ2d[i].size()) ;
+			OccMat.row(i)=vec;
 	}
 }
 
-void createCountDoc() {
+void tfidf::createCountDoc() {
 	Eigen::MatrixXd dataMat(OccMat); //copy OccMat
 	CountDoc = Eigen::VectorXd::Zero(ncol);
 	for (unsigned int i = 0; i <nrow; ++i) {
@@ -79,7 +79,7 @@ void createCountDoc() {
 	dataMat.resize(0,0);
 }
 
-void calweightMat(int argc, char *argv[]) {
+void tfidf::calweightMat(int argc, char *argv[]) {
     reader(argc,argv);
     //when the iterative part is over
     createOccMat();
