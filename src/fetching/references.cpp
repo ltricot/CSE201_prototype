@@ -271,15 +271,17 @@ PDFConverter::PDFConverter(std::string id) {
 	// curl_global_cleanup(); 
 }
 
+// replaced by function below. mark deleted ?
 PDFConverter::PDFConverter(std::stringstream *pdf) {
 	pdfBuffer << pdf->str();
 }
 
+// used when constructing converter with an already obtained PDF
+// i.e. with the output of the bulk downloads
 PDFConverter::PDFConverter(PDF pdf) {
 	// maybe an easy way to do this is : 
 	std::ifstream input( pdf, std::ios::binary );
     std::vector<unsigned char> pdfBuffer(std::istreambuf_iterator<char>(input), {}); 	// copies all data into buffer
-
 
 	/* that doesnt look efficient to me 
 	fstream file ; 
@@ -296,7 +298,6 @@ PDFConverter::PDFConverter(PDF pdf) {
 	*/ 
 }
 
-
 /**
  * Callback function passed to CURLOPT_WRITEFUNCTION
  * Writes the content of the pdf into std::stringstream pdfBuffer;
@@ -312,32 +313,9 @@ string PDFConverter::getText() {
 }
 
 
-
 ////////////////////////
 //    Papers Class    //
 ////////////////////////
-
-
-
-/**
- * Constructor of the Papers class
- */
-
-
-/**
-     * All the work should be done here. To make the use of this object simple,
-     * when this constructor returns, the ``edges`` attributed should be
-     * finalized.
-     * 
-     * For each id in ids, create a PDFConverter object.
-     * Manage those with a curl multi handle and launch all downloads. Using the
-     * ``select`` functionality, notice when each download finishes and immediately
-     * call the associated PDFConverter's ``getText`` method to convert the pdf to text.
-     * 
-     * For every pdf converted to text this way, construct a ``References`` object
-     * which will be responsible for reference pattern matching.
-     */
-
 
 void Papers::initialize() {
 	this->mhandle = curl_multi_init() ; 
@@ -351,7 +329,7 @@ void Papers::cleanup() {
 	curl_multi_cleanup(this->mhandle) ; 
 }
 
-
+// not a priority anymore
 Papers::Papers(std::vector<std::string> ids) : ids(ids) {
 	initialize();
 
@@ -369,8 +347,23 @@ Papers::Papers(std::vector<std::string> ids) : ids(ids) {
 	cleanup(); // or  Papers::cleanup()?
 }
 
-Papers::Papers(PDF pdf) {
-	PDFConverter pdfc = PDFConverter(pdf);
+// this is the priority
+Papers::Papers(std::vector<std::string> ids, std::vector<PDF> pdfs) : ids(ids) {
+    if(ids.size() != pdfs.size())
+        throw "argument error";
+
+    for(int i = 0; i < ids.size(); i++) {
+    	PDFConverter pdfc(pdfs[i]);
+        Paper paper(ids[i]);
+        References refs(paper, pdfc.getText());
+
+        // put found references in this object
+        references.insert(references.end(), refs.begin(), refs.end());
+    }
+}
+
+std::vector<std::pair<Paper, Paper>> Papers::getReferences() {
+    return this->references;  // explicitness
 }
 
 // map from papers to all that they reference
@@ -389,18 +382,19 @@ std::vector<std::pair<Paper, Paper>> getReferences(std::vector<Paper> papers) {
     return refs;
 }
 
-/////////////////////////////////
+////////////////////////////////
 //    BulkDownloader Class    //
 ////////////////////////////////
 
 
 void BulkDownloader::downloadTar() {
-	// aws cli must be configured with an aws account
-	system("aws s3 cp --request-payer requester s3://arxiv/pdf/${name} ./pdfs");
+    std::string cmd = "aws s3 cp --request-payer requester s3://arxiv/pdf/" + which + " " + folder;
+	system(cmd.c_str());
 }
 
 void BulkDownloader::decompress() {
-	system("tar -xvf ./pdfs/${name}");
+    std::string cmd = "tar -xvf " + folder + " " + which;
+	system(cmd.c_str());
 }
 
 /** 
@@ -412,10 +406,9 @@ vector<string> openDir(string path) {
     dirent *pdir;
     vector<string> files;
     dir = opendir(path.c_str());
-    while ((pdir = readdir(dir) ))
-    {
+    while(pdir = readdir(dir))
         files.push_back(pdir->d_name);
-    }
+
     return files;
 }
 

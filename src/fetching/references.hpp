@@ -29,12 +29,16 @@ class References {
      */
 
     private:
+
+    // simple internal alias
+    typedef std::pair<Paper, Paper> reference_t;
+
     /**
      * Private variables:
      *      - ``references``: holds parsed references.
      *      - ``textBuffer``: text of paper's pdf.
      */
-    std::vector<References> references;
+    std::vector<reference_t> references;
     const std::string textBuffer;
 
     public:
@@ -43,7 +47,7 @@ class References {
      * Simple delegation to the underlying ``references`` vector. Give this no
      * thought when developing this object, only when using it.
      */
-    typedef std::vector<References>::iterator iterator;
+    typedef std::vector<reference_t>::iterator iterator;
     iterator begin() { return this->references.begin(); }
     iterator end() { return this->references.end(); }
 
@@ -116,27 +120,21 @@ class Papers {
     const std::vector<std::string> ids;
 
     // in-object convenience
-    std::map<std::string, Paper> papers;
-    std::map<Paper, std::shared_ptr<References>> references;
-
-    // pdf conversion objects
-    std::map<Paper, std::shared_ptr<PDFConverter>> PDFConverters;
+    std::vector<Paper> papers;
+    std::vector<std::pair<Paper, Paper>> references;
 
     // curl multi handle
     CURLM *mhandle; // maybe should be public like for thr PDFConverter class?
 
     // curl stuff - you may change this structure as you will
+    int *stillRunning;
     void initialize();
     void perform();
     void cleanup();  // should be idempotent
 
-    int *stillRunning;
-
     public:
-    std::vector<Edge> edges;
 
-    /**
-     * All the work should be done here. To make the use of this object simple,
+    /** All the work should be done here. To make the use of this object simple,
      * when this constructor returns, the ``edges`` attributed should be
      * finalized.
      * 
@@ -150,19 +148,17 @@ class Papers {
      */
     Papers(std::vector<std::string> ids);
 
-    /**
-     * We need a second Papers constructor, which takes as argument the PDF files directly
+    /** We need a second Papers constructor, which takes as argument the PDF files directly
      * no need to do a curl request 
-    */
-    Papers(PDF pdf); //Papers(std::string pdf);
+     */
+    Papers(std::vector<std::string> ids, std::vector<PDF> pdfs);
 
     std::vector<std::pair<Paper, Paper>> getReferences();
 };
 
 
 class BulkDownloader {
-    /**
-     * Second PDF downloader component,
+    /** Second PDF downloader component,
      * doesn't choose the pdfs downloaded, but much faster.
      * 
      * Downloads the pdfs from S3, somewhere where 
@@ -181,11 +177,17 @@ class BulkDownloader {
      */
 
     private:
+
+    std::string which;
     std::string folder;      // name of the folder into which the files will be downloaded 
+
+    public:
+
     void downloadTar();        // downloads a file .tar.gz and stores it in the folder "./pdfs"
     void decompress();         // decompress the file 
     void constructPapers();    // opens each pdf downloaded and creates a Papers object, then deletes each pdf file
-                                // idk how to make it delete the whole folder at the end ? 
-    void destroy();             // deletes the folder 
+
+    BulkDownloader(std::string which, std::string folder)
+        : which(which), folder(folder) {}
 
 };
