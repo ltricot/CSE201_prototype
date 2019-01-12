@@ -5,7 +5,6 @@
 #include <memory>
 #include <sstream>
 #include <map>
-#include <pair>
 
 #include <curl/curl.h>
 

@@ -38,7 +38,7 @@ class Crawler {
     std::set<std::string> Set ; 
 
     // constructor
-    Crawler(Paper source) : source(source);
+    Crawler(Paper source) : source(source) {}
 
     /**
      * Facilitator function wrapping libcurl calls.
