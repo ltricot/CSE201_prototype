@@ -140,13 +140,6 @@ class Crawler {
         Edge operator*() const;
     };
 
-    iterator begin() {
-        iterator it(this);
-        return it;
-    }
-
-    iterator end() {
-        iterator it(this);
-        return it;
-    }
+    iterator begin();
+    iterator end();
 };

@@ -233,6 +233,16 @@ Crawler::iterator &Crawler::iterator::operator++() {
 }
 #endif
 
+Crawler::iterator Crawler::begin() {
+    iterator it(this);
+    return it;
+}
+
+Crawler::iterator Crawler::end() {
+    iterator it(this);
+    return it;
+}
+
 std::vector<Paper> Crawler::getSummary(std::string xmlstr) {
     // return value
     std::vector<Paper> summ;

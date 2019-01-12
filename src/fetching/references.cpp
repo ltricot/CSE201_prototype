@@ -441,6 +441,7 @@ void setUpReferences(std::string folder, std::vector<std::string> archives) {
     }
 }
 
+// must find some kind of way to serialize / deserialize `allReferences`
 std::vector<std::pair<Paper, Paper>> getReferences(std::vector<Paper> papers) {
     std::vector<std::pair<Paper, Paper>> refs;
 

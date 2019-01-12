@@ -19,6 +19,9 @@
  */
 std::vector<std::pair<Paper, Paper>> getReferences(std::vector<Paper>);
 
+// download pdfs and extract references
+void setUpReferences(std::string folder, std::vector<std::string> archives);
+
 class References {
     /**
      * Object used to parse references from a paper's PDF.
