@@ -251,11 +251,8 @@ void extractText(stringstream &istr, outstream &ostr) {
  * 				so has to have access to the attributes of the BulkDownloader class ? 
  */
 PDFConverter::PDFConverter(std::string id) {
-
-	handle(this->handle) ; // or just handle(handle) ? 
-
 	// curl_global_init(CURL_GLOBAL_ALL);  i'm not sure if we should do it here, we only need to do it once per program
-	handle = curl_easy_init(); 
+	CURL *handle = curl_easy_init();
 
 	// creating the url
 	std::string URL = "https://arxiv.org/pdf/" + id;
@@ -356,14 +353,12 @@ void Papers::cleanup() {
 
 
 Papers::Papers(std::vector<std::string> ids) : ids(ids) {
-
 	initialize();
 
 	// For each id in ids, create a PDFConverter object 
-	for(std::vector<T>::iterator id = ids.begin() ; id != ids.end() ; id++){
-		PDFConverter::PDFConverter(*id) ; 
-		CURL *easy_handle = PDFConverter::handle(handle) ; 
-		curl_multi_add_handle( mhandle,  easy_handle  ) ;  
+	for(std::vector<std::string>::iterator id = ids.begin() ; id != ids.end() ; id++){
+		PDFConverter pdfc = PDFConverter(*id);
+		curl_multi_add_handle(mhandle, pdfc.handle);
 	}
 
 	perform(); // or Papers::perform ? 
@@ -375,7 +370,23 @@ Papers::Papers(std::vector<std::string> ids) : ids(ids) {
 }
 
 Papers::Papers(PDF pdf) {
-	PDFConverter::PDFConverter(pdf) ; 
+	PDFConverter pdfc = PDFConverter(pdf);
+}
+
+// map from papers to all that they reference
+// big object. not scalable for real data (> 1.5 million docs)
+// no time to do better
+std::map<std::string, std::vector<std::string>> allReferences;
+
+std::vector<std::pair<Paper, Paper>> getReferences(std::vector<Paper> papers) {
+    std::vector<std::pair<Paper, Paper>> refs;
+
+    for(auto from : papers) {
+        for(auto to : allReferences[from.id])
+            refs.push_back(std::make_pair(from, Paper(to)));
+    }
+
+    return refs;
 }
 
 /////////////////////////////////
@@ -417,7 +428,7 @@ void BulkDownloader::constructPapers() {
 	f = openDir(this->folder); // might need to give the path? 
 	for (vector<string>::iterator s = f.begin(); s != f.end(); s++)
     {
-		Papers::Papers(*s) ; // creates a Papers object for each file in the folder 
-		remove(*s) ; 		 // deletes the file 
+		// Papers papers(*s); // creates a Papers object for each file in the folder 
+		// remove(*s); 		 // deletes the file
     }
 }

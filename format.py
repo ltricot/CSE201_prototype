@@ -11,7 +11,8 @@ def _run_format(src: str):
 
     for dirpath, dirnames, filenames in os.walk(src):
         for fpath in filenames:
-            _format(fpath)
+            if fpath.endswith('.cpp'):
+                _format(os.path.join(dirpath, fpath))
 
 
 if __name__ == '__main__':

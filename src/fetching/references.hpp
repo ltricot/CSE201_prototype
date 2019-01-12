@@ -5,9 +5,18 @@
 #include <memory>
 #include <sstream>
 #include <map>
+#include <set>
 
 #include <curl/curl.h>
 
+
+/** @brief get references for a vector of papers
+ * 
+ * @details this function reads from the `references` object.
+ * 
+ * @param papers vector of paper objects from which we wish to extract references
+ * @return pairs of papers ; for each pair, the first references the second
+ */
 std::vector<std::pair<Paper, Paper>> getReferences(std::vector<Paper>);
 
 class References {
@@ -61,13 +70,13 @@ class PDFConverter {
     std::stringstream textBuffer;
 
     public:
-    const CURL *handle;
+    CURL *handle;
 
     // constructor that takes as input a pdf file and stores the result in pdfBuffer
-    PDFConverter(PDF pdf) {} 
+    PDFConverter(PDF pdf);
 
     // constructor that launches the curl_easy_setopt for the pdf with the provided id, and stores the result in pdfBuffer
-    PDFConverter(std::string id) {}
+    PDFConverter(std::string id);
 
     // convenience constructor for testing purposes
     PDFConverter(std::stringstream *pdf); // PDFConverter(std::string pdf);
@@ -119,9 +128,9 @@ class Papers {
     // curl stuff - you may change this structure as you will
     void initialize();
     void perform();
-    void cleanup();  // should be idem potent
+    void cleanup();  // should be idempotent
 
-    int *stillRunning ; 
+    int *stillRunning;
 
     public:
     std::vector<Edge> edges;
@@ -145,9 +154,9 @@ class Papers {
      * We need a second Papers constructor, which takes as argument the PDF files directly
      * no need to do a curl request 
     */
-    Papers(PDF pdf) {} //Papers(std::string pdf);
+    Papers(PDF pdf); //Papers(std::string pdf);
 
-    std:vector<std::pair<Paper, Paper>> getReferences();
+    std::vector<std::pair<Paper, Paper>> getReferences();
 };
 
 
@@ -172,11 +181,11 @@ class BulkDownloader {
      */
 
     private:
-    string folder = pdfs ;      // name of the folder into which the files will be downloaded 
-    void downloadTar() ;        // downloads a file .tar.gz and stores it in the folder "./pdfs"
-    void decompress() ;         // decompress the file 
-    void constructPapers() ;    // opens each pdf downloaded and creates a Papers object, then deletes each pdf file
+    std::string folder;      // name of the folder into which the files will be downloaded 
+    void downloadTar();        // downloads a file .tar.gz and stores it in the folder "./pdfs"
+    void decompress();         // decompress the file 
+    void constructPapers();    // opens each pdf downloaded and creates a Papers object, then deletes each pdf file
                                 // idk how to make it delete the whole folder at the end ? 
     void destroy();             // deletes the folder 
 
-}; 
+};
