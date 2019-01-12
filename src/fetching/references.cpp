@@ -366,21 +366,6 @@ std::vector<std::pair<Paper, Paper>> Papers::getReferences() {
     return this->references;  // explicitness
 }
 
-// map from papers to all that they reference
-// big object. not scalable for real data (> 1.5 million docs)
-// no time to do better
-std::map<std::string, std::vector<std::string>> allReferences;
-
-std::vector<std::pair<Paper, Paper>> getReferences(std::vector<Paper> papers) {
-    std::vector<std::pair<Paper, Paper>> refs;
-
-    for(auto from : papers) {
-        for(auto to : allReferences[from.id])
-            refs.push_back(std::make_pair(from, Paper(to)));
-    }
-
-    return refs;
-}
 
 ////////////////////////////////
 //    BulkDownloader Class    //
@@ -412,16 +397,57 @@ vector<string> openDir(string path) {
     return files;
 }
 
-void BulkDownloader::constructPapers() {
+Papers BulkDownloader::constructPapers() {
 	vector<string> f ;
     fstream file;
     map<string, int> m_query;
     string c;
 
-	f = openDir(this->folder); // might need to give the path? 
-	for (vector<string>::iterator s = f.begin(); s != f.end(); s++)
-    {
-		// Papers papers(*s); // creates a Papers object for each file in the folder 
-		// remove(*s); 		 // deletes the file
+	f = openDir(this->folder);  // might need to give the path ?
+
+    std::vector<std::string> ids;
+    std::vector<PDF> pdfs;
+	for (vector<string>::iterator s = f.begin(); s != f.end(); s++) {
+        // push id
+        ids.push_back(s->substr(0, s->size()-4));
+
+        // push whole pdf text - do we need the binary marker ?
+        std::ifstream pdf_stream(*s, std::ios::binary);
+        std::stringstream buffer;
+        buffer << pdf_stream.rdbuf();
+        pdfs.push_back(PDF(buffer.str()));
     }
+
+    Papers papers(ids, pdfs);
+    return papers;
+}
+
+
+// map from papers to all that they reference
+// big object. not scalable for real data (> 1.5 million docs)
+// no time to do better
+std::map<std::string, std::vector<std::string>> allReferences;
+
+// must be called a number of times.
+void setUpReferences(std::string folder, std::vector<std::string> archives) {
+    for(auto archive : archives) {
+        BulkDownloader bd(archive, folder);
+        bd.downloadTar();
+        bd.decompress();
+        Papers papers = bd.constructPapers();
+
+        for(auto ref : papers.getReferences())
+            allReferences[ref.first.id].push_back(ref.second.id);
+    }
+}
+
+std::vector<std::pair<Paper, Paper>> getReferences(std::vector<Paper> papers) {
+    std::vector<std::pair<Paper, Paper>> refs;
+
+    for(auto from : papers) {
+        for(auto to : allReferences[from.id])
+            refs.push_back(std::make_pair(from, Paper(to)));
+    }
+
+    return refs;
 }

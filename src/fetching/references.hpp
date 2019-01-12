@@ -65,7 +65,13 @@ class References {
 };
 
 
-class PDF : public std::string {};
+class PDF : public std::string {
+    public:
+
+    PDF(std::string str) {
+        *this = str;
+    }
+};
 
 class PDFConverter {
     private:
@@ -179,13 +185,13 @@ class BulkDownloader {
     private:
 
     std::string which;
-    std::string folder;      // name of the folder into which the files will be downloaded 
+    std::string folder;      // name of the folder into which the files will be downloaded
 
     public:
 
-    void downloadTar();        // downloads a file .tar.gz and stores it in the folder "./pdfs"
-    void decompress();         // decompress the file 
-    void constructPapers();    // opens each pdf downloaded and creates a Papers object, then deletes each pdf file
+    void downloadTar();        // downloads a file .tar.gz and stores it in the folder `folder`
+    void decompress();         // decompress the file
+    Papers constructPapers();    // opens each pdf downloaded and creates a Papers object, then deletes each pdf file
 
     BulkDownloader(std::string which, std::string folder)
         : which(which), folder(folder) {}
