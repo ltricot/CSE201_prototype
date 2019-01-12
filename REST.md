@@ -78,9 +78,12 @@
 
 `:id` user ID provided by the GUI
 
-_POST fields_
-
-`article` article ID. Example: `article=1812.01234_v2`
+`body` new liked articles in a json string. Example:
+```js
+[
+    "1812.01234_v2", "1609.43210"
+]
+```
 
 `returns` a json object whose unique key is `"success"` and whose value is `1` on success and `0` on failure.
 ```js
