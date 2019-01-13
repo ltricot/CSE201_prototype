@@ -429,19 +429,34 @@ Papers BulkDownloader::constructPapers() {
 std::map<std::string, std::vector<std::string>> allReferences;
 
 
+
+
+/** 
+ * @brief to write the content of allReferences to a file
+ * @param data to be written in the file
+ * @param filename name of the file to be created and 
+ * written into
+ * (verified, i.e. works)
+ */
 void writeFile(std::map<std::string, std::vector<std::string>> data , std::string filename){
-	std::string file = filename + ".txt" ; // also a prefix to say where its going? but VM details? 
+	std::string file = filename + ".txt" ; // also a prefix to say where its going? 
 	std::ofstream fs(file);
 
 	if(!fs){
 		std::cerr<<"Cannot open the output file."<<std::endl;
 	}
 
+	// we write on the file in the following format :
+	// paper
+	// paper_referenced1|paper_referenced_2|......|paper_referenced_n|
+	// paper
+	// etc. 
+
 	for(std::map<std::string, std::vector<std::string>>::iterator pair = data.begin(); pair != data.end() ; pair++){
 		fs << pair->first << endl ; 
 		
 		for(std::vector<std::string>::iterator ref = pair->second.begin() ; ref != pair->second.end() ; ref++){
-			fs << *ref ; 
+			fs << *ref << "|" ; 
 		}
 
 		fs << endl ; 
@@ -451,6 +466,50 @@ void writeFile(std::map<std::string, std::vector<std::string>> data , std::strin
 
 	fs.close() ; 
 
+}
+
+/** 
+ * @brief get allReferences back from a file
+ * @param filename file to be read from
+ */
+std::map<std::string, std::vector<std::string>> readFile(std::string filename){
+	std::map<std::string, std::vector<std::string>> res ; 
+	std::ifstream file(filename, std::ifstream::in);
+	if(file.is_open()){
+		std::string line ;
+		int index = 0 ; // will allow us to know where we stand in the file
+		std::string key ; 
+
+		while(getline(file,line)){
+
+			if(!index){ // index = 0 : we stand in a 'paper' line 
+				key = line ; // so we just store the value as 'key'
+			}
+
+			else {
+				// index = 1 : we stand in a 'paper_referenced1|paper_referenced_2|..
+				// ..|paper_referenced_n|' line
+				// so we parse the line to get the each reference 
+
+				std::vector<std::string> references ; 
+				std::string delimiter =  "|" ;
+				size_t pos = 0 ; 
+				std::string token ;
+
+				while ((pos = line.find(delimiter)) != std::string::npos) {
+					token = line.substr(0, pos);
+					references.push_back(token); 
+					line.erase(0, pos + delimiter.length());
+				}
+
+				res[key] = references ; 
+			}
+
+			index = 1 - index ;
+
+		}
+	} 
+	return res ; 
 }
 
 
