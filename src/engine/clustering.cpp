@@ -14,7 +14,7 @@ double getSim(Eigen::VectorXd & vec1, Eigen::VectorXd & vec2) {
 }
 
 int cluster::T =2;
-int cluster::K =10;
+int cluster::K =5;
 
 void cluster::initializelabel(){
     for (int i=0;i<sizeInput;i++){
@@ -62,11 +62,9 @@ void cluster::findneighbors(){
                         KmaxSim.insert(std::pair<double,int>(s,j));
                         KmaxNeigh.insert(std::pair<int,double>(j,s));
                         minNeigh=j;
-                        }
                     }
-            
-            }
-            
+                }
+            } 
         }
         neighbors.push_back(KmaxNeigh);
         KmaxSim.clear();
@@ -74,29 +72,39 @@ void cluster::findneighbors(){
     }
 }
 
+void cluster::getCDF(){
+    for (int i=0;i<sizeInput;i++){
+        Eigen::ArrayXd allSim; // vector of similarities between the ith node and all its neighbors
+        Eigen::ArrayXd allProb; //vector of e^si/sum(e^si)
+        allSim.resize(K);
+        allProb.resize(K);
+        std::vector<int> orderedNeigh;
+        int c=0;
+        //iterate over the map neighbors(index) to have an array of similarities
+        for (std::map<int, double>::iterator it = neighbors[i].begin(); it != neighbors[i].end(); ++it){
+            allSim(c)=it->second;
+            orderedNeigh.push_back(it->first);
+            c++;
+        }
+        orderedNEIGH.push_back(orderedNeigh);
+        orderedNeigh.clear();
+        allProb= (1/((T*allSim).exp().sum()))*(T*allSim).exp();
+        allSim.resize(0);
+        // the probability to choose the label of the jth neighbor is equal to allProb(j)
+        std::vector<double> cdf; //cumulative distribution function corresponding to allProb
+        double sum=0;
+        for (int j=0;j<allProb.size();j++){
+            sum+=allProb(j);
+            cdf.push_back(sum);
+        }
+        allProb.resize(0);
+        allCDF.push_back(cdf);
+        cdf.clear();
+    }
+}
 int cluster::getMaxSim(int & index){
-    Eigen::ArrayXd allSim; // vector of similarities between the ith node and all its neighbors
-    Eigen::ArrayXd allProb; //vector of e^si/sum(e^si)
-    allSim.resize(K);
-    allProb.resize(K);
-    std::vector<int> orderedNeigh;
-    int c=0;
-    //iterate over the map neighbors(index) to have an array of similarities
-    for (std::map<int, double>::iterator it = neighbors[index].begin(); it != neighbors[index].end(); ++it){
-        orderedNeigh.push_back(it->first);
-        allSim(c)=it->second;
-        c++;
-    }
-    allProb= (1/(T*allSim).exp().sum())*(T*allSim).exp();
-    allSim.resize(0);
-    // the probability to choose the label of the jth neighbor is equal to allProb(j)
-    std::vector<double> cdf; //cumulative distribution function corresponding to allProb
-    double sum=0;
-    for (int j=0;j<allProb.size();j++){
-        sum+=allProb(j);
-        cdf.push_back(sum);
-    }
-    allProb.resize(0);
+    std::vector<int> orderedNeigh = orderedNEIGH[index];
+    std::vector<double> cdf= allCDF[index];
     // simulate a random experience to pick the neighbor
     double flip=(double) (rand()) /  (double) (RAND_MAX); //random float between 0 and 1
     for (int ind=0;ind<cdf.size();ind++){
@@ -138,8 +146,9 @@ void cluster::createcluster( std::vector<Eigen::VectorXd> & input){
     sizeInput = input.size();
     findneighbors();
     initializelabel();
+    getCDF();
     updaterate =1;
-    while (updaterate>0.5){ //while the rate of updates in the graph is greater to 1% we continue to update
+    while (updaterate>0.8){ //while the rate of updates in the graph is greater to 1% we continue to update
         updatelabel();
     }
 }
