@@ -34,14 +34,14 @@ class References {
     private:
 
     // simple internal alias
-    typedef std::pair<Paper, Paper> reference_t;
+    typedef std::pair<Paper, Paper> Reference;
 
     /**
      * Private variables:
      *      - ``references``: holds parsed references.
      *      - ``textBuffer``: text of paper's pdf.
      */
-    std::vector<reference_t> references;
+    std::vector<Reference> references;
     const std::string textBuffer;
 
     public:
@@ -50,7 +50,7 @@ class References {
      * Simple delegation to the underlying ``references`` vector. Give this no
      * thought when developing this object, only when using it.
      */
-    typedef std::vector<reference_t>::iterator iterator;
+    typedef std::vector<Reference>::iterator iterator;
     iterator begin() { return this->references.begin(); }
     iterator end() { return this->references.end(); }
 
@@ -64,7 +64,7 @@ class References {
      * The constructor ensures that the object may be iterated over and
      * immediately yield all found references in ``paper``.
      */
-    References(Paper paper, std::string text) : textBuffer(text) {}
+    References(Paper paper, std::string text);
 };
 
 

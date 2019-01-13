@@ -18,7 +18,7 @@ class Client {
 
     std::vector<std::string> getTopics();
     std::vector<std::string> getLikes(Author author);
-    bool putLikes(Author author, std::vector<std::string>);
+    bool putLikes(Author author, std::vector<std::string> topics);
     Paper getRecommendation(Author author);
     std::vector<std::string> getArticles(Author author);
     bool putArticles(std::vector<std::string> articles);

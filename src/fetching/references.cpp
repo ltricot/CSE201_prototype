@@ -31,6 +31,8 @@ using namespace std;
 
 ///////////////////////////////////////////////
 
+// EXTERNAL CODE FROM HERE
+
 // Find a string in a buffer:
 static size_t FindStringInBuffer(char* buffer, char* search, size_t buffersize) {
 	char* buffer0 = buffer;
@@ -238,6 +240,15 @@ void extractText(stringstream &istr, outstream &ostr) {
             morestreams = false;
         }
     }
+}
+
+// EXTERNAL CODE ENDS NOW
+
+////////////////////////
+//  References Class  //
+////////////////////////
+
+References::References(Paper paper, std::string text) : textBuffer(text) {
 }
 
 
