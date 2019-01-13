@@ -7,6 +7,7 @@
 #include <map>
 #include <cstdlib> 
 #include <ctime>
+#include <set>
 
 
 class cluster {
@@ -23,7 +24,7 @@ class cluster {
     static int T; // temperature
     static int K; //number of neighbors for each nodes
     std::vector<std::map<int,double>> neighbors; // vector that at index i contains a map that associates to each K closest neighbors of i its similarity with i
-    float updaterate ; //save the rate of updated labels 
+    double updaterate ; //save the rate of updated labels 
     void findneighbors(); //find the K closest neighbors for each nodes
     void initializelabel(); //function to initialize label such that each vector has a different label
 
