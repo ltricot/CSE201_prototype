@@ -19,6 +19,7 @@
 using namespace std;
 
 
+
 //////////////////////////////////////////////
 // for void BulkDownloader::constructPapers()
 
@@ -248,8 +249,45 @@ void extractText(stringstream &istr, outstream &ostr) {
 //  References Class  //
 ////////////////////////
 
-References::References(Paper paper, std::string text) : textBuffer(text) {
+References::References(Paper paper, std::string text) : paper(paper), textBuffer(text) {
+	getReferences() ; 
 }
+
+/** 
+ * @brief detex references in text using regex
+ * @param text what we want to parse
+ * @param regex what we want to find
+ * @returns std::vector<std::string> a vector
+ * containing all the std::string ids of the
+ * papers being referenced
+ */
+std::vector<std::string> findRegex(std::string text, std::string regex){
+    std::smatch m;
+    std::regex self_regex(regex); 
+
+	std::vector<std::string> res ; 
+
+    while (std::regex_search (text,m,self_regex)) {
+		res.push_back(m.str()) ; 
+        text = m.suffix().str();
+    }
+
+	return res ; 
+}
+
+/** 
+ * @brief fills the std::vector<Reference> references
+ * which holds the parsed references
+ */
+void References::getReferences(){
+	std::string regex ; 
+	regex = R"(arXiv:\d{4}[.](\d{4,5}[v]\d+|\d{4,5}))" ; // taking account of version
+	std::vector<std::string> papers = findRegex(textBuffer, regex);
+	for(std::vector<std::string>::iterator pap = papers.begin() ; pap != papers.end() ; pap++){
+		references.push_back(std::pair< paper,   Paper(*pap)  >) ; 
+	}
+}
+
 
 
 ////////////////////////
@@ -434,12 +472,11 @@ Papers BulkDownloader::constructPapers() {
 }
 
 
+
 // map from papers to all that they reference
 // big object. not scalable for real data (> 1.5 million docs)
 // no time to do better
 std::map<std::string, std::vector<std::string>> allReferences;
-
-
 
 
 /** 

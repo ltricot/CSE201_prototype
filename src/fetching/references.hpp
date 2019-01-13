@@ -6,6 +6,7 @@
 #include <sstream>
 #include <map>
 #include <set>
+#include <pair>
 
 #include <curl/curl.h>
 
@@ -46,6 +47,7 @@ class References {
      */
     std::vector<Reference> references;
     const std::string textBuffer;
+    const Paper paper ; 
 
     public:
     /**
