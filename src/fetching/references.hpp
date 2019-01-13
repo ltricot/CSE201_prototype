@@ -6,6 +6,7 @@
 #include <sstream>
 #include <map>
 #include <set>
+#include <pair>
 
 #include <curl/curl.h>
 
@@ -19,8 +20,11 @@
  */
 std::vector<std::pair<Paper, Paper>> getReferences(std::vector<Paper>);
 
-// download pdfs and extract references
-void setUpReferences(std::string folder, std::vector<std::string> archives);
+std::map<std::string, std::vector<std::string>>
+setUpReferences(std::string folder, std::vector<std::string> archives);
+
+void writeFile(std::map<std::string, std::vector<std::string>> data, std::string filename);
+
 
 class References {
     /**
@@ -43,6 +47,7 @@ class References {
      */
     std::vector<Reference> references;
     const std::string textBuffer;
+    const Paper paper ; 
 
     public:
     /**

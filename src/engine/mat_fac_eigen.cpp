@@ -56,8 +56,91 @@ class mat_factorization
       alpha = a;
       beta = b;
       num_iterations = num_iter;
+      P = (Eigen::MatrixXd::Random(users, lat_feat) + Eigen::MatrixXd::Constant(users, lat_feat, 1.))*0.5;
+      Q = (Eigen::MatrixXd::Random(lat_feat, brands) + Eigen::MatrixXd::Constant(lat_feat, brands, 1.))*0.5;
 
     }
+
+    void multiplicative_update()
+  {
+    Q = Q.cwiseProduct((P.transpose()*matrix).cwiseQuotient(P.transpose()*P*Q));
+    P = P.cwiseProduct((matrix*Q.transpose()).cwiseQuotient(P*Q*Q.transpose()));
+  }
+
+    void kullback_leibler()
+    {
+     Eigen::MatrixXd one = Eigen::MatrixXd::Constant(users, brands, 1.);
+     Q = Q.cwiseProduct((P.transpose()*(matrix.cwiseQuotient(P*Q))).cwiseQuotient(P.transpose()*one));
+     P = P.cwiseProduct(((matrix.cwiseQuotient(P*Q)*Q.transpose())).cwiseQuotient(one*Q.transpose()));
+    }
+
+  void itakura_saito()
+  {
+    Eigen::MatrixXd PQ = P*Q;
+    Eigen::MatrixXd PQ_square = PQ.cwiseProduct(PQ);
+    Eigen::MatrixXd one = Eigen::MatrixXd::Constant(users, brands, 1.);
+
+    Q = Q.cwiseProduct(P.transpose()*(matrix.cwiseQuotient(PQ_square)));
+    P = P.cwiseProduct(((matrix.cwiseQuotient(PQ_square))*Q.transpose()).cwiseQuotient((one.cwiseQuotient(P*Q)*Q.transpose())));
+  }
+
+
+  void train_2(std::string update_rule)
+  { double error_trial = 0;
+      if (update_rule.compare("mu"))
+      {
+
+      for (int count = 0;count < num_iterations; count ++)
+        {
+            multiplicative_update();
+            error_trial = (matrix-P*Q).squaredNorm();
+            if (error_trial < 0.001)
+                {
+                    break;
+                }
+        }
+      }
+      else if (update_rule.compare("klb"))
+      {
+
+      for (int count = 0;count < num_iterations; count ++)
+        {
+            kullback_leibler();
+            error_trial = (matrix-P*Q).squaredNorm();
+            if (error_trial < 0.001)
+                {
+                    break;
+                }
+        }
+      }
+      else if (update_rule.compare("ita"))
+      {
+         for (int count = 0;count < num_iterations; count ++)
+        {
+            itakura_saito();
+            error_trial = (matrix-P*Q).squaredNorm();
+            if (error_trial < 0.001)
+                {
+                    break;
+                }
+        }
+      }
+
+    Eigen::MatrixXd result(users, brands);
+
+    // Next we want to do matrix multiplication
+
+    result = P*Q;
+    std::cout<< "Answer" << std::endl;
+
+    std::cout<< result << std::endl;
+
+    std::cout << "Error = " << error_trial << std::endl;
+
+  }
+  
+ 
+
 
   double error()
   {
@@ -68,13 +151,13 @@ class mat_factorization
                 {
                   if (matrix(i, j) > 0)
                   {
-                    double sum = 0;
+                      double dot = 0;
                     for(int k = 0; k < lat_feat; k++)
                     {
-                      sum += P(i, k)*Q(k, j);
+                      dot += P(i, k)*Q(k, j);
                     }
 
-                    e += std::pow(matrix(i, j) - sum, 2);
+                    e += std::pow(matrix(i, j) - dot, 2);
 
                     for(int k = 0; k < lat_feat; k++)
                     {
@@ -86,16 +169,14 @@ class mat_factorization
     return e;
   }
 
+
+
   void train()
       {
 
-      std::default_random_engine generator;
-      std::uniform_real_distribution<double> distribution(0.0,1.0);
-
       // R = PQ^t
         // Initialize the matrix P with dimension user*lat_feat
-       P = Eigen::MatrixXd::Random(users, lat_feat);
-       Q = Eigen::MatrixXd::Random(lat_feat, brands);
+
 
         double error_trial = 0;
         for(int count = 0; count < num_iterations; count++)
@@ -127,7 +208,7 @@ class mat_factorization
               }
 
               error_trial = error();
-              if (error_trial < 0.000001){
+              if (error_trial < 0.001){
                 break;
               }
 
@@ -153,30 +234,20 @@ class mat_factorization
 int main(){
 
  Eigen::MatrixXd mat(5,4);
-   mat(0, 0) = 5;
-   mat(0, 1) = 3;
-   mat(0, 3) = 1;
+ mat << 5,0,0,3,
+       4,0,0,1,
+       1,0,0,5,
+       1,0,0,4,
+       0,1,0,4;
 
-   mat(1, 0) = 4;
-   mat(1, 3) = 1;
-
-   mat(2, 0) = 1;
-   mat(2, 1) = 1;
-   mat(2, 3) = 5;
-
-   mat(3, 0) = 1;
-   mat(3, 3) = 4;
-
-   mat(4, 1) = 1;
-   mat(4, 2) = 5;
-   mat(4, 3) = 4;
-
-  int lat_feat = 3;
-  double alpha = 0.0002;
+  int lat_feat = 2;
+  double alpha = 0.002;
   double beta = 0.02;
   int num_iter = 50000;
   mat_factorization classifier(mat, lat_feat, alpha, beta, num_iter);
+  classifier.train_2("ita");
   classifier.train();
+
 
 
   return 0;

@@ -1,0 +1,6 @@
+Use the Eigen library
+
+To compile:
+
+g++ -std=c++0x  -c test_clustering.cpp -I Eigen/
+g++ -std=c++0x  -c clustering.cpp -I Eigen/
