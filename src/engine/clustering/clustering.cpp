@@ -148,8 +148,9 @@ void cluster::createcluster( std::vector<Eigen::VectorXd> & input){
     initializelabel();
     getCDF();
     updaterate =1;
-    while (updaterate>0.8){ //while the rate of updates in the graph is greater to 1% we continue to update
+    while (updaterate>0.8){ //while the rate of updates in the graph is greater to 1% we continue to update PB TOO SLOW TO HAVE THIS THRESHOLD
         updatelabel();
+        std::cout<<"AAAAA"<<std::endl;
     }
 }
 
