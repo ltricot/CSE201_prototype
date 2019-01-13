@@ -449,7 +449,7 @@ std::map<std::string, std::vector<std::string>> allReferences;
  * written into
  * (verified, i.e. works)
  */
-void writeFile(std::map<std::string, std::vector<std::string>> data , std::string filename){
+void writeFile(std::map<std::string, std::vector<std::string>> data , std::string filename) {
 	std::string file = filename + ".txt" ; // also a prefix to say where its going? 
 	std::ofstream fs(file);
 
@@ -527,7 +527,10 @@ std::map<std::string, std::vector<std::string>> readFile(std::string filename){
 
 
 // must be called a number of times.
-void setUpReferences(std::string folder, std::vector<std::string> archives) {
+std::map<std::string, std::vector<std::string>>
+setUpReferences(std::string folder, std::vector<std::string> archives) {
+	std::map<std::string, std::vector<std::string>> references;
+
     for(auto archive : archives) {
         BulkDownloader bd(archive, folder);
         bd.downloadTar();
@@ -535,8 +538,10 @@ void setUpReferences(std::string folder, std::vector<std::string> archives) {
         Papers papers = bd.constructPapers();
 
         for(auto ref : papers.getReferences())
-            allReferences[ref.first.id].push_back(ref.second.id);
+            references[ref.first.id].push_back(ref.second.id);
     }
+
+	return references;
 }
 
 // must find some kind of way to serialize / deserialize `allReferences`
