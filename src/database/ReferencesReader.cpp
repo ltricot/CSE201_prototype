@@ -4,7 +4,6 @@
 #include <sys/stat.h>
 #include <sys/types.h>
 #include <direct.h>
-#include "Matrix.h"
 
 using namespace std;
 
@@ -24,7 +23,7 @@ Matrix ReferencesReader::MakeMatrix() {
 	string line;
 	while (getline(file, line)) {
 		vector<string> vec;
-		boost::algorithm::split(vec, line, boost::is_any_of(this->delim)); 
+		boost::algorithm::split(vec, line, boost::is_any_of(this->delim));
 		string id = vec[0];
 		string ref = vec[1];
 		m.write(id, ref, 1);
