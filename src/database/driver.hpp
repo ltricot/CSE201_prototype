@@ -19,6 +19,9 @@ template <typename F, typename T> class Edge_t {
 };
 
 
+typedef Edge_t<Author, Paper> Edge;
+
+
 template <typename F, typename T> class Driver {
     public:
 
