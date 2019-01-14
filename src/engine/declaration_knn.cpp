@@ -10,6 +10,14 @@ get the cluster (list of name of researchers) of jules
 get person identity vector or a paper identity vectior*/
 /*verifier que edge.paper est une string d'un nom de papier */
 
+/** @brief Get a recommendation (Title of a paper) for a client
+ * 
+ * @details Using the cluster to which belong the client, we choose k neigbours in this cluster
+ * The papers read by those neigbours are potential recommendations. We return one of those papers with a probability that depends on the predicted rating of this paper by our client
+ * @param integer k: the number of neigbours in the cluster of the client that we will take into account
+ * 
+ * @return the title of a paper that we recommend to the client according to his preferences
+ */
 std::string Person::getRecommendation(int& k) {
     std::vector<std::string> a_list_of_interaction_papers;
     a_list_of_interaction_papers = get_k_NeighborsInteractions(int& k);
@@ -19,6 +27,16 @@ std::string Person::getRecommendation(int& k) {
     recommendation = get_a_Title_paper(std::pair<std::vector<int>,std::vector<std::string>>& result);
     return recommendation;
 }
+
+/** @brief get the name of the papers read by k neighbours of the client 
+ * 
+ * @details 
+ * 
+ * @param integer k : number of neighbours in the cluster of the client that we will take into account
+ * 
+ * @return a vector of name of papers that has been read by those k neighbours
+ */
+ 
 std::vector<std::string> Person::get_k_NeighborsInteractions(int& k) const {
     std::vector<array*> list_of_neighbours_in_cluster;
     std::vector<array*> list_of_neighbours_in_cluster = author.cluster(); /*get the list of people in the cluster of my user ID =  resultat de lalgo de jules, stocker dans la base de donnée*/
