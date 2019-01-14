@@ -36,7 +36,7 @@ std::string Person::getRecommendation(int& k) {
  * 
  * @return a vector of name of papers that has been read by those k neighbours
  */
- 
+
 std::vector<std::string> Person::get_k_NeighborsInteractions(int& k) const {
     std::vector<array*> list_of_neighbours_in_cluster;
     std::vector<array*> list_of_neighbours_in_cluster = author.cluster(); /*get the list of people in the cluster of my user ID =  resultat de lalgo de jules, stocker dans la base de donnée*/
@@ -75,7 +75,15 @@ std::vector<std::string> Person::get_k_NeighborsInteractions(int& k) const {
     return a_list_of_interaction_papers;
 }
 
-std::pair<std::vector<int>,std::vector<std::string>>  Person::getRatings_of_papers(std::vector<std::string>& list_of_papers) { /*list of papers sera id.get_k_Interactions*/
+/** @brief get the predicted ratings of a list of papers for the client
+ * 
+ * @details given a list of papers, we use the preferences (through the vector of the client) to predict the ratings of each paper of the list
+ * 
+ * @param vector of strings : the vector contains titles of papers 
+ * @return a pair composed of a vector of float (predicted ratings) and a vector of name of papers (the rating at index i corresponds to the paper at the index i in the vector of papers) 
+ */
+ 
+std::pair<std::vector<float>,std::vector<std::string>>  Person::getRatings_of_papers(std::vector<std::string>& list_of_papers) { /*list of papers sera id.get_k_Interactions*/
     std::vector<float> ratings_of_ID;
     Driver driver("folder");
     std::vector<Edge> interactions_pairs = driver.getFrom(author);
@@ -103,12 +111,19 @@ std::pair<std::vector<int>,std::vector<std::string>>  Person::getRatings_of_pape
     
 
     }
-    std::pair<std::vector<int>,std::vector<std::string>> result;
+    std::pair<std::vector<float>,std::vector<std::string>> result;
     result.first = ratings_of_ID;
     result.second = name_of_papers_of_ID;
     return result;
     }
-
+/** @brief choose a paper among a list of paper wth higher probability the more the predicted rating of this paper by the client is important
+ * 
+ * @details 
+ * 
+ * @param a pair composed of a vector of float (predicted ratings) and a vector of name of papers (the rating at index i corresponds to the paper at the 
+ *
+ * @return a name of a paper from the vector of paper names given as parameter
+ */
 std::string Person::get_a_title_paper(std::pair<std::vector<int>,std::vector<std::string>>& result) {
         int proba;
         int sum = sum(result.first);
