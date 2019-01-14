@@ -8,8 +8,11 @@ int main(int argc, char *argv[]) {
         return 1;
     }
 
+    Driver d ; 
+
     Crawler crawler = Crawler(Paper(std::string(argv[1])));
-    for(auto edge : crawler) {
-        std::cout << edge.paper.id << std::endl;
+    for(Crawler::iterator edgeit = crawler.begin() ; edgeit != crawler.end() ; edgeit++){
+        d.writeEdge(*edgeit) ;
+        // also do : TBD by Loan
     }
 }
