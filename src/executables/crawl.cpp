@@ -14,8 +14,8 @@ int main(int argc, char *argv[]) {
     Driver d(argv[2]);
 
     Crawler crawler = Crawler(Paper(std::string(argv[1])));
-    for(Crawler::iterator edgeit = crawler.begin() ; edgeit != crawler.end() ; edgeit++){
-        d.writeEdge(*edgeit);
+    for(auto edge : crawler) {
+        d.writeEdge(edge);
         // also do : TBD by Loan
     }
 }

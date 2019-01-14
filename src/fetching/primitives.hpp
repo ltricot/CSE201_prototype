@@ -39,7 +39,8 @@ class Edge {
 	Paper paper;
 	double weight;
 
-	Edge();
+	Edge() {}
+
 	Edge(Author author, Paper paper, double weight = 1.0)
 		: author(author), paper(paper), weight(weight) {}
 

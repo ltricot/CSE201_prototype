@@ -381,6 +381,7 @@ void Papers::cleanup() {
 }
 
 // not a priority anymore
+#ifdef no_time
 Papers::Papers(std::vector<std::string> ids) : ids(ids) {
 	initialize();
 
@@ -397,6 +398,7 @@ Papers::Papers(std::vector<std::string> ids) : ids(ids) {
 
 	cleanup(); // or  Papers::cleanup()?
 }
+#endif
 
 // this is the priority
 Papers::Papers(std::vector<std::string> ids, std::vector<PDF> pdfs) : ids(ids) {

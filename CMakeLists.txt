@@ -10,6 +10,7 @@ include_directories (libraries/eigen-git-mirror)
 # structure
 add_subdirectory (src)
 target_include_directories (crawler PUBLIC "libraries")
+target_include_directories (database PUBLIC "src/fetching")
 
 add_subdirectory (tests)
 target_include_directories (testcrawler PUBLIC "src/fetching")
