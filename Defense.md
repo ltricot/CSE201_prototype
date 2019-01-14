@@ -8,18 +8,18 @@ In the 30 minutes slot for questions the instructors will ask various question a
 
 ## Main organisation
 
-#### What is our project (about -4 minutes)
+#### I-What is our project (about -4 minutes)
 What problem does it solve?What did we build?
 
-#### Project architecture: each part will be explained (about –20 minutes)
+#### II-Project architecture: each part will be explained (about –20 minutes)
 1) Crawler
 2) Database
 3) Server and API
 4) Recommendation
 
-#### Live demo of the project (about 3-minutes)
+#### III-Live demo of the project (about 3-minutes)
 
-### Where we started (Pitch presentation) , to where we ended (Final project's description)
+### I- Where we started (Pitch presentation) , to where we ended (Final project's description)
 
 
 Initial goal:
@@ -36,6 +36,23 @@ Solution:
 
 Our final project is the following:
 ### Tinder for researchers: Recommendation system of papers for researchers
+
+Description of the project:
+
+### II- Architecture of the project WHY? (why did you do that) HOW? (How did you do?)
+
+1) 
+2)
+3)
+4)
+
+### III- Live Demo of the project
+
+# TO BE DONE:
+
+Powerpoint
+Each part to be completed by the designated person
+Global presentation of the project (Clémence//Loan)
 
 
 
