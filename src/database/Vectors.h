@@ -3,11 +3,12 @@
 #include <string>
 #include <vector>
 #include <fstream>
-
+#include <iostream>
 #include <sys/types.h>
 #include <sys/stat.h>
 
-#include <Eigen/Eigen>
+#include "Eigen/Eigen"
+
 
 
 using namespace std;
@@ -16,7 +17,7 @@ using namespace std;
 class Vectors {
     public:
     string root_directory;
-    Vectors(string dir) : root_directory(dir) {}
+    Vectors(string dir);
 
     template <int size> void storevector(string id, Eigen::Matrix<double, size, 1> vec){
 	    while (id.length() < 11) {
@@ -37,6 +38,7 @@ class Vectors {
         	
         string filepath = id3 + "/" + id.substr(9, 2) + ".txt";
         
+		cout << filepath << "\n";
         ofstream out(filepath);
 
         for(int i = 0; i < size; i++){
@@ -68,7 +70,8 @@ class Vectors {
         Eigen::Matrix<double, size, 1> ret;
 	    string line;
         while (getline(inp, line)) {
-            ret(0, counter) = line;
+            line.erase(remove(line.begin(), line.end(), '\n'), line.end());
+            ret(counter, 0) = stod(line);
             counter += 1;
         }
 

@@ -4,13 +4,13 @@
 using std::exp;
 
 double getSim(Eigen::VectorXd & vec1, Eigen::VectorXd & vec2) {
-    int res=0;
+    double res=0;
     for (int k=0; k<vec1.size(); k++){
         if (vec1(k)==vec2(k)){
             res+=1;
         }
     }
-    return res/vec1.size();
+    return double(res)/vec1.size();
 }
 
 int cluster::T =2;
