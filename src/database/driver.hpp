@@ -1,46 +1,32 @@
 #include <vector>
 #include <string>
-
+#include "vectors.h"
 #include <Eigen/Eigen>
+#include <unordered_map>
+#include <sstream>
 
 #include "primitives.h"
 
-
+using namespace std;
 /** @brief Template for a generic undirected edge representation
  */
-template <typename F, typename T> class Edge_t {
-    public:
-    F from;
-    T to;
-    double weight;
-
-    Edge(F from, T to, double weight=1.0)
-        : from(from), to(to), weight(weight) {}
-};
 
 
-typedef Edge_t<Author, Paper> Edge;
-
-
-template <typename F, typename T> class Driver {
+class Driver {
     public:
 
-    // convenience
-    typedef Edge_t<F, T> Edge;
+	std::string directory;
+	/// @brief get all edges outwards from ``from``
+	std::vector<Edge> getFrom(Author from);
+	bool writeEdge(Edge edge);  // overwrites
+	bool removeEdge(Edge edge);
 
-    // constructor
-    Driver(std::string directory);
-
-    /// @brief get all edges outwards from ``from``
-    std::vector<Edge> getFrom(F from);
-    bool writeEdge(Edge edge);  // overwrites
-    bool removeEdge(Edge edge);
-
-    // batch equivalents of above
-    std::vector<Edge> getFroms(std::vector<F> froms)
-    bool writeEdges(std::vector<Edge> edges);
-    bool removeEdges(std::vector<Edge> edges);
+	// batch equivalents of above
+	std::vector<Edge> getFroms(std::vector<Author> froms);
+	bool writeEdges(std::vector<Edge> edges);
+	bool removeEdges(std::vector<Edge> edges);
 };
+
 
 
 /** @brief Interface between the recommendation algorithms and the
@@ -96,9 +82,48 @@ class EdgeAccessor {
 template <int rank> class VectorAccessor {
     typedef Matrix<double, rank, 1> vec;
 
-    vec get_vector(Author author);
-    vec get_vector(Paper paper);
+    vec get_vector(Author author){
+        Vectors v("Authors");
+        string n = author.name;
+        hash<string> hasher;
+        size_t foo = hasher(n);
+	    std::ostringstream ostr;
+	    ostr << foo;
+	    string id = ostr.str();
+        v.getvector<rank> (id);
+    }
 
-    bool send_vector(Author author, vec);
-    bool send_vector(Paper paper, vec);
+    vec get_vector(Paper paper){
+        Vectors v("Papers");
+        string n = paper.id;
+        hash<string> hasher;
+        size_t foo = hasher(n);
+	    std::ostringstream ostr;
+	    ostr << foo;
+	    string id = ostr.str();
+        v.getvector<rank> (id);
+    }
+
+    bool send_vector(Author author, vec){
+        Vectors v("Authors");
+        string n = author.id;
+        hash<string> hasher;
+        size_t foo = hasher(n);
+	    std::ostringstream ostr;
+	    ostr << foo;
+	    string id = ostr.str();
+        v.storevector<rank> (id, vec);
+        return true;
+    }
+    bool send_vector(Paper paper, vec){
+        Vectors v("Papers");
+        string n = paper.id;
+        hash<string> hasher;
+        size_t foo = hasher(n);
+	    std::ostringstream ostr;
+	    ostr << foo;
+	    string id = ostr.str();
+        v.storevector<rank> (id, vec);
+        return true;        
+    }
 };

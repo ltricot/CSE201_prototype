@@ -29,11 +29,11 @@ window_main::window_main(info_user &info)
 
     // Like buttons
     QPushButton *like_button = new QPushButton;
-    like_button->setIcon(QIcon("/Users/damienbradelle/TestGUI/like.png"));
+    like_button->setIcon(QIcon("://Images/like.png"));
     QPushButton *dislike_button = new QPushButton;
-    dislike_button->setIcon(QIcon("/Users/damienbradelle/TestGUI/dislike.png"));
+    dislike_button->setIcon(QIcon("://Images/dislike.png"));
     QPushButton *indiff_button = new QPushButton;
-    indiff_button->setIcon(QIcon("/Users/damienbradelle/TestGUI/indiff.png"));
+    indiff_button->setIcon(QIcon("://Images/indiff.png"));
 
     // Webpage display
     QWebEngineView *view = new QWebEngineView;
@@ -74,9 +74,9 @@ Enjoy!");
     likes_0.display_article("1812.03857");
     QObject::connect(recom_1, SIGNAL(clicked()), likes_0.article, SLOT(show()));
     QPushButton *like_button_1 = new QPushButton;
-    like_button_1->setIcon(QIcon("/Users/damienbradelle/TestGUI/like.png"));
+    like_button_1->setIcon(QIcon("://Images/like.png"));
     QPushButton *dislike_button_1 = new QPushButton;
-    dislike_button_1->setIcon(QIcon("/Users/damienbradelle/TestGUI/dislike.png"));
+    dislike_button_1->setIcon(QIcon("://Images/dislike.png"));
     l_1->addWidget(rec_1_lab, 0, 0, 1, 3);
     l_1->addWidget(dislike_button_1, 1, 0);
     l_1->addWidget(recom_1, 1, 1);
@@ -94,9 +94,9 @@ Enjoy!");
     QObject::connect(recom_2, SIGNAL(clicked()), likes_0.article, SLOT(show()));
     recom_2->setText("Let's see!");
     QPushButton *like_button_2 = new QPushButton;
-    like_button_2->setIcon(QIcon("/Users/damienbradelle/TestGUI/like.png"));
+    like_button_2->setIcon(QIcon("://Images/like.png"));
     QPushButton *dislike_button_2 = new QPushButton;
-    dislike_button_2->setIcon(QIcon("/Users/damienbradelle/TestGUI/dislike.png"));
+    dislike_button_2->setIcon(QIcon("://Images/dislike.png"));
     l_2->addWidget(rec_2_lab, 0, 0, 1, 3);
     l_2->addWidget(dislike_button_2, 1, 0);
     l_2->addWidget(recom_2, 1, 1);
@@ -114,9 +114,9 @@ Enjoy!");
     recom_3->setText("Let's see!");
     QObject::connect(recom_3, SIGNAL(clicked()), likes_0.article, SLOT(show()));
     QPushButton *like_button_3 = new QPushButton;
-    like_button_3->setIcon(QIcon("/Users/damienbradelle/TestGUI/like.png"));
+    like_button_3->setIcon(QIcon("://Images/like.png"));
     QPushButton *dislike_button_3 = new QPushButton;
-    dislike_button_3->setIcon(QIcon("/Users/damienbradelle/TestGUI/dislike.png"));
+    dislike_button_3->setIcon(QIcon("://Images/dislike.png"));
     l_3->addWidget(rec_3_lab, 0, 0, 1, 3);
     l_3->addWidget(dislike_button_3, 1, 0);
     l_3->addWidget(recom_3, 1, 1);

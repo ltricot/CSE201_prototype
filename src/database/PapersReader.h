@@ -1,12 +1,10 @@
 #pragma once
-#include "Paper.h"
+#include "Matrix.h"
 #include "Reader.h"
-#include <string>
-
-class PapersReader : public Reader {
-/* Specialized reader for a file containing information on a list of research papers */ 
+class ReferencesReader : public Reader {
+	/* Specialized reader which reads a file containing the edges of a graph, then creates and stores the adjacency matrix of that graph */
 public:
-	std::string filename; /*The file name */
-	PapersReader(std::string name); 
-	void UploadPapers(azure::storage::cloud_table& table); /* Creates a Paper object from each line and uploads it */
+	std::string filename;
+	ReferencesReader(std::string name);
+	Matrix MakeMatrix(); /*Read the file and makes the matrix  */
 };

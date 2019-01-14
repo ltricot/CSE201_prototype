@@ -77,6 +77,7 @@ std::string Crawler::callArxiv(std::string url) {
     return response;
 }
 
+
 std::vector<Edge> Crawler::getPairs(std::string xmlstr) {
     // return value
     std::vector<Edge> pairs;
@@ -100,21 +101,34 @@ std::vector<Edge> Crawler::getPairs(std::string xmlstr) {
     std::string name, article;
 
     // iteration over entries (representing articles)
+    int i = 0;
     for (entry = root->first_node("entry"); entry && entry->name() == std::string("entry");
          entry = entry->next_sibling()) {
-        article = entry->first_node("id")->value();
+        article = entry->first_node("id")->value(); 
+
+        // Paper(article) has to be created here with the summary 
+        std::vector<Paper> summary = getSummary(xmlstr);
+        Paper paper = summary[i] ; 
+
+        if(paper.id() != article){
+            std::cerr << "Call the cops" << std::endl; 
+            exit();
+        }
 
         // iteration over authors of this article
         for (author = entry->first_node("author");
              author && author->name() == std::string("author"); author = author->next_sibling()) {
             name = author->first_node("name")->value();
 
-            pairs.push_back(Edge(Author(name), Paper(article)));
+            pairs.push_back(Edge(Author(name), paper));
         }
+
+        i++; // means we're getting the next paper
     }
 
     return pairs;
 }
+
 
 std::vector<Edge> Crawler::fromAuthors(std::vector<Author> authors) {
     // return value & auxiliary iteration variable
