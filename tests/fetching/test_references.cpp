@@ -1,3 +1,5 @@
+#include references.hpp
+
 TEST_CASE("fetching/references/readFile,fetching/references/writeFile", "test if it reads what we write exactly in the same way"){
     std::string filename;
     filename ="test";
