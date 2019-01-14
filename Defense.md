@@ -8,6 +8,17 @@ In the 30 minutes slot for questions the instructors will ask various question a
 
 ## Main organisation
 
+#### What is our project (about -4 minutes)
+What problem does it solve?What did we build?
+
+#### Project architecture: each part will be explained (about –20 minutes)
+1) Crawler
+2) Database
+3) Server and API
+4) Recommendation
+
+#### Live demo of the project (about 3-minutes)
+
 ### Where we started (Pitch presentation) , to where we ended (Final project's description)
 
 
@@ -21,5 +32,10 @@ Issues:
 
 Solution:
 
-   We decided to change the orientation of the project: changing the subject/ type of data on which we were going to work, keeping the final aim/algorithms with the same final aim: creating a recommendation engine which could be updated based on some specific methods: data extraction, crawling, data organization, interactions and clustering with K-nearest-neighbours algorithm for predictions and recommendation
+   We decided to change the orientation of the project: changing the subject/ type of data on which we were going to work, keeping the final aim/algorithms with the same final aim: creating a recommendation engine which could be updated based on some specific methods: data extraction (crawler), creation of a database, matrix factorization, clustering and K-nearest-neighbours algorithm for predictions and recommendation.
+
+Our final project is the following:
+### Tinder for researchers: Recommendation system of papers for researchers
+
+
 
