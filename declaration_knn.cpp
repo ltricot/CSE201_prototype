@@ -77,7 +77,7 @@ std::vector<std::string> Person::get_k_NeighborsInteractions(int& k) const {
 
 /** @brief get the predicted ratings of a list of papers for the client
  * 
- * @details given a list of papers, we use the preferences (thourgh the vector of the client) to predict the ratings of each paper of the list
+ * @details given a list of papers, we use the preferences (through the vector of the client) to predict the ratings of each paper of the list
  * 
  * @param vector of strings : the vector contains titles of papers 
  * @return a pair composed of a vector of float (predicted ratings) and a vector of name of papers (the rating at index i corresponds to the paper at the index i in the vector of papers) 
@@ -116,13 +116,13 @@ std::pair<std::vector<float>,std::vector<std::string>>  Person::getRatings_of_pa
     result.second = name_of_papers_of_ID;
     return result;
     }
-/** @brief get the predicted ratings of a list of papers for the client
+/** @brief choose a paper among a list of paper wth higher probability the more the predicted rating of this paper by the client is important
  * 
- * @details given a list of papers, we use the preferences (thourgh the vector of the client) to predict the ratings of each paper of the list
+ * @details 
  * 
- * @param integer k : number of neighbours in the cluster of the client that we will take into account
- * 
- * @return a pair composed of a vector of float (predicted ratings) and a vector of name of papers (the rating at index i corresponds to the paper at the index i in the vector of papers) 
+ * @param a pair composed of a vector of float (predicted ratings) and a vector of name of papers (the rating at index i corresponds to the paper at the 
+ *
+ * @return a name of a paper from the vector of paper names given as parameter
  */
 std::string Person::get_a_title_paper(std::pair<std::vector<int>,std::vector<std::string>>& result) {
         int proba;
