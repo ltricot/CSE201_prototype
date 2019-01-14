@@ -200,7 +200,7 @@ std::string getID(std::string link) {
     return temp;
 }
 
-Crawler::iterator::iterator(Crawler crawler) { this->parent = crawler; }
+// Crawler::iterator::iterator(Crawler *crawler) { this->parent = crawler; }
 
 bool Crawler::iterator::operator==(iterator other) const { return false; }
 
@@ -226,16 +226,16 @@ Crawler::iterator &Crawler::iterator::operator++() {
      */
 
     // while (bloom.seen(*cursor) && cursor != buffer.end())
-    while (crawler->Set.find(*cursor) != Set.end() && cursor != buffer.end()) {
-        cursor++;
-    }
+    // while (crawler->Set.find(cursor) != crawler->Set.end() && cursor != buffer.end()) {
+    //     cursor++;
+    // }
 
     auto edge = *cursor;
 
     // if (!bloom.seen(edge))
-    if (crawler->Set.find(edge) == Set.end()) {
-        // bloom.add(edge);
-    }
+    // if (crawler.Set.find(edge) == crawler->Set.end()) {
+    //     bloom.add(edge);
+    // }
 
     if (cursor == buffer.end()) {
         std::vector<Edge> edges = crawler->crawl(2);

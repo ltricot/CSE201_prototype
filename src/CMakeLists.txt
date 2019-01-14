@@ -5,3 +5,4 @@ add_subdirectory (engine)
 # must be last as it depends on libraries defined above
 add_subdirectory (executables)
 target_include_directories (crawl PUBLIC "fetching" "database")
+# target_include_directories (download_references PUBLIC "fetching")

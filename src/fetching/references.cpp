@@ -294,6 +294,7 @@ void References::getReferences(){
 // PDFConverter Class //
 ////////////////////////
 
+#ifdef no_time
 /**
  * Launches the curl_easy_setopt (URL, writefunction etc)
  * Input : the id of the pdf we want to convert. We have to check whether we've already converted it with the Bulk method.
@@ -319,6 +320,7 @@ PDFConverter::PDFConverter(std::string id) {
 	// curl_easy_cleanup(curl_handle);
 	// curl_global_cleanup(); 
 }
+#endif
 
 // replaced by function below. mark deleted ?
 PDFConverter::PDFConverter(std::stringstream *pdf) {
