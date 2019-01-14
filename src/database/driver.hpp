@@ -11,12 +11,9 @@ using namespace std;
 /** @brief Template for a generic undirected edge representation
  */
 
-class Driver {
-public:
 
-	// constructor
-	Driver();
-	Driver(std::string directory);
+class Driver {
+    public:
 
 	std::string directory;
 	/// @brief get all edges outwards from ``from``
