@@ -107,19 +107,19 @@ template <int rank> class VectorAccessor {
         v.getvector<rank> (id);
     }
 
-    bool send_vector(Author author, vec){
+    bool send_vector(Author author, vec vect) {
         Vectors v("Authors");
-        string n = author.id;
+        string n = author.name;
         hash<string> hasher;
         size_t foo = hasher(n);
 	    std::ostringstream ostr;
 	    ostr << foo;
 	    string id = ostr.str();
-        v.storevector<rank> (id, vec);
+        v.storevector<rank> (id, vect);
         return true;
     }
 
-    bool send_vector(Paper paper, vec){
+    bool send_vector(Paper paper, vec vect) {
         Vectors v("Papers");
         string n = paper.id;
         hash<string> hasher;
@@ -127,7 +127,7 @@ template <int rank> class VectorAccessor {
 	    std::ostringstream ostr;
 	    ostr << foo;
 	    string id = ostr.str();
-        v.storevector<rank> (id, vec);
+        v.storevector<rank> (id, vect);
         return true;        
     }
 };

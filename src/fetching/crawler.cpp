@@ -200,7 +200,6 @@ std::string getID(std::string link) {
     return temp;
 }
 
-#ifdef UGH
 Crawler::iterator::iterator(Crawler crawler) { this->parent = crawler; }
 
 bool Crawler::iterator::operator==(iterator other) const { return false; }
@@ -245,7 +244,6 @@ Crawler::iterator &Crawler::iterator::operator++() {
         }
     }
 }
-#endif
 
 Crawler::iterator Crawler::begin() {
     iterator it(this);
