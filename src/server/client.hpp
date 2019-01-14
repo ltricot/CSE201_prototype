@@ -7,6 +7,8 @@
 using json = nlohmann::json;
 
 
+// trivial
+
 class Client {
     public:
 
@@ -24,4 +26,4 @@ class Client {
     bool putArticles(std::vector<std::string> articles);
     
     Paper getSummary(Paper paper);
-}
+};
