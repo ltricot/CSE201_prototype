@@ -18,5 +18,11 @@ int main() {
 	Edge e(a, p);
 	Driver d;
 	d.writeEdge(e);
+
+	VectorAccessor<3> v;
+    Eigen::Matrix<double, 3, 1> vec;
+    vec << 1, 2, 3;
+	bool b = v.send_vector(a, vec);
+    cout <<  v.get_vector(a);
 	return 0;
 }

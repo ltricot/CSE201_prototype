@@ -1,11 +1,11 @@
 #include <vector>
 #include <string>
 #include "Vectors.h"
-#include <Eigen/Eigen>
+#include "../../libraries/eigen-eigen-323c052e1731/Eigen/Eigen"
 #include <unordered_map>
 #include <sstream>
 
-#include "primitives.hpp"
+#include "../fetching/primitives.hpp"
 
 
 using namespace std;
@@ -17,6 +17,8 @@ class Driver {
     public:
 
 	std::string directory;
+    Driver() : directory("Matrix"){};
+
 	/// @brief get all edges outwards from ``from``
 	std::vector<Edge> getFrom(Author from);
 	bool writeEdge(Edge edge);  // overwrites
@@ -85,6 +87,7 @@ class EdgeAccessor {
 template <int rank> class VectorAccessor {
     typedef Eigen::Matrix<double, rank, 1> vec;
 
+  public:
     vec get_vector(Author author){
         Vectors v("Authors");
         string n = author.name;
@@ -93,7 +96,7 @@ template <int rank> class VectorAccessor {
 	    std::ostringstream ostr;
 	    ostr << foo;
 	    string id = ostr.str();
-        v.getvector<rank> (id);
+        return v.getvector<rank> (id);
     }
 
     vec get_vector(Paper paper){
@@ -104,7 +107,7 @@ template <int rank> class VectorAccessor {
 	    std::ostringstream ostr;
 	    ostr << foo;
 	    string id = ostr.str();
-        v.getvector<rank> (id);
+        return v.getvector<rank> (id);
     }
 
     bool send_vector(Author author, vec vect) {
