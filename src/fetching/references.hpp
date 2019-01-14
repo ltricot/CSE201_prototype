@@ -24,6 +24,7 @@ std::map<std::string, std::vector<std::string>>
 setUpReferences(std::string folder, std::vector<std::string> archives);
 
 void writeFile(std::map<std::string, std::vector<std::string>> data, std::string filename);
+void readFile(std::string filename);
 
 
 class References {
