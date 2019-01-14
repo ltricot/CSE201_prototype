@@ -12,7 +12,7 @@ get person identity vector or a paper identity vectior*/
 
 /** @brief Get a recommendation (Title of a paper) for a client
  * 
- * @details Using the cluster to which belong the client, we choose k neigbours in this cluster
+ * @details Using the cluster to which belong the client, we choose k neighbours in this cluster
  * The papers read by those neigbours are potential recommendations. We return one of those papers with a probability that depends on the predicted rating of this paper by our client
  * @param integer k: the number of neigbours in the cluster of the client that we will take into account
  * 
@@ -21,25 +21,25 @@ get person identity vector or a paper identity vectior*/
 std::string Person::getRecommendation(int& k) {
     std::vector<std::string> a_list_of_interaction_papers;
     a_list_of_interaction_papers = get_k_NeighborsInteractions(int& k);
-    std::pair<std::vector<int>,std::vector<std::string>> result;
+    std::pair<std::vector<float>,std::vector<std::string>> result;
     result = getRatings_of_papers(std::vector<std::string>& a_list_of_interaction_papers);
     std::string recommendation;
-    recommendation = get_a_Title_paper(std::pair<std::vector<int>,std::vector<std::string>>& result);
+    recommendation = get_a_Title_paper(std::pair<std::vector<float>,std::vector<std::string>>& result);
     return recommendation;
 }
 
-/** @brief get the name of the papers read by k neighbours of the client 
+/** @brief get the titles of the papers read by k neighbours of the client 
  * 
  * @details 
  * 
- * @param integer k : number of neighbours in the cluster of the client that we will take into account
+ * @param integer k : number of neighbours in the cluster of the client that we will consider
  * 
  * @return a vector of name of papers that has been read by those k neighbours
  */
 
-std::vector<std::string> Person::get_k_NeighborsInteractions(int& k) const {
+std::vector<std::string> Person::get_k_NeighborsInteractions(int& k) {
     std::vector<array*> list_of_neighbours_in_cluster;
-    std::vector<array*> list_of_neighbours_in_cluster = author.cluster(); /*get the list of people in the cluster of my user ID =  resultat de lalgo de jules, stocker dans la base de donnée*/
+    std::vector<array*> list_of_neighbours_in_cluster = author.cluster(); /*get the list of people in the cluster of my user:algo of jules and marine*/
     array** total_interactions = new array*[list_of_neighbours_in_cluster.size()];
     int i = 0;
     for (nei = list_of_neighbours_in_cluster.begin(); nei != list_of_neighbours_in_cluster.end(); nei++)
@@ -61,7 +61,7 @@ std::vector<std::string> Person::get_k_NeighborsInteractions(int& k) const {
     std::vector<array*> knn_info;
     for(l = 0;l<=k,l++) {
         n = rand() % list_of_neighbours_in_cluster.size() + 1;
-        knn_info[l] = total_interactions[n]; /* knn info est un liste de liste de papiers, certains papiers peuvent apparaitrent plusieurs fois*/
+        knn_info[l] = total_interactions[n]; /* knn info is a vector of pointers to arrays , each array is a list of paper names, some papers can appears in several arrays */
 
     }
     
