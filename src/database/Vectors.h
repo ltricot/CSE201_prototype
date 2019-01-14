@@ -1,18 +1,19 @@
 #pragma once
 #include <string>
 #include <vector>
-#include "C:\Users\Abdel\Downloads\eigen-eigen-323c052e1731\eigen-eigen-323c052e1731\Eigen"
+#include <Eigen/Eigen>
 
 using namespace std;
 class Vectors{
     public:
     string root_directory;
-    UserVectors();
-    UserVectors(string dir);
-    template <int size> void storevector(string id, Matrix<double, size, 1> vec){
+    Vectors(string dir) : root_directory(dir) {}
+
+    template <int size> void storevector(string id, Eigen::Matrix<double, size, 1> vec){
 	    while (id.length() < 11) {
 		    id.insert(0, 1, '0');
 	    }
+
         string id1 = this->root_directory + "/" + id.substr(0, 3);
         string id2 = id1 + "/" + id.substr(3, 3);
         string id3 = id2 + "/" + id.substr(6, 3);
@@ -34,7 +35,7 @@ class Vectors{
         }
     }
     
-    template <int size> Matrix<double, size, 1> getvector(string id){
+    template <int size> Eigen::Matrix<double, size, 1> getvector(string id){
         while (id.length() < 11){
             id.insert(0, 1, '0');
         }

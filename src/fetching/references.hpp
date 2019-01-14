@@ -6,7 +6,6 @@
 #include <sstream>
 #include <map>
 #include <set>
-#include <pair>
 
 #include <curl/curl.h>
 
@@ -24,7 +23,7 @@ std::map<std::string, std::vector<std::string>>
 setUpReferences(std::string folder, std::vector<std::string> archives);
 
 void writeFile(std::map<std::string, std::vector<std::string>> data, std::string filename);
-void readFile(std::string filename);
+std::map<std::string, std::vector<std::string>> readFile(std::string filename);
 
 
 class References {

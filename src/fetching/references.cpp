@@ -9,6 +9,7 @@
 #include <unistd.h> // thats the unix standard header 
 #include <ctype.h>
 #include <string.h>
+#include <regex>
 
 #include "zlib.h"   // zlib compression library
 
@@ -280,14 +281,13 @@ std::vector<std::string> findRegex(std::string text, std::string regex){
  * which holds the parsed references
  */
 void References::getReferences(){
-	std::string regex ; 
-	regex = R"(arXiv:\d{4}[.](\d{4,5}[v]\d+|\d{4,5}))" ; // taking account of version
+	std::string regex; 
+	regex = R"(arXiv:\d{4}[.](\d{4,5}[v]\d+|\d{4,5}))"; // taking account of version
 	std::vector<std::string> papers = findRegex(textBuffer, regex);
-	for(std::vector<std::string>::iterator pap = papers.begin() ; pap != papers.end() ; pap++){
-		references.push_back(std::pair< paper,   Paper(*pap)  >) ; 
+	for(std::vector<std::string>::iterator pap = papers.begin(); pap != papers.end(); pap++) {
+		references.push_back(std::make_pair(paper, Paper(*pap)));
 	}
 }
-
 
 
 ////////////////////////

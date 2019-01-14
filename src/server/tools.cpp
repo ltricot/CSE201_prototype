@@ -3,6 +3,7 @@
 #include <map>
 #include <iostream>
 #include <stdio.h>
+#include <string>
 
 /** ``writefunction`` parameter of a curl call
  * 

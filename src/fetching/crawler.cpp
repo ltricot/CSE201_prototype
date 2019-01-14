@@ -110,9 +110,9 @@ std::vector<Edge> Crawler::getPairs(std::string xmlstr) {
         std::vector<Paper> summary = getSummary(xmlstr);
         Paper paper = summary[i] ; 
 
-        if(paper.id() != article){
+        if(paper.id != article){
             std::cerr << "Call the cops" << std::endl; 
-            exit();
+            exit(EXIT_FAILURE);
         }
 
         // iteration over authors of this article

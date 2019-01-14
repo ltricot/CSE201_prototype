@@ -1,18 +1,21 @@
 #include <iostream>
+
 #include "crawler.hpp"
+#include "driver.hpp"
 
 
 int main(int argc, char *argv[]) {
-    if(argc != 2) {
-        std::cout << "Provide exactly one source paper ID" << std::endl;
+    if(argc != 3) {
+        std::cout << "Usage: crawl source folder" << std::endl;
+        std::cout << "Example: crawl 1312.4933v2 ./interactions" << std::endl;
         return 1;
     }
 
-    Driver d ; 
+    Driver d(argv[2]);
 
     Crawler crawler = Crawler(Paper(std::string(argv[1])));
     for(Crawler::iterator edgeit = crawler.begin() ; edgeit != crawler.end() ; edgeit++){
-        d.writeEdge(*edgeit) ;
+        d.writeEdge(*edgeit);
         // also do : TBD by Loan
     }
 }

@@ -28,7 +28,7 @@ class tfidf {
 
         /*matrix whose coefficients is the number of occurences of the word of the column 
         in the corresponding document of the row */
-        Eigen::MatrixXd OccMat; 
+        Eigen::MatrixXd OccMat;
         
         Eigen::VectorXd CountDoc;
         unsigned int nrow; // matrix row number

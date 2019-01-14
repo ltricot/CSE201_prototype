@@ -1,11 +1,12 @@
 #include <vector>
 #include <string>
-#include "vectors.h"
+#include "Vectors.h"
 #include <Eigen/Eigen>
 #include <unordered_map>
 #include <sstream>
 
-#include "primitives.h"
+#include "primitives.hpp"
+
 
 using namespace std;
 /** @brief Template for a generic undirected edge representation
@@ -25,6 +26,8 @@ class Driver {
 	std::vector<Edge> getFroms(std::vector<Author> froms);
 	bool writeEdges(std::vector<Edge> edges);
 	bool removeEdges(std::vector<Edge> edges);
+
+    Driver(std::string directory) : directory(directory) {}
 };
 
 
@@ -40,7 +43,7 @@ class Driver {
  */
 class EdgeAccessor {
     private:
-    Driver<std::string, std::string> driver;
+    Driver driver;
 
     /// stores the size of the internal buffer
     unsigned int bufferSize;
@@ -48,7 +51,7 @@ class EdgeAccessor {
     /// stores edges to send when ``getBatch`` is called
     /// there is no need for this to be a vector. maybe making it some sort
     /// of priority queue may be wise
-    std::vector<Edge_t> replayBuffer;
+    std::vector<Edge> replayBuffer;
 
     /** @brief Update the internal buffer by interacting with the database
      * 
@@ -70,7 +73,7 @@ class EdgeAccessor {
 
     class iterator : public std::iterator<
             std::input_iterator_tag,
-            Edge_t, int, const Edge_t*, Edge_t> {
+            Edge, int, const Edge*, Edge> {
         // stuff
     };
 
@@ -80,7 +83,7 @@ class EdgeAccessor {
 
 
 template <int rank> class VectorAccessor {
-    typedef Matrix<double, rank, 1> vec;
+    typedef Eigen::Matrix<double, rank, 1> vec;
 
     vec get_vector(Author author){
         Vectors v("Authors");
@@ -115,6 +118,7 @@ template <int rank> class VectorAccessor {
         v.storevector<rank> (id, vec);
         return true;
     }
+
     bool send_vector(Paper paper, vec){
         Vectors v("Papers");
         string n = paper.id;

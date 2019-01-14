@@ -5,30 +5,9 @@
 #include <unordered_map>
 #include <sstream>
 #include<iostream>
+
 using namespace std;
-Author::Author() {
-	this->name = "";
-}
-Paper::Paper() {
-	this->summary = "";
-	this->id = "";
-}
-Edge::Edge() {
-	this->author = Author();
-	this->paper = Paper();
-	this->weight = 1;
-}
-void Edge::readVector(std::vector<std::string> line, std::string author) {
-	(this->author).name = author;
-	(this->paper).id = line[0];
-	(this->weight) = stod(line[1]);
-}
-Driver::Driver() {
-	this->directory = "Matrix";
-}
-Driver::Driver(string directory) {
-	this->directory = directory;
-}
+
 
 bool Driver::writeEdge(Edge edge) {
 	hash<string> hasher;
@@ -42,6 +21,7 @@ bool Driver::writeEdge(Edge edge) {
 	m.write(row, col, edge.weight, n);
 	return true;
 }
+
 bool Driver::removeEdge(Edge edge) {
 	hash<string> hasher;
 	Matrix m(this->directory);
@@ -54,6 +34,7 @@ bool Driver::removeEdge(Edge edge) {
 	m.del(row, col);
 	return true;
 }
+
 vector<Edge> Driver::getFrom(Author from) {
 	hash<string> hasher;
 	Matrix m(this->directory);
@@ -65,12 +46,14 @@ vector<Edge> Driver::getFrom(Author from) {
 	vector<vector<string>> res = m.getrow(row);
 	vector<Edge> ret;
 	res.erase(res.begin());
+
 	for (vector<vector<string>>::iterator it = res.begin(); it < res.end(); it++) {
 		vector<string> line = *it  ;
 		Edge edge;
 		edge.readVector(line, n);
 		ret.push_back(edge);
 	}
+
 	return ret;
 }
 

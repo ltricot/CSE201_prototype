@@ -7,4 +7,4 @@ include_directories (${Boost_INCLUDE_DIR})
 
 add_executable (tfidf_arxiv tfidf_arxiv.cpp)
 target_link_libraries (tfidf_arxiv tfidf)
-target_link_libraries (tfidf_arxiv PUBLIC ${Boost_LIBRARIES})
+target_link_libraries (tfidf_arxiv PRIVATE ${Boost_LIBRARIES})
