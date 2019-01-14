@@ -12,22 +12,14 @@ In the 30 minutes slot for questions the instructors will ask various question a
 
 
 Initial goal:
-```js
-[
+
     Create a recommender engine of brands for customers depending on fashion brands. We wanted to extract data from social media: Twitter, Instagram, Pinterest, about the actual fashion trends (using #hastags, descriptions, numbers of like, of citations, number of followers). Using that data we would have been able to create bipartite graph of customers and brands (there would have been a link between a user and a customer if there has been an interaction of any type between the brand's account and the customer account on a social media. Using clustering theory we would have created some groups of customers which have similar preferences and interactions. From this we would have use a neighbours-based system to recommand new brands to customers. One other main aim would have been to keep our graph updated , adding new fashion brands (which are being more and more trendy).
-]
-```
+
 Issues:
-```js
-[
-Difficulties to use social networks' API (Twitter, Instagram,...): Restrictions to access some data, limited amount of data.
-]
-```
+
+   Difficulties to use social networks' API (Twitter, Instagram,...): Restrictions to access some data, limited amount of data.
+
 Solution:
-```js
-[
-We decided to change the orientation of the project: changing the subject/ type of data on which we were going to work, keeping the final aim/algorithms with the same final aim: creating a recommendation engine which could be updated based on some specific methods: data extraction, crawling, data organization, interactions and clustering with K-nearest-neighbours algorithm for predictions and recommendation
-]
-```
-### 
+
+   We decided to change the orientation of the project: changing the subject/ type of data on which we were going to work, keeping the final aim/algorithms with the same final aim: creating a recommendation engine which could be updated based on some specific methods: data extraction, crawling, data organization, interactions and clustering with K-nearest-neighbours algorithm for predictions and recommendation
 
