@@ -49,7 +49,6 @@ void search(char *txt, char *pat)
             printf("\n pattern found at position = %d ", s);
             
             s += (s + m < n) ? m - l[txt[s + m]] : 1;
-            //s += std::max(s+m,m)- l[txt[s + m]] ;
             
         }
         
