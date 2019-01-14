@@ -31,7 +31,7 @@ class Crawler {
     private:
 
     bool from;  // when false: from authors. when true: from papers.
-    const Paper source;
+    Paper source;
 
     public:
 

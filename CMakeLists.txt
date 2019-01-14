@@ -7,6 +7,10 @@ set (CMAKE_CXX_FLAGS "${CMAKE_CXX_FLAGS} -std=c++11")
 # ugh dependencies
 include_directories (libraries/eigen-git-mirror)
 
+# add boost to include dirs
+find_package (Boost 1.40 REQUIRED)
+include_directories (${Boost_INCLUDE_DIR})
+
 # structure
 add_subdirectory (src)
 target_include_directories (crawler PUBLIC "libraries")
