@@ -5,9 +5,9 @@ TEST_CASE("fetching/references/readFile,fetching/references/writeFile", "test if
     filename ="test";
     std::map<std::string, std::vector<std::string>> data ;
 
-    data["Loan"].push_back("Loan is cool");
-    data["Maria"].push_back("Maria as well");
+    data["paper_1"].push_back("reference_1/reference_2/reference_3");
+    data["paper_2"].push_back("reference_4/reference_5/reference_6");
 
-    REQUIRE(references.writeFile(data, std::map<std::string, filename) == references.readFile(filename)
+    REQUIRE(references.writeFile(data, filename) == references.readFile(filename));
 }
 //Not finished and not correct
