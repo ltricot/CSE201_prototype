@@ -1,11 +1,13 @@
 #include <vector>
 #include <string>
-
+#include "vectors.h"
 #include <Eigen/Eigen>
+#include <unordered_map>
+#include <sstream>
 
 #include "primitives.h"
 
-
+using namespace std;
 /** @brief Template for a generic undirected edge representation
  */
 
@@ -80,9 +82,48 @@ class EdgeAccessor {
 template <int rank> class VectorAccessor {
     typedef Matrix<double, rank, 1> vec;
 
-    vec get_vector(Author author);
-    vec get_vector(Paper paper);
+    vec get_vector(Author author){
+        Vectors v("Authors");
+        string n = author.name;
+        hash<string> hasher;
+        size_t foo = hasher(n);
+	    std::ostringstream ostr;
+	    ostr << foo;
+	    string id = ostr.str();
+        v.getvector<rank> (id);
+    }
 
-    bool send_vector(Author author, vec);
-    bool send_vector(Paper paper, vec);
+    vec get_vector(Paper paper){
+        Vectors v("Papers");
+        string n = paper.id;
+        hash<string> hasher;
+        size_t foo = hasher(n);
+	    std::ostringstream ostr;
+	    ostr << foo;
+	    string id = ostr.str();
+        v.getvector<rank> (id);
+    }
+
+    bool send_vector(Author author, vec){
+        Vectors v("Authors");
+        string n = author.id;
+        hash<string> hasher;
+        size_t foo = hasher(n);
+	    std::ostringstream ostr;
+	    ostr << foo;
+	    string id = ostr.str();
+        v.storevector<rank> (id, vec);
+        return true;
+    }
+    bool send_vector(Paper paper, vec){
+        Vectors v("Papers");
+        string n = paper.id;
+        hash<string> hasher;
+        size_t foo = hasher(n);
+	    std::ostringstream ostr;
+	    ostr << foo;
+	    string id = ostr.str();
+        v.storevector<rank> (id, vec);
+        return true;        
+    }
 };
