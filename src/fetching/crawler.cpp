@@ -210,7 +210,12 @@ bool Crawler::iterator::operator!=(iterator other) const { return true; }
  */
 Edge Crawler::iterator::operator*() const { return *cursor; }
 
-Crawler::iterator &Crawler::iterator::operator++() {
+Crawler::iterator::iterator(Crawler *crawler) : crawler(crawler) {
+    cursor = buffer.begin();
+    std::cout << "we construct" << std::endl;
+}
+
+Crawler::iterator Crawler::iterator::operator++() {
     /* @brief implementation of the incrementation operator of the cursor
      * iterator.
      * @details the buffer is the place where we store the Edges fetched by the
@@ -247,6 +252,13 @@ Crawler::iterator &Crawler::iterator::operator++() {
 
 Crawler::iterator Crawler::begin() {
     iterator it(this);
+    std::vector<Edge> edges = this->crawl(2);
+
+    for (Edge edge : edges) {
+        it.buffer.push_back(edge);
+        std::cout << edge.paper.id << std::endl;
+    }
+
     return it;
 }
 
@@ -301,6 +313,8 @@ std::vector<Edge> Crawler::crawl(int steps) {
     std::vector<Edge> buffer;
     std::vector<Edge> tempPapers;
     std::vector<Edge> tempAuthors;
+
+    std::cout << "crawlinggg" << std::endl;
 
     while (steps-- > 0) {
 
