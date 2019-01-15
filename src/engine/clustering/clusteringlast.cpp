@@ -70,36 +70,22 @@ void cluster::getCDF(){
     }
 }
 int cluster::getMaxSim(int & index){
-    std::vector<int> orderedNeigh = orderedNEIGH[index];
-    std::vector<double> cdf= allCDF[index];
     // simulate a random experience to pick the neighbor
     double flip=(double) (rand()) /  (double) (RAND_MAX); //random float between 0 and 1
-    for (int ind=0;ind<cdf.size();ind++){
-        if (cdf[ind]>=flip){
-            cdf.clear();
-            int b=orderedNeigh[ind];
-            orderedNeigh.clear();
-            return b;  
+    for (int ind=0;ind<allCDF[index].size();ind++){
+        if (allCDF[index][ind]>=flip){
+            return orderedNEIGH[index][ind];
         }
     }  
-    int a= cdf.size()-1;
-    cdf.clear();
-    int b=orderedNeigh[a];
-    orderedNeigh.clear();
-    return b;
+    return orderedNEIGH[index][allCDF[index].size()-1];
 }
 
-void cluster::updatelabel(){
+void cluster::updatelabel(int order[]){
     //need to save the rate of updates
     int nbupdate =0;
-    std::vector<int> unvisited;
-    for (int i=0;i<sizeInput;i++){
-        unvisited.push_back(i);
-    }
-    std::random_shuffle(unvisited.begin(),unvisited.end());
     std::set<int> visited;
     for (int j=0; j<sizeInput;j++){
-        int index=unvisited[j];
+        int index = order[j];
         if (visited.find(index)==visited.end()){
             int max=getMaxSim(index);
             visited.insert(index);
@@ -110,21 +96,22 @@ void cluster::updatelabel(){
             }
         }
     }
-    updaterate= double(nbupdate)/sizeInput;
-    
+    updaterate= double(nbupdate)/sizeInput;  
 }
 
 
-void cluster::createcluster( std::vector<Eigen::VectorXd> & input){
-    nodes= input;
-    sizeInput = input.size();
-    
+void cluster::createcluster(){
     findneighbors();
     initializelabel();
     getCDF();
     updaterate =1;
+    int order [sizeInput];
+    for (int i=0;i<sizeInput;i++){
+        order [i]=i;
+    }
     while (updaterate>0.1){ //while the rate of updates in the graph is greater to 1% we continue to update PB TOO SLOW TO HAVE THIS THRESHOLD
-        updatelabel();
+        std::random_shuffle(&order[0], &order[sizeInput]);
+        updatelabel(order);
         std::cout<<updaterate<<std::endl;
     }
 }
