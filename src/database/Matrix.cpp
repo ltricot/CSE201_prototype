@@ -49,7 +49,6 @@ double Matrix::read(long long i, long long j) {
 	return this->read(id, column);
 }
 void Matrix::write(string i, string j, double val, string name) {
-	cout << i << endl;
 	string &id = i;
 	string &column = j;
 	string app = column + "," + to_string(val);
@@ -70,7 +69,6 @@ void Matrix::write(string i, string j, double val, string name) {
     const int dir_er3 = _mkdir(path3);//, 0666);
 
 	string filepath = id3 + "/" + id.substr(9, 2) + ".txt";
-	cout << filepath;
 	ifstream inp(filepath);
 	ofstream out(id3 + "/" + "tmp.txt");
 

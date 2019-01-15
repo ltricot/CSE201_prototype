@@ -42,7 +42,6 @@ class Vectors {
         	
         string filepath = id3 + "/" + id.substr(9, 2) + ".txt";
         
-		cout << filepath << "\n";
         ofstream out(filepath);
 
         for(int i = 0; i < size; i++){
