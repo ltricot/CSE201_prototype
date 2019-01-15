@@ -9,6 +9,7 @@
 using namespace std;
 
 
+const int lat_feat = 200;
 bool Driver::writeEdge(Edge edge) {
 	hash<string> hasher;
 	Matrix m(this->directory);
@@ -18,6 +19,13 @@ bool Driver::writeEdge(Edge edge) {
 	ostr << foo;
 	string row = ostr.str();
 	string col = edge.paper.id;
+	Eigen::Matrix<double, lat_feat, 1> p = (Eigen::MatrixXd::Random(lat_feat, 1) + Eigen::MatrixXd::Constant(lat_feat,1, 1.))*0.5;
+        Eigen::Matrix<double, lat_feat, 1> q =
+            (Eigen::MatrixXd::Random(lat_feat, 1) + Eigen::MatrixXd::Constant(lat_feat, 1, 1.)) *
+            0.5;
+    VectorAccessor<lat_feat> v;
+    v.send_vector(edge.author, p);
+    v.send_vector(edge.paper, q);
 	m.write(row, col, edge.weight, n);
 	return true;
 }
