@@ -7,8 +7,12 @@
 #include <sys/types.h>
 #include <sys/stat.h>
 
-#include "Eigen/Eigen"
+#include "../../libraries/eigen-eigen-323c052e1731/Eigen/Eigen"
 
+
+#include <direct.h>
+#include <stdlib.h>
+#include <stdio.h>
 
 
 using namespace std;
@@ -32,9 +36,9 @@ class Vectors {
         const char * path2 = id2.c_str();
         const char * path3 = id3.c_str();
 
-        const int dir_er1 = mkdir(path1, 0666);
-        const int dir_er2 = mkdir(path2, 0666);
-        const int dir_er3 = mkdir(path3, 0666);
+        const int dir_er1 = _mkdir(path1);//, 0666);
+        const int dir_er2 = _mkdir(path2);//, 0666);
+        const int dir_er3 = _mkdir(path3);//, 0666);
         	
         string filepath = id3 + "/" + id.substr(9, 2) + ".txt";
         
@@ -59,9 +63,9 @@ class Vectors {
         const char * path2 = id2.c_str();
         const char * path3 = id3.c_str();
 
-        const int dir_er1 = mkdir(path1, 0666);
-        const int dir_er2 = mkdir(path2, 0666);
-        const int dir_er3 = mkdir(path3, 0666);
+        const int dir_er1 = _mkdir(path1);//, 0666);
+        const int dir_er2 = _mkdir(path2);//, 0666);
+        const int dir_er3 = _mkdir(path3);//, 0666);
 
         string filepath = id3 + "/" + id.substr(9, 2) + ".txt";
 

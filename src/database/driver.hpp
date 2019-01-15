@@ -1,11 +1,11 @@
 #include <vector>
 #include <string>
 #include "Vectors.h"
-#include "Eigen/Eigen"
+#include "../../libraries/eigen-eigen-323c052e1731/Eigen/Eigen"
 #include <unordered_map>
 #include <sstream>
 
-#include "primitives.hpp"
+#include "../fetching/primitives.hpp"
 
 
 using namespace std;
