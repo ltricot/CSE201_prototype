@@ -67,9 +67,9 @@ std:: vector<int> MinHash::getSignature(const Author &author)
     return user_signature;
 }
 
-float MinHash::getSimilarity(const Author &author1, const Author &author2){
+double MinHash::getSimilarity(const Author &author1, const Author &author2){
     //computes the similarity between 2 authors
-    int count = 0;
+    double count = 0;
     std::vector<int> signature1 = getSignature(author1);
     std::vector<int> signature2 = getSignature(author2);
     for (int i = 0; i < hash_nb; i++){
@@ -77,7 +77,7 @@ float MinHash::getSimilarity(const Author &author1, const Author &author2){
             count += 1;
         }
     }
-    return count/hash_nb;
+    return double(count)/hash_nb;
 }
 
 void MinHash::update(Edge edge)
