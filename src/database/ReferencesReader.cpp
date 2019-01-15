@@ -3,6 +3,7 @@
 #include <boost/algorithm/string.hpp>
 #include <sys/stat.h>
 #include <sys/types.h>
+#include "driver.hpp"
 #include <direct.h>
 
 using namespace std;
@@ -26,7 +27,8 @@ Matrix ReferencesReader::MakeMatrix() {
 		boost::algorithm::split(vec, line, boost::is_any_of(this->delim));
 		string id = vec[0];
 		string ref = vec[1];
-		m.write(id, ref, 1);
+		Driver d;
+		d.writeEdge(Edge(Author(id), Paper(ref), 1));
 	}
 	file.close();
 	return m;

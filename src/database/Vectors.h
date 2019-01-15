@@ -6,7 +6,7 @@
 #include <iostream>
 #include <sys/types.h>
 #include <sys/stat.h>
-
+#include <cfloat>
 #include "../../libraries/eigen-eigen-323c052e1731/Eigen/Eigen"
 
 
@@ -72,13 +72,13 @@ class Vectors {
         ifstream inp(filepath);
         int counter = 0;
         Eigen::Matrix<double, size, 1> ret;
-	    string line;
+        ret(1,0) = -DBL_MAX;
+		string line;
         while (getline(inp, line)) {
             line.erase(remove(line.begin(), line.end(), '\n'), line.end());
             ret(counter, 0) = stod(line);
             counter += 1;
         }
-
         return ret;
     }
 };

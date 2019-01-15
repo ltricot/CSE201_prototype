@@ -24,8 +24,13 @@ bool Driver::writeEdge(Edge edge) {
             (Eigen::MatrixXd::Random(lat_feat, 1) + Eigen::MatrixXd::Constant(lat_feat, 1, 1.)) *
             0.5;
     VectorAccessor<lat_feat> v;
-    v.send_vector(edge.author, p);
-    v.send_vector(edge.paper, q);
+	Eigen::Matrix<double, lat_feat, 1> vect1 = v.get_vector(edge.author);
+    if (vect1(1, 0) == -DBL_MAX) {
+		v.send_vector(edge.author, p);
+		}        
+    if (v.get_vector(edge.paper)(1,0) == -DBL_MAX){
+		v.send_vector(edge.paper, q);
+	}
 	m.write(row, col, edge.weight, n);
 	return true;
 }
