@@ -36,7 +36,7 @@ class MinHash {
     std::vector<int> getSignature(const Author &author);
 
     //computes the similarity between 2 authors
-    float getSimilarity(const Author &author1, const Author &author2);
+    double getSimilarity(const Author &author1, const Author &author2);
 
     //adds the author to the users2articles map if he was never seen
     //adds paper to the image of my user by the users2articles map if it is not already in it
