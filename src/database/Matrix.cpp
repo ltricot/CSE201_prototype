@@ -6,20 +6,17 @@
 #include <iostream>
 #include <boost/algorithm/string.hpp>
 
-#include <direct.h>
-#include <stdio.h>
-#include <stdlib.h>
 
 using namespace std;
 
 Matrix::Matrix(string dir) {
 	this->root_directory = dir;
-    int res = _mkdir(dir.c_str());// , 0666);
+    int res = mkdir(dir.c_str() , 0666);
 }
 
 Matrix::Matrix() {
 	this->root_directory = "Matrix";
-    int res = _mkdir("Matrix");//, 0666);
+    int res = mkdir("Matrix", 0666);
 }
 
 double Matrix::read(string i, string j) {
@@ -60,13 +57,13 @@ void Matrix::write(string i, string j, double val, string name) {
 	string id2 = id1 + "/" + id.substr(3, 3);
 	string id3 = id2 + "/" + id.substr(6, 3);
 
-	const char * path1 = id1.c_str();
-	const char * path2 = id2.c_str();
-	const char * path3 = id3.c_str();
+        const char *path1 = id1.c_str();
+        const char *path2 = id2.c_str();
+        const char *path3 = id3.c_str();
 
-	const int dir_er1 = _mkdir(path1);//, 0666);
-    const int dir_er2 = _mkdir(path2);//, 0666);
-    const int dir_er3 = _mkdir(path3);//, 0666);
+        const int dir_er1 = mkdir(path1, 0666);
+        const int dir_er2 = mkdir(path2, 0666);
+        const int dir_er3 = mkdir(path3, 0666);
 
 	string filepath = id3 + "/" + id.substr(9, 2) + ".txt";
 	ifstream inp(filepath);
@@ -122,14 +119,13 @@ vector<vector<string>> Matrix::getrow(string i) {
 	string id2 = id1 + "/" + id.substr(3, 3);
 	string id3 = id2 + "/" + id.substr(6, 3);
 
-	const char * path1 = id1.c_str();
-	const char * path2 = id2.c_str();
-	const char * path3 = id3.c_str();
+        const char *path1 = id1.c_str();
+        const char *path2 = id2.c_str();
+        const char *path3 = id3.c_str();
 
-
-	const int dir_er1 = _mkdir(path1); //, 0666);
-    const int dir_er2 = _mkdir(path2); //, 0666);
-    const int dir_er3 = _mkdir(path3); //, 0666);
+        const int dir_er1 = mkdir(path1, 0666);
+        const int dir_er2 = mkdir(path2, 0666);
+        const int dir_er3 = mkdir(path3, 0666);
 
 	string filepath = id3 + "/" + id.substr(9, 2) + ".txt";
 	Reader r(filepath);
@@ -153,9 +149,9 @@ void Matrix::del (string i, string j) {
 	const char * path3 = id3.c_str();
 
 
-	const int dir_er1 = _mkdir(path1); //, 0666);
-    const int dir_er2 = _mkdir(path2); //, 0666);
-    const int dir_er3 = _mkdir(path3); //, 0666);
+        const int dir_er1 = mkdir(path1, 0666);
+        const int dir_er2 = mkdir(path2, 0666);
+        const int dir_er3 = mkdir(path3, 0666);
 
 	string filepath = id3 + "/" + id.substr(9, 2) + ".txt";
 	ifstream inp(filepath);

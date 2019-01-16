@@ -7,12 +7,9 @@
 #include <sys/types.h>
 #include <sys/stat.h>
 #include <cfloat>
-#include "../../libraries/eigen-eigen-323c052e1731/Eigen/Eigen"
+#include "Eigen/Eigen"
 
 
-#include <direct.h>
-#include <stdlib.h>
-#include <stdio.h>
 
 
 using namespace std;
@@ -36,9 +33,9 @@ class Vectors {
         const char * path2 = id2.c_str();
         const char * path3 = id3.c_str();
 
-        const int dir_er1 = _mkdir(path1);//, 0666);
-        const int dir_er2 = _mkdir(path2);//, 0666);
-        const int dir_er3 = _mkdir(path3);//, 0666);
+        const int dir_er1 = mkdir(path1, 0666);
+        const int dir_er2 = mkdir(path2, 0666);
+        const int dir_er3 = mkdir(path3, 0666);
         	
         string filepath = id3 + "/" + id.substr(9, 2) + ".txt";
         
@@ -54,22 +51,23 @@ class Vectors {
             id.insert(0, 1, '0');
         }
 
-        string id1 = this->root_directory + "/" + id.substr(0, 3);
+		string id1 = this->root_directory + "/" + id.substr(0, 3);
         string id2 = id1 + "/" + id.substr(3, 3);
         string id3 = id2 + "/" + id.substr(6, 3);
 
-        const char * path1 = id1.c_str();
-        const char * path2 = id2.c_str();
-        const char * path3 = id3.c_str();
+        const char *path1 = id1.c_str();
+        const char *path2 = id2.c_str();
+        const char *path3 = id3.c_str();
 
-        const int dir_er1 = _mkdir(path1);//, 0666);
-        const int dir_er2 = _mkdir(path2);//, 0666);
-        const int dir_er3 = _mkdir(path3);//, 0666);
+        const int dir_er1 = mkdir(path1, 0666);
+        const int dir_er2 = mkdir(path2, 0666);
+        const int dir_er3 = mkdir(path3, 0666);
 
         string filepath = id3 + "/" + id.substr(9, 2) + ".txt";
-
+		
         ifstream inp(filepath);
-        int counter = 0;
+		
+		int counter = 0;
         Eigen::Matrix<double, size, 1> ret;
         ret(1,0) = -DBL_MAX;
 		string line;
