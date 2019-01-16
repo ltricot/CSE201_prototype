@@ -3,6 +3,7 @@
 #include <iostream>
 #include <map>
 #include <stdio.h>
+#include "tools.hpp"
 
 static std::size_t makeString(void *contents, size_t size, size_t nmemb, std::string *s) {
     std::size_t newLength = size * nmemb;
@@ -47,6 +48,8 @@ static size_t read_callback(void *dest, size_t size, size_t nmemb, void *userp){
 std::string get(std::string url) {
     // creating curl object
     CURL *curl;
+
+    //return value
     std::string response;
 
     // initializing the curl object
@@ -77,9 +80,12 @@ std::string get(std::string url) {
     return response;
 }
 
-void post(std::string url, std::string body) {
+std::string post(std::string url, std::string body) {
     // creating curl object
     CURL *curl;
+
+    //return value
+    std::string response;
 
     // initializing the curl object
     curl = curl_easy_init();
@@ -94,6 +100,12 @@ void post(std::string url, std::string body) {
         // we must esacpe the url (get rid of bad characters)
         const char *c_url = url.c_str();
         curl_easy_setopt(curl, CURLOPT_URL, url.c_str());
+
+        // send all data to this callback function so we can return it afterwards
+        //curl_easy_setopt(curl, CURLOPT_WRITEFUNCTION, makeString);
+
+        // data pointer to pass to the write callback
+        //curl_easy_setopt(curl, CURLOPT_WRITEDATA, &response);
 
         //this specifies that we want to post data(body in our case):
         curl_easy_setopt(curl, CURLOPT_POST, 1L);
@@ -116,14 +128,23 @@ void post(std::string url, std::string body) {
         // cleanup
         curl_easy_cleanup(curl);
     }
+
+    // error handling
+    if (response.size() == 0) {
+        return "curl_easy_perform() failed";
+    }
+    return response;
 }
 
-void put(std::string url, std::string body) {
+std::string put(std::string url, std::string body) {
     // creating curl object
     CURL *curl;
 
     // initializing the curl object
     curl = curl_easy_init();
+
+    //return value
+    std::string response;
 
     //initialize the data we want to send (body in this case) as a To_send object
     struct To_send data;
@@ -135,6 +156,12 @@ void put(std::string url, std::string body) {
         // we must esacpe the url (get rid of bad characters)
         const char *c_url = url.c_str();
         curl_easy_setopt(curl, CURLOPT_URL, url.c_str());
+
+        // send all data to this callback function so we can return it afterwards
+        curl_easy_setopt(curl, CURLOPT_WRITEFUNCTION, makeString);
+
+        // data pointer to pass to the write callback
+        curl_easy_setopt(curl, CURLOPT_WRITEDATA, &response);
 
         //enables uploading
         curl_easy_setopt(curl, CURLOPT_UPLOAD, 1L);
@@ -160,10 +187,16 @@ void put(std::string url, std::string body) {
         // cleanup
         curl_easy_cleanup(curl);
     }
+
+    // error handling
+    if (response.size() == 0) {
+        return "curl_easy_perform() failed";
+    }
+    return response;
 }
 
 int main() {
-    curl_global_init(CURL_GLOBAL_DEFAULT);
+     curl_global_init(CURL_GLOBAL_DEFAULT);
 
     /*
     g++ tools.cpp -lcurl
@@ -177,13 +210,12 @@ int main() {
     */
 
     /* Example how to use post() function
-    post("http://httpbin.org/post", "random_text");
+    std::cout << put("http://httpbin.org/post", "random_text") << std::endl;
     */
 
      /* Example how to use put() function
-    put("http://httpbin.org/put", "random_text");
+    std::cout << put("http://httpbin.org/put", "random_text") << std::endl;
     */
-   
     curl_global_cleanup();
     return 0;
 }
