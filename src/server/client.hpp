@@ -10,6 +10,8 @@ using json = nlohmann::json;
 // trivial
 
 class Client {
+    private:
+    std::vector<std::string> topics;
     public:
 
     // server properties
