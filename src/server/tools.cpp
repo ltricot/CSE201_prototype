@@ -89,7 +89,6 @@ void post(std::string url, std::string body) {
     const char *c_body = body.c_str();
     data.readptr = c_body;
     data.sizeleft = strlen(c_body);
-    //-------------------------
 
     if(curl){
         // we must esacpe the url (get rid of bad characters)
@@ -131,7 +130,6 @@ void put(std::string url, std::string body) {
     const char *c_body = body.c_str();
     data.readptr = c_body;
     data.sizeleft = strlen(c_body);
-    //-------------------------
 
     if(curl){
         // we must esacpe the url (get rid of bad characters)
