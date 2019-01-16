@@ -31,7 +31,7 @@ std::vector<std::string> Client::getLikes(Author author) {
 }
 
 bool Client::putLikes(Author author, std::vector<std::string> topics){
-    std::string response =  post(ip + /users/:id/likes);
+    std::string response =  put(ip + /users/:id/likes);
     json resp = json::parse(response);
     if (resp.success == 1) {
         return true
@@ -43,11 +43,13 @@ bool Client::putLikes(Author author, std::vector<std::string> topics){
 
 Paper Client::getRecommendation(Author author) {
     std::string response = get(ip + /users/:id/recommendation);
-
+    json resp = json::parse(response);
+    Paper new_paper(resp.article);
+    return new_paper;
 }
 
 Paper Client::getSummary(Paper paper) {
-    return get(ip + /);
+    std::string = response get(ip + /);
 }
 
 std::vector<std::string> Client::getArticles(Author author) {
@@ -71,5 +73,3 @@ bool Client::putArticles(std::vector<std::string> articles){
         return false
     }
 }
-
-// hello world
