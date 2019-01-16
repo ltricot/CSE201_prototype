@@ -31,14 +31,15 @@ class Crawler {
     private:
 
     bool from;  // when false: from authors. when true: from papers.
-    Paper source;
+    std::vector<Paper> paperSource;
+    std::vector<Author> authorSource;
 
     public:
 
     std::set<std::string> Set ; 
 
     // constructor
-    Crawler(Paper source) : source(source) {}
+    Crawler(Paper source) : paperSource({source}), from(true) {}
 
     /**
      * Facilitator function wrapping libcurl calls.

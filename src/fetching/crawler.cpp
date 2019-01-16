@@ -2,6 +2,7 @@
 #include <set>
 #include <sstream>
 #include <string>
+#include <cstring>
 #include <vector>
 
 #include "rapidxml/rapidxml.hpp"
@@ -43,15 +44,11 @@ std::string Crawler::callArxiv(std::string url) {
 
     // initialize curl session
     // curl_gloabl_init shoyuld be outside of this method
-    curl_global_init(CURL_GLOBAL_ALL);
+
     curl_handle = curl_easy_init();
     curl_easy_setopt(curl_handle, CURLOPT_VERBOSE, 0L); // ugh so much printing
 
     // provide the URL to use in the request
-    // we must esacpe the url (get rid of bad characters)
-    // const char* c_url = url.c_str();
-    // char* escaped = curl_easy_escape(curl_handle, c_url, 0);
-
     curl_easy_setopt(curl_handle, CURLOPT_URL, url.c_str());
     curl_easy_setopt(curl_handle, CURLOPT_VERBOSE,
                      0L); // very useful for libcurl and/or protocol debugging
@@ -72,13 +69,13 @@ std::string Crawler::callArxiv(std::string url) {
     // cleanup curl stuff
     // curl_free(escaped);
     curl_easy_cleanup(curl_handle);
-    curl_global_cleanup();
-
     return response;
 }
 
 
 std::vector<Edge> Crawler::getPairs(std::string xmlstr) {
+    std::cerr << "Crawler::getPairs" << std::endl;
+
     // return value
     std::vector<Edge> pairs;
 
@@ -108,9 +105,9 @@ std::vector<Edge> Crawler::getPairs(std::string xmlstr) {
 
         // Paper(article) has to be created here with the summary 
         std::vector<Paper> summary = getSummary(xmlstr);
-        Paper paper = summary[i] ; 
+        Paper paper = summary[i];
 
-        if(paper.id != article){
+        if(paper.id != article) {
             std::cerr << "Call the cops" << std::endl;
             std::cerr << paper.id << " != " << article << std::endl;
             exit(EXIT_FAILURE);
@@ -120,7 +117,6 @@ std::vector<Edge> Crawler::getPairs(std::string xmlstr) {
         for (author = entry->first_node("author");
              author && author->name() == std::string("author"); author = author->next_sibling()) {
             name = author->first_node("name")->value();
-
             pairs.push_back(Edge(Author(name), paper));
         }
 
@@ -132,6 +128,8 @@ std::vector<Edge> Crawler::getPairs(std::string xmlstr) {
 
 
 std::vector<Edge> Crawler::fromAuthors(std::vector<Author> authors) {
+    std::cerr << "Crawler::fromAuthors" << std::endl;
+
     // return value & auxiliary iteration variable
     std::vector<Edge> pairs;
     std::vector<Edge> pairs_aux;
@@ -147,8 +145,10 @@ std::vector<Edge> Crawler::fromAuthors(std::vector<Author> authors) {
     for (author = authors.begin(); author != authors.end(); author++) {
         url.str("");
         url << "http://export.arxiv.org/api/query?search_query=au:";
-        url << author->name << "&maxresults=100";
+        char *escaped = curl_escape(author->name.c_str(), author->name.length());
+        url << escaped << "&maxresults=100";
         xmlstr = this->callArxiv(url.str());
+        curl_free(escaped);
 
         // extend found pairs with this author's new pairs
         pairs_aux = getPairs(xmlstr);
@@ -160,6 +160,8 @@ std::vector<Edge> Crawler::fromAuthors(std::vector<Author> authors) {
 }
 
 std::vector<Edge> Crawler::fromPapers(std::vector<Paper> papers) {
+    std::cerr << "Crawler::fromPapers" << std::endl;
+
     // return value & auxiliary iteration variable
     std::vector<Edge> pairs;
     std::vector<Edge> pairs_aux;
@@ -206,20 +208,25 @@ std::string getID(std::string link) {
 bool Crawler::iterator::operator==(iterator other) const { return false; }
 
 bool Crawler::iterator::operator!=(iterator other) const { return true; }
+
 /**
  * @return an Edge
  */
-Edge Crawler::iterator::operator*() const { return *cursor; }
+Edge Crawler::iterator::operator*() const {
+    std::cerr << "Crawler::iterator::operator*" << std::endl;
+
+    auto ret = *cursor;
+    return ret;
+}
 
 Crawler::iterator::iterator(Crawler *crawler, bool init) : crawler(crawler) {
-    cursor = buffer.begin();
-    std::cout << "we construct" << std::endl;
-
     if (init) {  // crawl a bit at initialization
         std::vector<Edge> edges = crawler->crawl(2);
         for (Edge edge : edges)
             buffer.push_back(edge);
     }
+
+    cursor = buffer.begin();
 }
 
 Crawler::iterator Crawler::iterator::operator++() {
@@ -241,21 +248,30 @@ Crawler::iterator Crawler::iterator::operator++() {
     // while (crawler->Set.find(cursor) != crawler->Set.end() && cursor != buffer.end()) {
     //     cursor++;
     // }
+    std::cerr << "Crawler::iterator::operator++" << std::endl;
 
-    auto edge = *cursor;
+    if (cursor == buffer.end())
+        goto fillup;
+    else if (++cursor == buffer.end())
+        goto fillup;
+    else
+        goto done;
+
+    fillup: {
+        std::vector<Edge> edges = crawler->crawl(1);
+        for (Edge edge : edges) {
+            buffer.push_back(edge);
+        }
+    }
+
+    // auto edge = *(*this);
 
     // if (!bloom.seen(edge))
     // if (crawler.Set.find(edge) == crawler->Set.end()) {
     //     bloom.add(edge);
     // }
 
-    if (cursor == buffer.end()) {
-        std::vector<Edge> edges = crawler->crawl(2);
-        for (Edge edge : edges) {
-            buffer.push_back(edge);
-        }
-    }
-
+    done:
     return *this ; 
 
 }
@@ -271,6 +287,8 @@ Crawler::iterator Crawler::end() {
 }
 
 std::vector<Paper> Crawler::getSummary(std::string xmlstr) {
+    std::cerr << "Crawler::getSummary" << std::endl;
+
     // return value
     std::vector<Paper> summ;
 
@@ -314,21 +332,21 @@ std::vector<Paper> Crawler::getSummary(std::string xmlstr) {
  * @return a vector of (author, paper) pairs.
  */
 std::vector<Edge> Crawler::crawl(int steps) {
+    std::cerr << "Crawler::crawl" << std::endl;
+
     std::vector<Edge> buffer;
     std::vector<Edge> tempPapers;
     std::vector<Edge> tempAuthors;
 
-    // std::cout << "crawlinggg" << std::endl;
-
     while (steps-- > 0) {
         // beug
-        Paper last ; 
+        // Paper last;
 
         // case where from = 1, i.e. request comes from papers
         // then, we call fromPapers()
         if (from) {
-            std::vector<Paper> start = {source}; // vector of one Paper with value source
-
+            /* FIND WHICH PAPERS TO FOLLOW THROUGH */
+            std::vector<Paper> start = paperSource; // vector of one Paper with value source
             std::vector<Paper> unseen; // vector of Paper objects not already in
                                        // the Set (i.e. we haven't seen them)
 
@@ -336,13 +354,13 @@ std::vector<Edge> Crawler::crawl(int steps) {
                  paper++) {
 
                 if (Set.find(paper->id) == Set.end()) {
-                    //std::cout << "not find" << std::endl;
-                    unseen.push_back(*paper); // do we need * here ?
+                    unseen.push_back(*paper);
                 }
             }
+            /* END FIND */
 
+            /* FOLLOW UNSEEN PAPERS */
             tempPapers = fromPapers(unseen);
-            //std::cout << "not fromPapers" << std::endl;
 
             // we get the references of the papers we havent already seen
 
@@ -350,83 +368,73 @@ std::vector<Edge> Crawler::crawl(int steps) {
             for (std::vector<Edge>::iterator edge = tempPapers.begin(); edge != tempPapers.end();
                  edge++) {
                 papers.push_back(edge->paper);
-                //std::cout << edge->paper.id << std::endl ; 
-                //std::cout << "HEREEE HEREEE" << std::endl ; 
             }
 
             std::vector<std::pair<Paper, Paper>> references = getReferences(papers);
-            //std::cout << "not getReferences" << std::endl;
 
             std::vector<Edge> newEdges;
-
-            for (int i = 0; i != buffer.size(); i++) {
+            #ifdef refdone
+            for (int i = 0; i != references.size(); i++) {
 
                 if (buffer[i].paper.id == references[i].first.id) {
                     // we add this edge only if we havent seen the author nor
                     // the paper
 
+
                     if (Set.find(buffer[i].author.name) == Set.end() &&
                         Set.find(references[i].second.id) == Set.end()) {
-                        //std::cout << "not the Set.find" << std::endl;
+
                         newEdges.push_back(Edge(buffer[i].author, references[i].second));
-                        //std::cout << Edge(buffer[i].author, references[i].second).paper.id << std::endl ; 
+                        std::cerr << Edge(buffer[i].author, references[i].second).paper.id << std::endl ; 
                     }
                 }
             }
-
-            // which one will we be needing to do?
+            #endif
 
             // Move elements from newEdges to tempPapers.
             tempPapers.insert(tempPapers.end(), std::make_move_iterator(newEdges.begin()),
                               std::make_move_iterator(newEdges.end()));
 
             // Move elements from tempPapers to buffer.
-            buffer.insert(buffer.end(), std::make_move_iterator(tempPapers.begin()),
-                          std::make_move_iterator(tempPapers.end()));
+            buffer.insert(buffer.end(), tempPapers.begin(), tempPapers.end());
+
+            // set author source for next iter
+            authorSource.clear();
+            for(auto edge : tempPapers)
+                authorSource.push_back(edge.author);
 
             // beug
-            last = tempPapers.end()->paper ; 
-        }
+            // last = tempPapers.end()->paper ; 
 
-        // case where from = 0, i.e. request comes from authors
-        // then, we call fromAuthors()
-        else {
+            // add things to Set
+        } else {
             std::vector<Author> authors;
             for (std::vector<Edge>::iterator edge = tempPapers.begin(); edge != tempPapers.end();
                  edge++) {
+
                 // if we havent seen this author we take it
                 if (Set.find(edge->author.name) == Set.end()) {
                     authors.push_back(edge->author);
-                    //std::cout << edge->author.name << std::endl ; 
-                    //std::cout << "not Set.find" << std::endl;
 
                     // beug
-                    last = edge->paper.id ; 
+                    // last = edge->paper.id ; 
                 }
             }
 
             tempAuthors = fromAuthors(authors);
 
+            paperSource.clear();
+            for(auto edge : tempAuthors)
+                paperSource.push_back(edge.paper);
+
             // Move elements from tempAuthors to buffer.
             buffer.insert(buffer.end(), std::make_move_iterator(tempAuthors.begin()),
                           std::make_move_iterator(tempAuthors.end()));
-
             
         }
 
-        from = !from;
-
-        // beug
-        source = last ; 
+        this->from = !(this->from);
     }
 
-    //std::cout << "out of while" << std::endl;
-
-    std::cout << "buffer = " << std::endl ;
-
-    for(std::vector<Edge>::iterator ite = buffer.begin() ; ite != buffer.end() ; ++ite){
-        std::cout << ite->author.name << std::endl ; 
-        std::cout << ite->paper.id << std::endl ; 
-    }
     return buffer;
 }
