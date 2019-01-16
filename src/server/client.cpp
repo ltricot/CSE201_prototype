@@ -29,8 +29,13 @@ std::vector<std::string> Client::getLikes(Author author) {
     return ret;
 }
 
+<<<<<<< HEAD
 bool Client::putLikes(Author author, std::vector<std::string> topics) {
     std::string response = post(ip + "/users/:id/likes");
+=======
+bool Client::putLikes(Author author, std::vector<std::string> topics){
+    std::string response =  put(ip + /users/:id/likes);
+>>>>>>> db5f0d1dca23fc440382c12b58dce566cd7e0c7e
     json resp = json::parse(response);
     if (resp.success == 1) {
         return true
@@ -40,6 +45,7 @@ bool Client::putLikes(Author author, std::vector<std::string> topics) {
 }
 
 Paper Client::getRecommendation(Author author) {
+<<<<<<< HEAD
     std::string response = get(ip + / users / : id / recommendation);
 }
 
@@ -55,6 +61,16 @@ Paper Client::getSummary(Paper paper) {
 
     std::cout << "Call the cops" << std::endl;
     exit(EXIT_FAILURE);
+=======
+    std::string response = get(ip + /users/:id/recommendation);
+    json resp = json::parse(response);
+    Paper new_paper(resp.article);
+    return new_paper;
+}
+
+Paper Client::getSummary(Paper paper) {
+    std::string = response get(ip + /);
+>>>>>>> db5f0d1dca23fc440382c12b58dce566cd7e0c7e
 }
 
 std::vector<std::string> Client::getArticles(Author author) {
@@ -76,5 +92,3 @@ bool Client::putArticles(std::vector<std::string> articles) {
         return false
     }
 }
-
-// hello world

@@ -19,7 +19,6 @@ class Driver {
     public:
 
 	std::string directory;
-      Driver(string dir);
 
 	/// @brief get all edges outwards from ``from``
 	std::vector<Edge> getFrom(Author from);
@@ -31,7 +30,7 @@ class Driver {
 	bool writeEdges(std::vector<Edge> edges);
 	bool removeEdges(std::vector<Edge> edges);
 
-    Driver(std::string directory) : directory(directory) {}
+    Driver(std::string dir);
 };
 
 
@@ -92,9 +91,10 @@ template <int rank> class VectorAccessor {
   public:
     string directory;
 	VectorAccessor(string dir) {
-        this->root_directory = dir;
+        this->directory = dir;
         int res = mkdir(dir.c_str(), 0666);
 	}
+
 	vec get_vector(Author author){
         Vectors v(directory);
         string n = author.name;
