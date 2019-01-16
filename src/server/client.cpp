@@ -1,5 +1,5 @@
 #include "client.hpp"
-#include "tools.cpp"
+#include "tools.hpp"
 
 #include <vector>
 #include <string>
