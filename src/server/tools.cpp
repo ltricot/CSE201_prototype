@@ -195,27 +195,24 @@ std::string put(std::string url, std::string body) {
     return response;
 }
 
+/*
+Some examples of how to use the above implemented functions:
+
 int main() {
      curl_global_init(CURL_GLOBAL_DEFAULT);
 
-    /*
-    g++ tools.cpp -lcurl
-    ./a.out
-    */
+    Example how to use get() function
+    std::cout << get("http://www.example.com") << std::endl;
+    
 
-    /* Example how to use get() function
-    std::string response;
-    response = get("http://www.example.com");
-    std::cout << response << std::endl;
-    */
-
-    /* Example how to use post() function
+    Example how to use post() function
     std::cout << put("http://httpbin.org/post", "random_text") << std::endl;
-    */
+    
 
-     /* Example how to use put() function
+    Example how to use put() function
     std::cout << put("http://httpbin.org/put", "random_text") << std::endl;
-    */
+
     curl_global_cleanup();
     return 0;
 }
+*/
