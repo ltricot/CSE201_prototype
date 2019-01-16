@@ -28,8 +28,8 @@ def _run_crawl(src: str, data: str):
     for line in os.popen(sh):
         print(line, end='')
 
-def _run_compile(build: str):
-    sh = f'cd {build} && cmake .. && make'
+def _run_compile(build: str, debug=""):
+    sh = f'cd {build} && cmake {"-DCMAKE_BUILD_TYPE=Debug" if debug else ""} .. && make'
     for line in os.popen(sh):
         print(line, end='')
 
