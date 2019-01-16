@@ -123,12 +123,15 @@ std::vector<Edge> Crawler::getPairs(std::string xmlstr) {
         i++; // means we're getting the next paper
     }
 
+    std::cerr << "pairs.size(): " << pairs.size() << std::endl;
     return pairs;
 }
 
 
 std::vector<Edge> Crawler::fromAuthors(std::vector<Author> authors) {
     std::cerr << "Crawler::fromAuthors" << std::endl;
+    for(auto a : authors)
+        std::cerr << a.name << std::endl;
 
     // return value & auxiliary iteration variable
     std::vector<Edge> pairs;
@@ -161,6 +164,8 @@ std::vector<Edge> Crawler::fromAuthors(std::vector<Author> authors) {
 
 std::vector<Edge> Crawler::fromPapers(std::vector<Paper> papers) {
     std::cerr << "Crawler::fromPapers" << std::endl;
+    for(auto p : papers)
+        std::cerr << p.id << std::endl;
 
     // return value & auxiliary iteration variable
     std::vector<Edge> pairs;
@@ -258,10 +263,13 @@ Crawler::iterator Crawler::iterator::operator++() {
         goto done;
 
     fillup: {
+        buffer.clear();
         std::vector<Edge> edges = crawler->crawl(1);
         for (Edge edge : edges) {
             buffer.push_back(edge);
         }
+
+        cursor = buffer.begin();
     }
 
     // auto edge = *(*this);
@@ -355,6 +363,7 @@ std::vector<Edge> Crawler::crawl(int steps) {
 
                 if (Set.find(paper->id) == Set.end()) {
                     unseen.push_back(*paper);
+                    Set.insert(paper->id);
                 }
             }
             /* END FIND */
@@ -409,12 +418,13 @@ std::vector<Edge> Crawler::crawl(int steps) {
             // add things to Set
         } else {
             std::vector<Author> authors;
-            for (std::vector<Edge>::iterator edge = tempPapers.begin(); edge != tempPapers.end();
-                 edge++) {
+            for (std::vector<Author>::iterator author = authorSource.begin(); author != authorSource.end();
+                 author++) {
 
                 // if we havent seen this author we take it
-                if (Set.find(edge->author.name) == Set.end()) {
-                    authors.push_back(edge->author);
+                if (Set.find(author->name) == Set.end()) {
+                    authors.push_back(*author);
+                    Set.insert(author->name);
 
                     // beug
                     // last = edge->paper.id ; 
@@ -436,5 +446,6 @@ std::vector<Edge> Crawler::crawl(int steps) {
         this->from = !(this->from);
     }
 
+    std::cerr << "buffer.size(): " << buffer.size() << std::endl;
     return buffer;
 }
