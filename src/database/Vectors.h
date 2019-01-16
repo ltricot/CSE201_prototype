@@ -6,8 +6,9 @@
 #include <iostream>
 #include <sys/types.h>
 #include <sys/stat.h>
-
+#include <cfloat>
 #include "Eigen/Eigen"
+
 
 
 
@@ -38,7 +39,6 @@ class Vectors {
         	
         string filepath = id3 + "/" + id.substr(9, 2) + ".txt";
         
-		cout << filepath << "\n";
         ofstream out(filepath);
 
         for(int i = 0; i < size; i++){
@@ -51,30 +51,31 @@ class Vectors {
             id.insert(0, 1, '0');
         }
 
-        string id1 = this->root_directory + "/" + id.substr(0, 3);
+		string id1 = this->root_directory + "/" + id.substr(0, 3);
         string id2 = id1 + "/" + id.substr(3, 3);
         string id3 = id2 + "/" + id.substr(6, 3);
 
-        const char * path1 = id1.c_str();
-        const char * path2 = id2.c_str();
-        const char * path3 = id3.c_str();
+        const char *path1 = id1.c_str();
+        const char *path2 = id2.c_str();
+        const char *path3 = id3.c_str();
 
         const int dir_er1 = mkdir(path1, 0666);
         const int dir_er2 = mkdir(path2, 0666);
         const int dir_er3 = mkdir(path3, 0666);
 
         string filepath = id3 + "/" + id.substr(9, 2) + ".txt";
-
+		
         ifstream inp(filepath);
-        int counter = 0;
+		
+		int counter = 0;
         Eigen::Matrix<double, size, 1> ret;
-	    string line;
+        ret(1,0) = -DBL_MAX;
+		string line;
         while (getline(inp, line)) {
             line.erase(remove(line.begin(), line.end(), '\n'), line.end());
             ret(counter, 0) = stod(line);
             counter += 1;
         }
-
         return ret;
     }
 };
