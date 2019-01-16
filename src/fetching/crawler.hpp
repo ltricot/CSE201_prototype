@@ -109,14 +109,14 @@ class Crawler {
          * should always be at the beginning of the list as we will delete seen
          * data as we send it to the user.
          */
+        std::list<Edge> buffer;
         std::list<Edge>::iterator cursor;
         // Bloom<Edge> bloom;
         Crawler *crawler;
 
         public:
-        std::list<Edge> buffer;
         // crawler is the parent crawler
-        iterator(Crawler *crawler);
+        iterator(Crawler *crawler, bool init=false);
 
         /**
          * Increment the ``cursor`` position.

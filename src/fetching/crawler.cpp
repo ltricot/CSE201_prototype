@@ -104,14 +104,15 @@ std::vector<Edge> Crawler::getPairs(std::string xmlstr) {
     int i = 0;
     for (entry = root->first_node("entry"); entry && entry->name() == std::string("entry");
          entry = entry->next_sibling()) {
-        article = entry->first_node("id")->value(); 
+        article = getID(entry->first_node("id")->value());
 
         // Paper(article) has to be created here with the summary 
         std::vector<Paper> summary = getSummary(xmlstr);
         Paper paper = summary[i] ; 
 
         if(paper.id != article){
-            std::cerr << "Call the cops" << std::endl; 
+            std::cerr << "Call the cops" << std::endl;
+            std::cerr << paper.id << " != " << article << std::endl;
             exit(EXIT_FAILURE);
         }
 
@@ -210,9 +211,15 @@ bool Crawler::iterator::operator!=(iterator other) const { return true; }
  */
 Edge Crawler::iterator::operator*() const { return *cursor; }
 
-Crawler::iterator::iterator(Crawler *crawler) : crawler(crawler) {
+Crawler::iterator::iterator(Crawler *crawler, bool init) : crawler(crawler) {
     cursor = buffer.begin();
     std::cout << "we construct" << std::endl;
+
+    if (init) {  // crawl a bit at initialization
+        std::vector<Edge> edges = crawler->crawl(2);
+        for (Edge edge : edges)
+            buffer.push_back(edge);
+    }
 }
 
 Crawler::iterator Crawler::iterator::operator++() {
@@ -254,14 +261,7 @@ Crawler::iterator Crawler::iterator::operator++() {
 }
 
 Crawler::iterator Crawler::begin() {
-    iterator it(this);
-    std::vector<Edge> edges = this->crawl(2);
-
-    for (Edge edge : edges) {
-        it.buffer.push_back(edge);
-        std::cout << edge.paper.id << std::endl;
-    }
-
+    iterator it(this, true);
     return it;
 }
 
