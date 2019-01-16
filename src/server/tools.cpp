@@ -119,6 +119,51 @@ void post(std::string url, std::string body) {
     }
 }
 
+void put(std::string url, std::string body) {
+    // creating curl object
+    CURL *curl;
+
+    // initializing the curl object
+    curl = curl_easy_init();
+
+    //initialize the data we want to send (body in this case) as a To_send object
+    struct To_send data;
+    const char *c_body = body.c_str();
+    data.readptr = c_body;
+    data.sizeleft = strlen(c_body);
+    //-------------------------
+
+    if(curl){
+        // we must esacpe the url (get rid of bad characters)
+        const char *c_url = url.c_str();
+        curl_easy_setopt(curl, CURLOPT_URL, url.c_str());
+
+        //enables uploading
+        curl_easy_setopt(curl, CURLOPT_UPLOAD, 1L);
+
+        //this specifies that we want to put data(body in our case):
+        curl_easy_setopt(curl, CURLOPT_PUT, 1L);
+
+        //providing the read_callback function
+        curl_easy_setopt(curl, CURLOPT_READFUNCTION, read_callback);
+    
+        // now specify which file to upload
+        curl_easy_setopt(curl, CURLOPT_READDATA, &data);
+
+        //usefull for debugging
+        curl_easy_setopt(curl, CURLOPT_VERBOSE, 1L);
+
+        //setting the size of the data we want to send
+        curl_easy_setopt(curl, CURLOPT_POSTFIELDSIZE, (long)data.sizeleft);
+
+        // perform the request
+        curl_easy_perform(curl);
+
+        // cleanup
+        curl_easy_cleanup(curl);
+    }
+}
+
 int main() {
     curl_global_init(CURL_GLOBAL_DEFAULT);
 
@@ -137,6 +182,10 @@ int main() {
     post("http://httpbin.org/post", "random_text");
     */
 
+     /* Example how to use put() function
+    put("http://httpbin.org/put", "random_text");
+    */
+   
     curl_global_cleanup();
     return 0;
 }
