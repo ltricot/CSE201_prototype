@@ -2,7 +2,7 @@
 // we have a vector of vector std::vector<Eigen::VectorXi> and a function getSim(Eigen::VectorXi vec1,Eigen::VectorXi vec2) that gives the similarity between two vectors
 #include "clusteringlast.hpp"
 using std::exp;
-#include <random>
+
 
 
 double getSim(Eigen::VectorXd & vec1, Eigen::VectorXd & vec2) {
@@ -45,16 +45,12 @@ void cluster::getCDF(){
         Eigen::ArrayXd allProb; //vector of e^si/sum(e^si)
         allSim.resize(neighbors[i].size());
         allProb.resize(neighbors[i].size());
-        std::vector<int> orderedNeigh;
         int c=0;
         //iterate over the map neighbors(index) to have an array of similarities
         for (std::map<int, double>::iterator it = neighbors[i].begin(); it != neighbors[i].end(); ++it){
             allSim(c)=it->second;
-            orderedNeigh.push_back(it->first);
             c++;
         }
-        orderedNEIGH.push_back(orderedNeigh);
-        orderedNeigh.clear();
         allProb= (1/((T*allSim).exp().sum()))*(T*allSim).exp();
         allSim.resize(0);
         // the probability to choose the label of the jth neighbor is equal to allProb(j)
@@ -62,6 +58,9 @@ void cluster::getCDF(){
         double sum=0;
         for (int j=0;j<allProb.size();j++){
             sum+=allProb(j);
+            if (i==1){
+                std::cout<<sum<<std::endl;
+            }
             cdf.push_back(sum);
         }
         allProb.resize(0);
@@ -69,15 +68,19 @@ void cluster::getCDF(){
         cdf.clear();
     }
 }
+
+
 int cluster::getMaxSim(int & index){
     // simulate a random experience to pick the neighbor
     double flip=(double) (rand()) /  (double) (RAND_MAX); //random float between 0 and 1
+    std::map<int,double>::iterator it= neighbors[index].begin();
     for (int ind=0;ind<allCDF[index].size();ind++){
         if (allCDF[index][ind]>=flip){
-            return orderedNEIGH[index][ind];
+            return it->first;
         }
+        it++;
     }  
-    return orderedNEIGH[index][allCDF[index].size()-1];
+    return it->first;
 }
 
 void cluster::updatelabel(int order[]){
@@ -112,7 +115,6 @@ void cluster::createcluster(){
     while (updaterate>0.1){ //while the rate of updates in the graph is greater to 1% we continue to update PB TOO SLOW TO HAVE THIS THRESHOLD
         std::random_shuffle(&order[0], &order[sizeInput]);
         updatelabel(order);
-        std::cout<<updaterate<<std::endl;
     }
 }
 
