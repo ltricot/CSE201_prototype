@@ -1,3 +1,5 @@
+#pragma once
+
 #include <vector>
 #include <string>
 #include "Vectors.h"
@@ -17,7 +19,7 @@ class Driver {
     public:
 
 	std::string directory;
-    Driver() : directory("Matrix"){};
+      Driver(string dir);
 
 	/// @brief get all edges outwards from ``from``
 	std::vector<Edge> getFrom(Author from);
@@ -88,8 +90,13 @@ template <int rank> class VectorAccessor {
     typedef Eigen::Matrix<double, rank, 1> vec;
 
   public:
-    vec get_vector(Author author){
-        Vectors v("Authors");
+    string directory;
+	VectorAccessor(string dir) {
+        this->root_directory = dir;
+        int res = mkdir(dir.c_str(), 0666);
+	}
+	vec get_vector(Author author){
+        Vectors v(directory);
         string n = author.name;
         hash<string> hasher;
         size_t foo = hasher(n);
@@ -100,7 +107,7 @@ template <int rank> class VectorAccessor {
     }
 
     vec get_vector(Paper paper){
-        Vectors v("Papers");
+        Vectors v(directory);
         string n = paper.id;
         hash<string> hasher;
         size_t foo = hasher(n);
@@ -111,7 +118,7 @@ template <int rank> class VectorAccessor {
     }
 
     bool send_vector(Author author, vec vect) {
-        Vectors v("Authors");
+        Vectors v(directory);
         string n = author.name;
         hash<string> hasher;
         size_t foo = hasher(n);
@@ -123,7 +130,7 @@ template <int rank> class VectorAccessor {
     }
 
     bool send_vector(Paper paper, vec vect) {
-        Vectors v("Papers");
+        Vectors v(directory);
         string n = paper.id;
         hash<string> hasher;
         size_t foo = hasher(n);
