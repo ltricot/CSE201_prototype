@@ -16,7 +16,7 @@
 //for more details, look here: 
 
 class MinHash {
-    private:
+    public:
 
     unsigned int hash_nb; //number of hash functions generated
     unsigned int MaxArticleID = 1500000; //the maximum value that an article can get
@@ -28,7 +28,7 @@ class MinHash {
     std::vector<int> hashes_a; //vector of the a coefficients of my hash functions
     std::vector<int> hashes_b; //vector of the b coefficients of my hash functions
 
-    public:
+    //public:
 
     //creates random coefficients for the hash functions (rank = nb of hash functions)
     MinHash(int rank);
