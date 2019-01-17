@@ -2,7 +2,7 @@
 #include <string>
 #include <stdlib.h>
 #include <array>
-
+#include "../../../module_eigen/Eigen/Eigen"
 #include "declaration_knn.hpp"
 /* constructor for name
 get the interactions in the data base
@@ -18,13 +18,13 @@ get person identity vector or a paper identity vectior*/
  * 
  * @return the title of a paper that we recommend to the client according to his preferences
  */
-std::string Person::getRecommendation(int& k) {
+std::string Person::getRecommendation(int &k) {
     std::vector<std::string> a_list_of_interaction_papers;
-    a_list_of_interaction_papers = get_k_NeighborsInteractions(int& k);
+    a_list_of_interaction_papers = this->get_k_NeighborsInteractions(k);
     std::pair<std::vector<float>,std::vector<std::string>> result;
-    result = getRatings_of_papers(std::vector<std::string>& a_list_of_interaction_papers);
+    result = this->getRatings_of_papers(a_list_of_interaction_papers);
     std::string recommendation;
-    recommendation = get_a_Title_paper(std::pair<std::vector<float>,std::vector<std::string>>& result);
+    recommendation = this->get_a_title_paper(result);
     return recommendation;
 }
 
@@ -37,42 +37,39 @@ std::string Person::getRecommendation(int& k) {
  * @return a vector of name of papers that has been read by those k neighbours
  */
 
-std::vector<std::string> Person::get_k_NeighborsInteractions(int& k) {
-    std::vector<std::vector<std::string>> list_of_neighbours_in_cluster;
-    std::vector<std::vector<std::string>> list_of_neighbours_in_cluster = author.cluster(); /*get the list of people in the cluster of my user:algo of jules and marine*/
+std::vector<std::string> Person::get_k_NeighborsInteractions(int &k) {
+    std::vector<Author> list_of_neighbours_in_cluster;
+    list_of_neighbours_in_cluster = this->cluster; /*get the list of people in the cluster of my user:algo of jules and marine: .cluster gives a list of AUthor types*/
     std::vector<std::vector<std::string>> total_interactions;
     int i = 0;
-    for (nei = list_of_neighbours_in_cluster.begin(); nei != list_of_neighbours_in_cluster.end(); nei++)
-    {
+    for (std::vector<Author>::iterator nei = list_of_neighbours_in_cluster.begin(); nei != list_of_neighbours_in_cluster.end(); nei++)
+    {   
         Driver driver("folder");
-        std::vector<Edge> interactions_pairs_nei = driver.getFrom(nei);
+        std::vector<Edge> interactions_pairs_nei = driver.getFrom(*nei);
         std::vector<std::string> interactions_nei;
         for(int i =0; i<=interactions_pairs_nei.size();i++) {
-            interactions_nei.push_back(interactions_pairs_nei[i].paper.id)
+            interactions_nei.push_back(interactions_pairs_nei[i].paper.id); /*because Edge is composed of a paper and a author and paper has an atribute .id which is a string*/
             }
-        std::vector<std::string> interactions_nei;
-        for(int i =0; i<=interactions_pairs.size();i++) {
-        interactions_nei.push_back(interactions_pairs[i].paper.id)
-    }
-    
         total_interactions[i] = interactions_nei;
-        
+        i++;
     }
+
     std::vector<std::vector<std::string>> knn_info;
-    for(l = 0;l<=k,l++) {
-        n = rand() % list_of_neighbours_in_cluster.size() + 1;
-        knn_info[l] = total_interactions[n]; /* knn info is a vector of vector of string, the string is the name of a paper some papers can appears in several times */
+    for(int l = 0;l<k;l++) {
+        
+        int n = rand() % list_of_neighbours_in_cluster.size() + 1;
+        knn_info[l] = total_interactions[n]; /* knn info is a vector of elements from total interactions (its element are =vector of string), the string is the name of a paper some papers can appears in several times : it is a Paper.id*/
 
     }
     
     std::vector<std::string> a_list_of_interaction_papers;
     
-    for(int i = 0;i<=knn_info.size();i++) {
-        for(int k = 0;k<=knn_info[i].size(),k++) {
-            a_list_of_interaction_papers.push_back(knn_info[i][k])
+    for(int i = 0;i<knn_info.size();i++) {
+        for(int k = 0;k<knn_info[i].size();k++) {
+            a_list_of_interaction_papers.push_back(knn_info[i][k]);
         }
     }
-    return a_list_of_interaction_papers;
+    return a_list_of_interaction_papers; /*this is a list of name of papers: the type is string because it is a Paper.id*/
 }
 
 /** @brief get the predicted ratings of a list of papers for the client
@@ -82,38 +79,38 @@ std::vector<std::string> Person::get_k_NeighborsInteractions(int& k) {
  * @param vector of strings : the vector contains titles of papers 
  * @return a pair composed of a vector of float (predicted ratings) and a vector of name of papers (the rating at index i corresponds to the paper at the index i in the vector of papers) 
  */
- 
-std::pair<std::vector<float>,std::vector<std::string>>  Person::getRatings_of_papers(std::vector<std::string>& list_of_papers) { /*list of papers sera id.get_k_Interactions*/
+
+std::pair<std::vector<float>,std::vector<std::string>>  Person::getRatings_of_papers(std::vector<std::string> &list_of_papers) { /*list of papers sera id.get_k_Interactions*/
     std::vector<float> ratings_of_ID;
     Driver driver("folder");
-    std::vector<Edge> interactions_pairs = driver.getFrom(author);
-    std::vector<std::string> id_interactions;
+    std::vector<Edge> interactions_pairs = driver.getFrom(this->author);
+    std::vector<std::string> id_interactions; /*name of the papers (string) with which the person has interacted with*/
     for(int i =0; i<interactions_pairs.size();i++) {
-        interactions.push_back(interactions_pairs[i].paper.id)
+        id_interactions.push_back(interactions_pairs[i].paper.id);
     }
     std::vector<std::string> name_of_papers_of_ID;
     for (int i=0;i<list_of_papers.size();i++){
-        for(k=0;k!= ratings_of_ID.size();k++){
-            std::string name_paper = list_of_papers[i];
-            if(name_paper in id_interactions or in name_of_papers_of_ID {
-                break;
-    }
-            else {
-                VectorAccessor<int 30> vector_id_researcher = get_vector(author);
-                VectorAccessor<int 30> vector_id_paper = get_vector(name_paper);
-                float rating_id = vector_id_researcher.dot(vector_id_paper); 
-                ratings_of_ID.push_back(rating_ID);
-                name_of_papers_of_ID.push_back(name_paper);
+        std::string name_paper = list_of_papers[i]; /*name paper is a Paper.id thus it is a string */
+        if(std::find(id_interactions.begin(),id_interactions.end(),name_paper)==id_interactions.end() || std::find(name_of_papers_of_ID.begin(),name_of_papers_of_ID.end(),name_paper)== name_of_papers_of_ID.end(){
+            break;
+            }
+        else {
+            VectorAccessor<30> v("folder2");
+            Eigen::Matrix<double ,30,1> vector_id_researcher = v.get_vector(this->author);
+            Eigen::Matrix<double ,30,1> vector_id_paper = v.get_vector(Paper(name_paper));
+            float rating_id = vector_id_researcher.dot(vector_id_paper);                 
+            ratings_of_ID.push_back(rating_ID);
+            name_of_papers_of_ID.push_back(name_paper);
 
-            }
-            }
+        }
+    }
     
     
 
-    }
+    
     std::pair<std::vector<float>,std::vector<std::string>> result;
     result.first = ratings_of_ID;
-    result.second = name_of_papers_of_ID;
+    result.second = name_of_papers_of_ID; /* result.second is a list of Paper.id, hence a list of string*/
     return result;
     }
 /** @brief choose a paper among a list of paper wth higher probability the more the predicted rating of this paper by the client is important
@@ -124,14 +121,14 @@ std::pair<std::vector<float>,std::vector<std::string>>  Person::getRatings_of_pa
  *
  * @return a name of a paper from the vector of paper names given as parameter
  */
-std::string Person::get_a_title_paper(std::pair<std::vector<int>,std::vector<std::string>>& result) {
+std::string Person::get_a_title_paper(std::pair<std::vector<int>,std::vector<std::string>> &result) {
         int proba;
         int sum = sum(result.first);
         int random = rand();
         int interval = 0;
-        for(i = 0;i<=result.first.size(),i++){
+        for(int i = 0;i<=result.first.size(),i++){
             if(interval>random*sum){
-                break
+                break;
             }
             interval+= result.first[i];
         }
