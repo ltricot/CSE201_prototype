@@ -130,6 +130,7 @@ void TFIDF::update(int threshold){
     for (std::unordered_set<std::string>::iterator it1=papers.begin();it1!=papers.end();it1++){
         int j=0;
         for (std::map<std::string,int>::iterator it2=vocab.begin();it2!=vocab.end();it2++){
+	    /*fill the buffer object with pEdge objects composed of a word, a Paper and the corresponding tfidf coefficient*/
 	    buffer.push_back(std::make_tuple(it2->first,Paper(*it1),weightMat(i,j))); 
             j++;        
         }
