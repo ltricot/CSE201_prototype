@@ -1,3 +1,4 @@
+//Author: Jules BAUDET
 #include <iostream>
 #include <vector>
 #include <unordered_map>
@@ -21,7 +22,7 @@ class MinHash {
     unsigned int MaxArticleID = 1500000; //the maximum value that an article can get
     unsigned int prime = 1500007; //smallest prime number bigger than MacArticleID
     unsigned int counter = 0; //counter used to assign numerical values to articles
-    std::unordered_map<std::string, std::vector<Paper> > users2articles; //map that associates each author's name to a vector of the papers he has cited
+    std::unordered_map<std::string, std::vector<std::string> > users2articles; //map that associates each author's name to a vector of the titles of the papers he has cited
     std::unordered_map<std::string, int> article2int; //map that associates each article's title to a numerical ID
 
     std::vector<int> hashes_a; //vector of the a coefficients of my hash functions
@@ -36,10 +37,12 @@ class MinHash {
     std::vector<int> getSignature(const Author &author);
 
     //computes the similarity between 2 authors
-    double getSimilarity(const Author &author1, const Author &author2);
+    float getSimilarity(const Author &author1, const Author &author2);
 
     //adds the author to the users2articles map if he was never seen
     //adds paper to the image of my user by the users2articles map if it is not already in it
     //adds the paper to the articles2int map and gives him a numerical ID if it was never seen
     void update(Edge edge);
+
+    void getInfo();
 };
