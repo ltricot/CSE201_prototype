@@ -1,4 +1,3 @@
-#pragma once
 #include "Vectors.h"
 
 using namespace std;
