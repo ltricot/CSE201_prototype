@@ -21,6 +21,7 @@ bool Driver::writeEdge(Edge edge) {
 	Matrix m(this->directory);
 	string n = edge.author.name;
 	size_t foo = hasher(n);
+	foo = foo % 100000000000LU;
 	std::ostringstream ostr;
 	ostr << foo;
 	string row = ostr.str();
@@ -49,6 +50,7 @@ bool Driver::writeEdge(Reference ref) {
 	Matrix m(this->directory);
 	string n = ref.first.id;
 	size_t foo = hasher(n);
+	foo = foo % 100000000000LU;
 	std::ostringstream ostr;
 	ostr << foo;
 	string row = ostr.str();
@@ -61,6 +63,7 @@ bool Driver::removeEdge(Edge edge) {
 	Matrix m(this->directory);
 	string n = edge.author.name;
 	size_t foo = hasher(n);
+	foo = foo % 100000000000LU;	
 	std::ostringstream ostr;
 	ostr << foo;
 	string row = ostr.str();
@@ -74,6 +77,7 @@ bool Driver::removeEdge(Reference ref) {
 	Matrix m(this->directory);
 	string n = ref.first.id;
 	size_t foo = hasher(n);
+	foo = foo % 100000000000LU;	
 	std::ostringstream ostr;
 	ostr << foo;
 	string row = ostr.str();
@@ -87,6 +91,7 @@ vector<Edge> Driver::getFrom(Author from) {
 	Matrix m(this->directory);
 	string n = from.name;
 	size_t foo = hasher(n);
+	foo = foo % 100000000000LU;
 	std::ostringstream ostr;
 	ostr << foo;
 	string row = ostr.str();
@@ -110,6 +115,7 @@ vector<Reference> Driver::getFrom(Paper from) {
 	Matrix m(this->directory);
 	string n = from.id;
 	size_t foo = hasher(n);
+	foo = foo % 100000000000LU;
 	std::ostringstream ostr;
 	ostr << foo;
 	string row = ostr.str();

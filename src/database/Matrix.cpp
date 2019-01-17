@@ -57,13 +57,13 @@ void Matrix::write(string i, string j, double val, string name) {
 	string id2 = id1 + "/" + id.substr(3, 3);
 	string id3 = id2 + "/" + id.substr(6, 3);
 
-        const char *path1 = id1.c_str();
-        const char *path2 = id2.c_str();
-        const char *path3 = id3.c_str();
+	const char *path1 = id1.c_str();
+	const char *path2 = id2.c_str();
+	const char *path3 = id3.c_str();
 
-        const int dir_er1 = mkdir(path1, 0666);
-        const int dir_er2 = mkdir(path2, 0666);
-        const int dir_er3 = mkdir(path3, 0666);
+	const int dir_er1 = mkdir(path1, 0666);
+	const int dir_er2 = mkdir(path2, 0666);
+	const int dir_er3 = mkdir(path3, 0666);
 
 	string filepath = id3 + "/" + id.substr(9, 2) + ".txt";
 	ifstream inp(filepath);
@@ -149,9 +149,9 @@ void Matrix::del (string i, string j) {
 	const char * path3 = id3.c_str();
 
 
-        const int dir_er1 = mkdir(path1, 0666);
-        const int dir_er2 = mkdir(path2, 0666);
-        const int dir_er3 = mkdir(path3, 0666);
+	const int dir_er1 = mkdir(path1, 0666);
+	const int dir_er2 = mkdir(path2, 0666);
+	const int dir_er3 = mkdir(path3, 0666);
 
 	string filepath = id3 + "/" + id.substr(9, 2) + ".txt";
 	ifstream inp(filepath);
