@@ -122,13 +122,11 @@ void TFIDF::update(int &threshold){
             }    
         }
         calweightMat();
-    int c=0;
     int i=0;
     for (std::map<std::string,int>::iterator it1=vocab.begin();i!=vocab.end();i++){
         int j=0;
         for (std::unorderedset<Paper>::iterator it2=papers.begin();j!=papers.end();j++){
             buffer.push_back(std::make_tuple(*it1->first,Paper(*it2),weightMat(i,j))); 
-            c++;  
             j++;        
         }
         i++;
