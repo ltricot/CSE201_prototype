@@ -279,7 +279,7 @@ Extractor::Extractor(std::string fpath) {
 	regex = R"(arXiv:\d{4}[.](\d{4,5}[v]\d+|\d{4,5}))"; // taking account of version
 	std::vector<std::string> papers = findRegex(text, regex);
 	for(std::vector<std::string>::iterator pap = papers.begin(); pap != papers.end(); pap++) {
-		references.push_back(std::make_pair(paper, Paper(*pap)));
+		references.push_back(std::make_pair(paper, Paper(pap->substr(6, pap->size()))));
 	}
 }
 
@@ -293,6 +293,10 @@ void Archive::run() {
 
     Driver driver(graph);
     for(auto &p : fs::recursive_directory_iterator(temp_pdf_folder)) {
+        std::string s = p.path();
+        if(s.substr(s.size() - 4, s.size()) != ".pdf")
+            continue;
+
         Extractor ext(p.path());
         for(auto ref : ext)
             driver.writeEdge(ref);
@@ -302,7 +306,7 @@ void Archive::run() {
 }
 
 void Archive::download() {
-    std::string cmd = "aws s3 cp --request-payer requester s3://arxiv/pdf/" + s3path;
+    std::string cmd = "aws s3 cp --request-payer requester s3://arxiv/pdf/" + s3path + " " + s3path;
 	system(cmd.c_str());
 }
 
@@ -312,13 +316,4 @@ void Archive::decompress() {
 
     std::string cmd = "tar -xvf " + s3path + " -C " + temp_pdf_folder;
 	system(cmd.c_str());
-}
-
-
-#include <iostream>
-
-int main(int argc, char *argv[]) {
-    Extractor ext(argv[1]);
-    for(auto ref : ext)
-        std::cout << ref.second.id << std::endl;
 }

@@ -17,6 +17,7 @@ endif (ZLIB_FOUND)
 # add crawler code as a library
 # PRIVATE means those libraries are used in the implementation
 # and user code has no need to know about them
-add_library (crawler crawler.cpp references.cpp)
+add_library (crawler crawler.cpp quickrefs.cpp)
 target_link_libraries (crawler PRIVATE ${CURL_LIBRARIES})
 target_link_libraries (crawler PRIVATE ${ZLIB_LIBRARIES})
+target_link_libraries (crawler PRIVATE stdc++fs)

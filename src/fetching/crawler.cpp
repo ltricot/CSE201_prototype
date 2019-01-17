@@ -10,6 +10,17 @@
 
 #include "crawler.hpp"
 
+
+
+// id of paper from link to paper on arxiv
+std::string getID(std::string link) {
+    std::string temp;
+    std::stringstream link_s(link);
+    while (std::getline(link_s, temp, '/'))
+        ;
+    return temp;
+}
+
 /** ``writefunction`` parameter of a curl call
  *
  * @param contents pointer to data received by curl
@@ -199,15 +210,6 @@ std::vector<Edge> Crawler::fromPapers(std::vector<Paper> papers) {
     return pairs;
 }
 
-// id of paper from link to paper on arxiv
-std::string getID(std::string link) {
-    std::string temp;
-    std::stringstream link_s(link);
-    while (std::getline(link_s, temp, '/'))
-        ;
-    return temp;
-}
-
 // Crawler::iterator::iterator(Crawler *crawler) { this->parent = crawler; }
 
 bool Crawler::iterator::operator==(iterator other) const { return false; }
@@ -341,6 +343,7 @@ std::vector<Paper> Crawler::getSummary(std::string xmlstr) {
  */
 std::vector<Edge> Crawler::crawl(int steps) {
     std::cerr << "Crawler::crawl" << std::endl;
+    // Driver driver(refdata);
 
     std::vector<Edge> buffer;
     std::vector<Edge> tempPapers;
@@ -379,7 +382,7 @@ std::vector<Edge> Crawler::crawl(int steps) {
                 papers.push_back(edge->paper);
             }
 
-            std::vector<std::pair<Paper, Paper>> references = getReferences(papers);
+            // std::vector<std::pair<Paper, Paper>> references = driver.getFroms(papers);
 
             std::vector<Edge> newEdges;
             #ifdef refdone

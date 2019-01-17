@@ -75,10 +75,9 @@ class References {
 
 class PDF : public std::string {
     public:
+    std::string str;
 
-    PDF(std::string str) {
-        *this = str;
-    }
+    PDF(std::string str) : str(str) {}
 };
 
 class PDFConverter {
@@ -194,14 +193,17 @@ class BulkDownloader {
 
     std::string which;
     std::string folder;      // name of the folder into which the files will be downloaded
+    std::string to;          // where to decompress archive
 
     public:
 
+    // where to store found references
+    std::map<std::string, std::vector<std::string>> references;
+
     void downloadTar();        // downloads a file .tar.gz and stores it in the folder `folder`
     void decompress();         // decompress the file
-    Papers constructPapers();    // opens each pdf downloaded and creates a Papers object, then deletes each pdf file
+    void constructPapers();    // opens each pdf downloaded and creates a Papers object, then deletes each pdf file
 
     BulkDownloader(std::string which, std::string folder)
-        : which(which), folder(folder) {}
-
+        : which(which), folder(folder), to("./temp") {}  // "temp" is a butt move
 };

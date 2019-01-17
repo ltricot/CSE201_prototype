@@ -23,13 +23,18 @@ def _run_clean(src: str):
             if fpath == '.DS_Store':
                 _del(os.path.join(dirpath, fpath))
 
-def _run_crawl(src: str, data: str):
-    sh = f'./build/src/executables/crawl {src} {data}'
+def _run_crawl(cdata: str, refdata, source):
+    sh = f'./build/src/executables/crawl {cdata} {refdata} {source}'
     for line in os.popen(sh):
         print(line, end='')
 
 def _run_compile(build: str, debug=""):
     sh = f'cd {build} && cmake {"-DCMAKE_BUILD_TYPE=Debug" if debug else ""} .. && make'
+    for line in os.popen(sh):
+        print(line, end='')
+
+def _run_download_references(paper, data):
+    sh = f'./build/src/executables/download_references {paper} {data}'
     for line in os.popen(sh):
         print(line, end='')
 
@@ -39,6 +44,7 @@ if __name__ == '__main__':
         'fmt': _run_format,
         'clean': _run_clean,
         'crawl': _run_crawl,
+        'references': _run_download_references,
         'compile': _run_compile,
     }
 

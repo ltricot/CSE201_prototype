@@ -4,7 +4,7 @@
 #include "primitives.hpp"
 
 
-typedef std::pair<Paper, Paper> Reference;
+// typedef std::pair<Paper, Paper> Reference;
 
 class Archive {
     private:

@@ -84,7 +84,7 @@ bool Driver::removeEdge(Edge edge) {
 	return true;
 }
 
-bool Driver::removeEdge(Edge edge) {
+bool Driver::removeEdge(Reference ref) {
 	hash<string> hasher;
 	Matrix m(this->directory);
 	string n = ref.first.id;
@@ -163,7 +163,7 @@ bool Driver::removeEdges(vector<Edge> edges){
 	return true;
 }
 
-bool removeEdges(std::vector<Reference> refs){
+bool Driver::removeEdges(std::vector<Reference> refs){
 	for (vector<Reference>::iterator it = refs.begin(); it < refs.end(); it++) {
 		this->removeEdge(*it);
 	}

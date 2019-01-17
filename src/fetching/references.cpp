@@ -11,6 +11,9 @@
 #include <string.h>
 #include <regex>
 
+#include <experimental/filesystem>
+namespace fs = std::experimental::filesystem;
+
 #include "zlib.h"   // zlib compression library
 
 #include "references.hpp"
@@ -30,6 +33,17 @@ using namespace std;
 #include <iostream>
 #include <map>
 #include <dirent.h>
+
+
+// id of paper from link to paper on arxiv
+std::string getID(std::string link) {
+    std::string temp;
+    std::stringstream link_s(link);
+    while (std::getline(link_s, temp, '/'))
+        ;
+    return temp;
+}
+
 
 ///////////////////////////////////////////////
 
@@ -331,7 +345,7 @@ PDFConverter::PDFConverter(std::stringstream *pdf) {
 // i.e. with the output of the bulk downloads
 PDFConverter::PDFConverter(PDF pdf) {
 	// maybe an easy way to do this is : 
-	std::ifstream input( pdf, std::ios::binary );
+	std::ifstream input( pdf.str, std::ios::binary );
     std::vector<unsigned char> pdfBuffer(std::istreambuf_iterator<char>(input), {}); 	// copies all data into buffer
 
 	/* that doesnt look efficient to me 
@@ -406,7 +420,9 @@ Papers::Papers(std::vector<std::string> ids, std::vector<PDF> pdfs) : ids(ids) {
         throw "argument error";
 
     for(int i = 0; i < ids.size(); i++) {
-    	PDFConverter pdfc(pdfs[i]);
+		std::stringstream pdf;
+		pdf.str(pdfs[i].str);
+    	PDFConverter pdfc(&pdf);
         Paper paper(ids[i]);
         References refs(paper, pdfc.getText());
 
@@ -431,11 +447,11 @@ void BulkDownloader::downloadTar() {
 }
 
 void BulkDownloader::decompress() {
-    std::string cmd = "tar -xvf " + folder + " " + which;
+    std::string cmd = "tar -xvf " + folder + "/" + which + " -C " + this->to;
 	system(cmd.c_str());
 }
 
-/** 
+/**
  * opening any folder and saving all file-names in a vector<string>
  * used in BulkDownloader::constructPapers()
  */
@@ -450,32 +466,49 @@ vector<string> openDir(string path) {
     return files;
 }
 
-Papers BulkDownloader::constructPapers() {
-	vector<string> f ;
+void BulkDownloader::constructPapers() {
+	vector<string> f;
     fstream file;
-    map<string, int> m_query;
     string c;
-
-	f = openDir(this->folder);  // might need to give the path ?
 
     std::vector<std::string> ids;
     std::vector<PDF> pdfs;
-	for (vector<string>::iterator s = f.begin(); s != f.end(); s++) {
-        // push id
-        ids.push_back(s->substr(0, s->size()-4));
+	for (auto p : fs::recursive_directory_iterator(this->to)) {
+		std::string s = p.path();  // only consider pdfs
+		if(s.substr(s.size() - 4, s.size()) != std::string(".pdf"))
+			continue;
+		
+		// push id
+        // ids.push_back(s.substr(0, s.size() - 4));  // take .pdf out
+		ids = {getID(s.substr(0, s.size() - 4))};
+
+		std::cout << ids[0] << std::endl;
 
         // push whole pdf text - do we need the binary marker ?
-        std::ifstream pdf_stream(*s, std::ios::binary);
+        std::ifstream pdf_stream(s, std::ios::binary);
+
         std::stringstream buffer;
+		buffer.str("");  // reset buffer
+
         buffer << pdf_stream.rdbuf();
-        pdfs.push_back(PDF(buffer.str()));
+
+		pdfs.clear();
+        pdfs = {PDF(buffer.str())};
+
+		pdf_stream.close();  // ey no leaks
+
+		// process this pdf as soon as it is seen
+		// store in inner references
+		Papers papers(ids, pdfs);
+        for(auto ref : papers.getReferences())
+            references[ref.first.id].push_back(ref.second.id);
+
+		// should delete pdf
+		fs::remove_all(s);
     }
 
-    Papers papers(ids, pdfs);
-    return papers;
+	fs::remove_all(this->to);
 }
-
-
 
 // map from papers to all that they reference
 // big object. not scalable for real data (> 1.5 million docs)
@@ -494,7 +527,7 @@ void writeFile(std::map<std::string, std::vector<std::string>> data , std::strin
 	std::string file = filename + ".txt" ; // also a prefix to say where its going? 
 	std::ofstream fs(file);
 
-	if(!fs){
+	if(!fs) {
 		std::cerr<<"Cannot open the output file."<<std::endl;
 	}
 
@@ -564,9 +597,7 @@ std::map<std::string, std::vector<std::string>> readFile(std::string filename){
 	return res ; 
 }
 
-
-
-
+#ifdef notusing
 // must be called a number of times.
 std::map<std::string, std::vector<std::string>>
 setUpReferences(std::string folder, std::vector<std::string> archives) {
@@ -584,6 +615,7 @@ setUpReferences(std::string folder, std::vector<std::string> archives) {
 
 	return references;
 }
+#endif
 
 // must find some kind of way to serialize / deserialize `allReferences`
 std::vector<std::pair<Paper, Paper>> getReferences(std::vector<Paper> papers) {
