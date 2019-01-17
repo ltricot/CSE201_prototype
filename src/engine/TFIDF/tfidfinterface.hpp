@@ -88,13 +88,13 @@ class TFIDF {
         std::vector<std::vector<double>> Occ2d; //iterative version of OccMat
         /*matrix whose coefficients is the number of occurences of the word of the column 
         in the corresponding document of the row */
-        Eigen::MatrixXd OccMat; 
+        Eigen::MatrixXd OccMat;  //matrix whose coefficients is the number of occurences of the word of the column in the corresponding paper of the row
         Eigen::VectorXd CountDoc;
         unsigned int nrow; // matrix row number
-	    unsigned int ncol; // matrix column number
+	unsigned int ncol; // matrix column number
         std::vector<std::string> textParse(const std::string & summary); //to parse a summary
         void convertsum(const std::vector<std::string> & parsed_doc); //function that convert the data contained in a summary into Occ2d
         void calweightMat();//compute the tf-idf weight matrix
-        void createOccMat();
-        void createCountDoc();
+        void createOccMat(); //function that creates the OccMat 
+        void createCountDoc(); //function that creates a vector that stores for each word in how many documents it appears
 };
