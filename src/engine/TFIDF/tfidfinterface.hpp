@@ -11,6 +11,7 @@
 #include <string>
 #include "boost_1_69_0/boost/tokenizer.hpp"
 #include "boost_1_69_0/boost/algorithm/string.hpp"
+#include "Eigen/Dense"
 #include "primitives.hpp"
 
 class Summaries {
