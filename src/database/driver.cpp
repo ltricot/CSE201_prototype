@@ -120,7 +120,7 @@ vector<Edge> Driver::getFrom(Author from) {
 }
 
 
-vector<Refrence> Driver::getFrom(Paper from) {
+vector<Reference> Driver::getFrom(Paper from) {
 	hash<string> hasher;
 	Matrix m(this->directory);
 	string n = from.id;
@@ -134,9 +134,10 @@ vector<Refrence> Driver::getFrom(Paper from) {
 
 	for (vector<vector<string>>::iterator it = res.begin(); it < res.end(); it++) {
 		vector<string> line = *it  ;
-		Edge edge;
-		edge.readVector(line, n);
-		ret.push_back(edge);
+		Reference ref;
+		ref.first = from;
+		ref.second = line[0];
+		ret.push_back(ref);
 	}
 
 	return ret;
@@ -148,12 +149,25 @@ bool Driver::writeEdges(vector<Edge> edges) {
 	}
 	return true;
 }
+bool Driver::writeEdges(vector<Reference> ref){
+	for (vector<Reference>::iterator it = ref.begin(); it < ref.end(); it++) {
+		this->writeEdge(*it);
+	}
+	return true;	
+}
 
 bool Driver::removeEdges(vector<Edge> edges){
 	for (vector<Edge>::iterator it = edges.begin(); it < edges.end(); it++) {
 		this->removeEdge(*it);
 	}
 	return true;
+}
+
+bool removeEdges(std::vector<Reference> refs){
+	for (vector<Reference>::iterator it = refs.begin(); it < refs.end(); it++) {
+		this->removeEdge(*it);
+	}
+	return true;	
 }
 
 vector<Edge> Driver::getFroms(vector<Author> froms) {
