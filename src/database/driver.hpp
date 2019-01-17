@@ -155,7 +155,7 @@ template <int rank> class VectorAccessor {
         string n = paper.id;
         hash<string> hasher;
         size_t foo = hasher(n);
-        foo = foo % 100000000000 LU;
+        foo = foo % 100000000000LU;
 	    std::ostringstream ostr;
 	    ostr << foo;
 	    string id = ostr.str();
