@@ -10,23 +10,25 @@
 #include <set>
 #include <algorithm>
 #include <random>
-
+#include "primitives.hpp"
+#include "MinHash.hpp"
 
 class cluster {
     public:
     /* "label" is a std::vector that associates to each vector of the input (each node) its label ie the label at index i is the label of the ith vector*/
     std::vector<int> label;
-    cluster(std::vector<Eigen::VectorXd> & input) { //constructor
+    std::vector<Author> nodes; //to store the input vector
+    std::map<int,std::vector<Author>> clusters; //output a map that associates to each label its cluster of authors 
+    cluster(std::vector<Author> & input) { //constructor
         nodes=input;
         sizeInput=input.size();
         createcluster();
     }
 
     private:
-    std::vector<Eigen::VectorXd> nodes; //to store the input vector
     int sizeInput; //size of the input vector
     static int T; // temperature
-    std::vector<std::map<int,double>> neighbors; // vector that at index i contains a map that associates to each K closest neighbors of i its similarity with i
+    std::vector<std::map<int,double>> neighbors; // vector that at index i contains a map that associates to each neighbors of i its similarity with i
     double updaterate ; //save the rate of updated labels 
     void findneighbors(); //find the neighbors for each nodes
     void initializelabel(); //function to initialize label such that each vector has a different label
