@@ -85,8 +85,8 @@ std::vector<std::string> Client::getArticles(Author author) {
 }
 
 //the following functions is not finished yet
-bool Client::putArticles(std::vector<std::string> articles) {
-    std::string response = post(ip + "/users/", articles[0]);
+bool Client::putArticles(Author author, std::vector<std::string> articles) {
+    std::string response = post(ip + "/users/" + author.name + "/articles", articles[0]);
     json resp = json::parse(response);
     return resp["success"] == 1;
 }
