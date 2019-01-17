@@ -25,17 +25,21 @@ class Driver {
 
 	bool writeEdge(Edge edge);  // overwrites
 	bool writeEdge(Reference ref);
+    bool writeEdge(Friends friends);
 
     bool removeEdge(Edge edge);
     bool removeEdge(Reference ref);
+    bool removeEdge(Friends friends);
 
 	// batch equivalents of above
 	std::vector<Edge> getFroms(std::vector<Author> froms);
 	bool writeEdges(std::vector<Edge> edges);
     bool writeEdges(std::vector<Reference> refs);
+    bool writeEdges(std::vector<Friends> friends );
 
 	bool removeEdges(std::vector<Edge> edges);
     bool removeEdges(std::vector<Reference> refs);
+    bool removeEdges(std::vector<Friends friends>);
     Driver(std::string dir);
 };
 
