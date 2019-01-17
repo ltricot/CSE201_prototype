@@ -28,7 +28,7 @@ pEdge TFIDF::iterator::operator*() const{
 }
 
 TFIDF::iterator TFIDF::begin() {
-    iterator it(this, true);
+    iterator it(this);
     return it;
 }
 
@@ -94,7 +94,7 @@ void TFIDF::createCountDoc() {
 	dataMat.resize(0,0);
 }
 
-void TFIDF::calweightMat(int argc, char *argv[]) {
+void TFIDF::calweightMat() {
     createOccMat();
 	createCountDoc();
     weightMat.resize(nrow, ncol);
