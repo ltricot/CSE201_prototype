@@ -37,7 +37,7 @@ TFIDF::iterator TFIDF::end() {
     return it;
 }
 
-//convert a string in a vector of words
+//convert a summary in a vector of words
 std::vector<std::string> TFIDF::textParse(const std::string & summary) { 
 		std::vector<std::string> vec;
 		boost::tokenizer<> tok(summary);
@@ -51,7 +51,8 @@ std::vector<std::string> TFIDF::textParse(const std::string & summary) {
 		return vec;
 }
 
-void TFIDF::convertsum(const std::vector<std::string> & parsed_sum){
+//use a parsed summary to update the Occ2d and vocab -> save the number of occurences of each word for a summary
+void TFIDF::convertsum(const std::vector<std::string> & parsed_sum){ 
     std::vector<double> OccVec(vocab.size(),0); //array that stores the number of occurences of a word
     for (std::string word : parsed_sum) {
         if ( vocab.find(word) == vocab.end() ) { //if it is the first time we encounter the word then insert it in the map
@@ -67,6 +68,7 @@ void TFIDF::convertsum(const std::vector<std::string> & parsed_sum){
     OccVec.clear();
 }
 
+//convert Occ2d which has a not fixed size in an Eigen::MatrixXd OccMat
 void TFIDF::createOccMat(){
     nrow = Occ2d.size();
     ncol = vocab.size();
@@ -78,6 +80,7 @@ void TFIDF::createOccMat(){
 	}
 }
 
+//create the CountDoc Eigen::MatrixXd which count for each word in how many summaries it is present
 void TFIDF::createCountDoc() {
 	Eigen::MatrixXd dataMat(OccMat); //copy OccMat
 	CountDoc = Eigen::VectorXd::Zero(ncol);
@@ -94,6 +97,7 @@ void TFIDF::createCountDoc() {
 	dataMat.resize(0,0);
 }
 
+//compute the tfidf matrix -> weightMat 
 void TFIDF::calweightMat() {
     createOccMat();
     createCountDoc();
@@ -108,7 +112,7 @@ void TFIDF::calweightMat() {
     }
 	weightMat = tf * idf; 	
 }
-
+ //do the update by pulling new summaries (up to a given threshold) and update accordingly the weightMat and the buffer
 void TFIDF::update(int threshold){
     Summaries summaries;
     for (Summaries::iterator it=summaries.begin();it!=summaries.end();it++){
