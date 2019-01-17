@@ -71,6 +71,6 @@ TEST_CASE("fetching/references/getText", "can ``Converter`` convert a pdf to tex
     PDFConverter converter = PDFConverter(&buf);
     std::string text = converter.getText();
 
-    // test something with the returned value :)
+    // test something with the returned value (look for random sentences in the pdf and see if we find them in the text converted)
 }
 */
