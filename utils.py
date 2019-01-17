@@ -48,11 +48,9 @@ def _run_references_all(data, archives, fm="10", to="19"):
             
             archs.append(paper)
     
-    print(archs)
     getyear = lambda a: int(a[-10:-8])
     archs = [a for a in archs if getyear(a) in range(int(fm), int(to))]
     archs = sorted(archs, key=getyear)
-    print(archs)
 
     for paper in archs:
         sh = f'./build/src/executables/download_references {paper} {data}'
