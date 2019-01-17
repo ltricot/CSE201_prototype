@@ -112,9 +112,9 @@ void TFIDF::calweightMat() {
 void TFIDF::update(int &threshold){
     Summaries summaries;
     for (Summaries::iterator it=summaries.begin();it!=summaries.end();it++){
-            if (papers.find(*it->id)==papers.end()) {  
-              papers.insert(*it->id);
-              std::vector<std::string> parsed_abstract= textParse(*it->summary));
+            if (papers.find(it->id)==papers.end()) {  
+              papers.insert(it->id);
+              std::vector<std::string> parsed_abstract= textParse(it->summary));
               convertsum(parsed_abstract);
             }
             if (papers.size()>threshold){        
@@ -126,7 +126,7 @@ void TFIDF::update(int &threshold){
     for (std::map<std::string,int>::iterator it1=vocab.begin();it1!=vocab.end();it1++){
         int j=0;
         for (std::unorderedset<Paper>::iterator it2=papers.begin();it2!=papers.end();it2++){
-            buffer.push_back(std::make_tuple(*it1->first,Paper(*it2),weightMat(i,j))); 
+            buffer.push_back(std::make_tuple(it1->first,Paper(*it2),weightMat(i,j))); 
             j++;        
         }
         i++;
