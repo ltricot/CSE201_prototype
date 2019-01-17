@@ -285,7 +285,7 @@ Extractor::Extractor(std::string fpath) {
 
 
 Archive::Archive(std::string s3path, std::string graph)
-    : s3path(s3path), graph(graph) {}
+    : s3path(s3path), graph(graph), temp_pdf_folder("./temp") {}
 
 void Archive::run() {
     download();
@@ -297,6 +297,21 @@ void Archive::run() {
         for(auto ref : ext)
             driver.writeEdge(ref);
     }
+
+    fs::remove_all(temp_pdf_folder);
+}
+
+void Archive::download() {
+    std::string cmd = "aws s3 cp --request-payer requester s3://arxiv/pdf/" + s3path;
+	system(cmd.c_str());
+}
+
+void Archive::decompress() {
+    if(!fs::exists(temp_pdf_folder))
+        fs::create_directories(temp_pdf_folder);
+
+    std::string cmd = "tar -xvf " + s3path + " -C " + temp_pdf_folder;
+	system(cmd.c_str());
 }
 
 
