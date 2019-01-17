@@ -38,6 +38,17 @@ def _run_download_references(paper, data):
     for line in os.popen(sh):
         print(line, end='')
 
+def _run_references_all(data, archives):
+    with open(archives) as f:
+        for line in f:
+            paper = line.split('/')[-1]
+            if not paper.endswith('tar'):
+                continue
+
+            sh = f'./build/src/executables/download_references {paper} {data}'
+            for out in os.popen(sh):
+                print(out, end='')
+
 
 if __name__ == '__main__':
     cmds = {
@@ -46,6 +57,7 @@ if __name__ == '__main__':
         'crawl': _run_crawl,
         'references': _run_download_references,
         'compile': _run_compile,
+        'ref_all': _run_references_all,
     }
 
     # usage: python utils [fmt|clean|crawl] *args

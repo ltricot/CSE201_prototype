@@ -14,8 +14,6 @@ int main(int argc, char *argv[]) {
     std::string refdata = std::string(argv[2]);
     Paper source = Paper(std::string(argv[3])) ; 
 
-    
-    
     Crawler crawler = Crawler(cdata, refdata, source);
     //for(Crawler::iterator edgeit = crawler.begin(); /* nah */; ++edgeit) {
     //    Edge edge = *edgeit;
@@ -23,7 +21,6 @@ int main(int argc, char *argv[]) {
     //    std::cout << edge.author.name << ", " << edge.paper.id << std::endl;
     //}
 
-    crawler.crawl(1000) ; 
-    
+    crawler.run();
     curl_global_cleanup();
 }

@@ -93,6 +93,8 @@ class Crawler {
      */
     std::vector<Edge> crawl(int steps);
 
+    void run();
+
     class iterator : public std::iterator<
             std::input_iterator_tag,
             Edge, int, const Edge*, Edge> {

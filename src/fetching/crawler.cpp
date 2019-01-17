@@ -383,13 +383,13 @@ std::vector<Edge> Crawler::crawl(int steps) {
             for (std::vector<Edge>::iterator edge = tempPapers.begin(); edge != tempPapers.end();
                  edge++) {
                 //papers.push_back(edge->paper);
+
                 std::vector<Reference> refs = driver.getFrom(edge->paper) ;
 
                 for(std::vector<Reference>::iterator ref = refs.begin(); ref != refs.end();
                  ref++) {
                      references.push_back(*ref) ;
                 }
-
             }
           
             // before : std::vector<Reference> references = getReferences(papers);
@@ -409,8 +409,6 @@ std::vector<Edge> Crawler::crawl(int steps) {
                         Set.find(references[i].second.id) == Set.end()) {
 
                         newEdges.push_back(Edge(buffer[i].author, references[i].second));
-
-                        d.writeEdge(Edge(buffer[i].author, references[i].second)) ; 
 
                         std::cerr << Edge(buffer[i].author, references[i].second).paper.id << std::endl ; 
                     }
@@ -466,4 +464,11 @@ std::vector<Edge> Crawler::crawl(int steps) {
 
     std::cerr << "buffer.size(): " << buffer.size() << std::endl;
     return buffer;
+}
+
+void Crawler::run() {
+    Driver d(cdata);
+    for(auto edge = this->begin();; ++edge) {
+        d.writeEdge(*edge);
+    }
 }
