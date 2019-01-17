@@ -67,7 +67,7 @@ class TFIDF {
 		    
         public:
         iterator(TFIDF *parent){
-            std::vector<pEdge>::iterator cursor = parent->buffer.begin();
+            cursor = parent->buffer.begin();
         };
 
         // make it so next pEde is available
