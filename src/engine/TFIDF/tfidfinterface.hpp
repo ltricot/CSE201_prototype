@@ -60,7 +60,11 @@ class TFIDF {
     class iterator : public std::iterator<
             std::input_iterator_tag,
             pEdge, int, const pEdge*, pEdge> {
-
+	
+	private:
+        TFIDF *parent;
+        std::vector<pEdge>::iterator cursor;
+		    
         public:
         iterator(TFIDF *parent){
             std::vector<pEdge>::iterator cursor = parent->buffer.begin();
