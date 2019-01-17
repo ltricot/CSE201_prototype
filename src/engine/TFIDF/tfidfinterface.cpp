@@ -109,7 +109,7 @@ void TFIDF::calweightMat() {
 	weightMat = tf * idf; 	
 }
 
-void TFIDF::update(int &threshold){
+void TFIDF::update(int threshold){
     Summaries summaries;
     for (Summaries::iterator it=summaries.begin();it!=summaries.end();it++){
             if (papers.find(it->id)==papers.end()) {  
