@@ -46,13 +46,13 @@ class TFIDF {
     // type of a word to paper interaction
     typedef std::tuple<std::string, Paper, double> pEdge;
     std::vector<pEdge> buffer;
-    void update(int &threshold);
+    void update(int threshold);
 
     TFIDF() {
         update(30000);
     };
     
-    std::unordered_set<Paper> papers; //vector of the ids of the papers we got
+    std::unordered_set<std::string> papers; //vector of the ids of the papers we got
     std::map<std::string, int> vocab; // set containing all the words
     Eigen::MatrixXd weightMat; // TF-IDF weighting matrix
     
