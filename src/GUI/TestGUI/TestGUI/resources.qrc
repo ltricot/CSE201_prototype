@@ -1,0 +1,7 @@
+<RCC>
+    <qresource prefix="/img">
+        <file>img/dislike.png</file>
+        <file>img/like.png</file>
+        <file>img/logo_2.png</file>
+    </qresource>
+</RCC>
