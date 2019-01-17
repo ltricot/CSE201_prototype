@@ -17,7 +17,7 @@ public:
     std::pair<std::vector<float>,std::vector<std::string>>  getRatings_of_papers(std::vector<std::string>& list_of_papers);
     std::string get_a_Title_paper(std::pair<std::vector<float>,std::vector<std::string>>& result)
 
-    void setPaperasRead(std::string& paper); /*update the database when we recommend a paper: create an interaction between the paper and the client*/
+    void setPaperasRead(std::string& paper); /*update the database when we recommend a paper: create an interaction between the paper and the client, need to be done*/
     
 
 };
