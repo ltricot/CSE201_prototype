@@ -46,10 +46,7 @@ bool Client::putLikes(Author author, std::vector<std::string> topics) {
 
     std::string response = put(ip + "/users" + author.name + "likes");
     json resp = json::parse(response);
-    if (resp["success"] == 1)
-        return true;
-    else
-        return false;
+    return resp["success"] == 1
 }
 
 Paper Client::getRecommendation(Author author) {
@@ -82,11 +79,12 @@ std::vector<std::string> Client::getArticles(Author author) {
     for (json::iterator it = resp.begin(); it != resp.end(); it++) {
         ret.push_back(*it);
     }
+    return ret
 }
 
-//the following functions is not finished yet
 bool Client::putArticles(Author author, std::vector<std::string> articles) {
-    std::string response = post(ip + "/users/" + author.name + "/articles", articles[0]);
+    std::string body = JSON.stringify(articles)
+    std::string response = post(ip + "/users/" + author.name + "/articles", body);
     json resp = json::parse(response);
     return resp["success"] == 1;
 }
