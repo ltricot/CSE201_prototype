@@ -6,8 +6,8 @@
 #include <string>
 #include <vector>
 
-Client::Client(std::string ip, int port) : ip(ip), port(port) { 
-    std::vector<std::string> topics = getTopics(); 
+Client::Client(std::string ip, int port) : ip(ip), port(port) {
+    std::vector<std::string> topics = getTopics();
 }
 
 std::vector<std::string> Client::getTopics() {
@@ -35,9 +35,9 @@ std::vector<std::string> Client::getLikes(Author author) {
 bool Client::putLikes(Author author, std::vector<std::string> topics) {
     std::string body;
     json j;
-    
-    for(auto topic : this->topics){
-        if(std::find(topics.begin(), topics.end(), topic) != topics.end())
+
+    for (auto topic : this->topics) {
+        if (std::find(topics.begin(), topics.end(), topic) != topics.end())
             j[topic] = 1;
         else
             j[topic] = 0;
@@ -61,8 +61,8 @@ Paper Client::getSummary(Paper paper) {
     std::vector<Paper> summaries;
     xmlstr = get("http://export.arxiv.org/api/query?id_list=" + paper.id);
     summaries = Crawler::getSummary(xmlstr);
-    for(std::vector<Paper>::iterator it = summaries.begin(); it != summaries.end(); ++it) {
-        if(it->id == paper.id)
+    for (std::vector<Paper>::iterator it = summaries.begin(); it != summaries.end(); ++it) {
+        if (it->id == paper.id)
             return *it;
     }
 
@@ -83,7 +83,10 @@ std::vector<std::string> Client::getArticles(Author author) {
 }
 
 bool Client::putArticles(Author author, std::vector<std::string> articles) {
-    std::string body = JSON.stringify(articles)
+    json body;
+    for (std::vector<std::string>::iterator it = articles.begin(); it != articles.end; ++it) {
+        body.push_back(*it);
+    }
     std::string response = post(ip + "/users/" + author.name + "/articles", body);
     json resp = json::parse(response);
     return resp["success"] == 1;
