@@ -21,7 +21,7 @@ class Driver {
 
 	/// @brief get all edges outwards from ``from``
 	std::vector<Edge> getFrom(Author from);
-    std::Vector<Reference> getFrom(Paper paper);
+    std::vector<Reference> getFrom(Paper paper);
 
 	bool writeEdge(Edge edge);  // overwrites
 	bool writeEdge(Reference ref);
