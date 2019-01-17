@@ -7,20 +7,23 @@
 int main(int argc, char *argv[]) {
     curl_global_init(CURL_GLOBAL_ALL);
 
-    if(argc != 3) {
-        std::cout << "Usage: crawl source folder" << std::endl;
-        std::cout << "Example: crawl 1312.4933v2 ./interactions" << std::endl;
-        return 1;
-    }
+    //Driver d(argv[1]);
+    // if we create it here we cant access it it crawl
 
-    Driver d(argv[2]);
-    Crawler crawler = Crawler(Paper(std::string(argv[1])));
-    for(Crawler::iterator edgeit = crawler.begin(); /* nah */; ++edgeit) {
-        Edge edge = *edgeit;
-        d.writeEdge(edge);
+    std::string cdata = std::string(argv[1]);
+    std::string refdata = std::string(argv[2]);
+    Paper source = Paper(std::string(argv[3])) ; 
 
-        std::cout << edge.author.name << ", " << edge.paper.id << std::endl;
-    }
+    
+    
+    Crawler crawler = Crawler(cdata, refdata, source);
+    //for(Crawler::iterator edgeit = crawler.begin(); /* nah */; ++edgeit) {
+    //    Edge edge = *edgeit;
+    //    d.writeEdge(edge);
+    //    std::cout << edge.author.name << ", " << edge.paper.id << std::endl;
+    //}
 
+    crawler.crawl(1000) ; 
+    
     curl_global_cleanup();
 }

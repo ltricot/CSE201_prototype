@@ -9,7 +9,7 @@
 #include <curl/curl.h>
 
 #include "crawler.hpp"
-
+#include "driver.hpp"
 
 
 // id of paper from link to paper on arxiv
@@ -343,7 +343,8 @@ std::vector<Paper> Crawler::getSummary(std::string xmlstr) {
  */
 std::vector<Edge> Crawler::crawl(int steps) {
     std::cerr << "Crawler::crawl" << std::endl;
-    // Driver driver(refdata);
+    Driver driver(this->refdata);
+    Driver d(this->cdata);
 
     std::vector<Edge> buffer;
     std::vector<Edge> tempPapers;
@@ -376,16 +377,27 @@ std::vector<Edge> Crawler::crawl(int steps) {
 
             // we get the references of the papers we havent already seen
 
-            std::vector<Paper> papers;
+            std::vector<Reference> references ;
+
+            //std::vector<Paper> papers;
             for (std::vector<Edge>::iterator edge = tempPapers.begin(); edge != tempPapers.end();
                  edge++) {
-                papers.push_back(edge->paper);
-            }
+                //papers.push_back(edge->paper);
+                std::vector<Reference> refs = driver.getFrom(edge->paper) ;
 
-            // std::vector<std::pair<Paper, Paper>> references = driver.getFroms(papers);
+                for(std::vector<Reference>::iterator ref = refs.begin(); ref != refs.end();
+                 ref++) {
+                     references.push_back(*ref) ;
+                }
+
+            }
+          
+            // before : std::vector<Reference> references = getReferences(papers);
+
+
 
             std::vector<Edge> newEdges;
-            #ifdef refdone
+            
             for (int i = 0; i != references.size(); i++) {
 
                 if (buffer[i].paper.id == references[i].first.id) {
@@ -397,11 +409,14 @@ std::vector<Edge> Crawler::crawl(int steps) {
                         Set.find(references[i].second.id) == Set.end()) {
 
                         newEdges.push_back(Edge(buffer[i].author, references[i].second));
+
+                        d.writeEdge(Edge(buffer[i].author, references[i].second)) ; 
+
                         std::cerr << Edge(buffer[i].author, references[i].second).paper.id << std::endl ; 
                     }
                 }
             }
-            #endif
+            
 
             // Move elements from newEdges to tempPapers.
             tempPapers.insert(tempPapers.end(), std::make_move_iterator(newEdges.begin()),
