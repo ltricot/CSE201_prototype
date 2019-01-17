@@ -112,7 +112,7 @@ template <int rank> class VectorAccessor {
         vec tmp =  v.getvector<rank> (id);
 	    vec p = (Eigen::MatrixXd::Random(rank, 1) + Eigen::MatrixXd::Constant(rank,1, 1.))*0.5;
         if (tmp(1, 0) == -DBL_MAX) {
-		    v.send_vector(edge.author, p);
+		    this->send_vector(author, p);
             return p;
 		}        
         return tmp;
@@ -129,7 +129,7 @@ template <int rank> class VectorAccessor {
         vec tmp  =  v.getvector<rank> (id);
 	    vec p = (Eigen::MatrixXd::Random(rank, 1) + Eigen::MatrixXd::Constant(rank,1, 1.))*0.5;
         if (tmp(1, 0) == -DBL_MAX) {
-    		v.send_vector(edge.author, p);
+    		this->send_vector(paper, p);
             return p;
 		}        
         return tmp;

@@ -1,22 +1,22 @@
 #include "tfidfinterface.hpp"
 
 TFIDF::iterator TFIDF::iterator::operator++(){
-    if (cursor == buffer.end())
+    if (cursor == parent->buffer.end())
         goto fillup;
-    else if (++cursor == buffer.end())
+    else if (++cursor == parent->buffer.end())
         goto fillup;
     else
         goto done;
 
     fillup: {
-        std::vector<pEdge> copy = buffer;
-        buffer.clear();
-        for (j=1000;j<copy.size();j++){
-            buffer.push_back(copy[j]);
+        std::vector<pEdge> copy = parent->buffer;
+        parent->buffer.clear();
+        for (int j=1000;j<copy.size();j++){
+            parent->buffer.push_back(copy[j]);
         }
         copy.clear();
         parent->update(1000);
-        cursor = buffer.begin();
+        cursor = parent->buffer.begin();
     }
     done: {
         return *this;
@@ -96,20 +96,20 @@ void TFIDF::createCountDoc() {
 
 void TFIDF::calweightMat() {
     createOccMat();
-	createCountDoc();
+    createCountDoc();
     weightMat.resize(nrow, ncol);
-	Eigen::MatrixXd tf = Eigen::MatrixXd::Zero(nrow,ncol);
-	Eigen::MatrixXd idf = Eigen::MatrixXd::Zero(ncol,ncol);
-	for (unsigned int j = 0; j < ncol; ++j) {
-		idf(j,j)= log(nrow / (CountDoc(j)));
-	}
-	for (unsigned int i=0; i<nrow;++i) {
-		tf.row(i)= OccMat.row(i)*(1/OccMat.row(i).sum());
-	}
+    Eigen::MatrixXd tf = Eigen::MatrixXd::Zero(nrow,ncol);
+    Eigen::MatrixXd idf = Eigen::MatrixXd::Zero(ncol,ncol);
+    for (unsigned int j = 0; j < ncol; ++j) {
+	idf(j,j)= log(double(nrow) / (CountDoc(j)));
+    }
+    for (unsigned int i=0; i<nrow;++i) {
+	tf.row(i)= OccMat.row(i)*(1/OccMat.row(i).sum());
+    }
 	weightMat = tf * idf; 	
 }
 
-void TFIDF::update(int &threshold){
+void TFIDF::update(int threshold){
     Summaries summaries;
     for (Summaries::iterator it=summaries.begin();it!=summaries.end();it++){
             if (papers.find(it->id)==papers.end()) {  
@@ -126,7 +126,7 @@ void TFIDF::update(int &threshold){
     for (std::map<std::string,int>::iterator it1=vocab.begin();it1!=vocab.end();it1++){
         int j=0;
         for (std::unorderedset<Paper>::iterator it2=papers.begin();it2!=papers.end();it2++){
-            buffer.push_back(std::make_tuple(it1->first,Paper(*it2),weightMat(i,j))); 
+	    buffer.push_back(std::make_tuple(it1->first,Paper(*it2),weightMat(i,j))); 
             j++;        
         }
         i++;
