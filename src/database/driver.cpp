@@ -44,6 +44,33 @@ bool Driver::writeEdge(Edge edge) {
 	return true;
 }
 
+bool Driver::writeEdge(Reference ref) {
+	hash<string> hasher;
+	Matrix m(this->directory);
+	string n = ref.first.id;
+	size_t foo = hasher(n);
+	std::ostringstream ostr;
+	ostr << foo;
+	string row = ostr.str();
+	string col = ref.second.id;
+
+	/*
+	Eigen::Matrix<double, lat_feat, 1> p = (Eigen::MatrixXd::Random(lat_feat, 1) + Eigen::MatrixXd::Constant(lat_feat,1, 1.))*0.5;
+    Eigen::Matrix<double, lat_feat, 1> q =
+        (Eigen::MatrixXd::Random(lat_feat, 1) + Eigen::MatrixXd::Constant(lat_feat, 1, 1.)) *
+            0.5;
+    VectorAccessor<lat_feat> v("MatFact");
+	Eigen::Matrix<double, lat_feat, 1> vect1 = v.get_vector(edge.author);
+    if (vect1(1, 0) == -DBL_MAX) {
+		v.send_vector(edge.author, p);
+		}        
+    if (v.get_vector(edge.paper)(1,0) == -DBL_MAX){
+		v.send_vector(edge.paper, q);
+	}*/
+
+	m.write(row, col, 1, n);
+	return true;
+}
 bool Driver::removeEdge(Edge edge) {
 	hash<string> hasher;
 	Matrix m(this->directory);
@@ -53,6 +80,19 @@ bool Driver::removeEdge(Edge edge) {
 	ostr << foo;
 	string row = ostr.str();
 	string col = edge.paper.id;
+	m.del(row, col);
+	return true;
+}
+
+bool Driver::removeEdge(Edge edge) {
+	hash<string> hasher;
+	Matrix m(this->directory);
+	string n = ref.first.id;
+	size_t foo = hasher(n);
+	std::ostringstream ostr;
+	ostr << foo;
+	string row = ostr.str();
+	string col = ref.second.id;
 	m.del(row, col);
 	return true;
 }
@@ -67,6 +107,29 @@ vector<Edge> Driver::getFrom(Author from) {
 	string row = ostr.str();
 	vector<vector<string>> res = m.getrow(row);
 	vector<Edge> ret;
+	res.erase(res.begin());
+
+	for (vector<vector<string>>::iterator it = res.begin(); it < res.end(); it++) {
+		vector<string> line = *it  ;
+		Edge edge;
+		edge.readVector(line, n);
+		ret.push_back(edge);
+	}
+
+	return ret;
+}
+
+
+vector<Refrence> Driver::getFrom(Paper from) {
+	hash<string> hasher;
+	Matrix m(this->directory);
+	string n = from.id;
+	size_t foo = hasher(n);
+	std::ostringstream ostr;
+	ostr << foo;
+	string row = ostr.str();
+	vector<vector<string>> res = m.getrow(row);
+	vector<Reference> ret;
 	res.erase(res.begin());
 
 	for (vector<vector<string>>::iterator it = res.begin(); it < res.end(); it++) {

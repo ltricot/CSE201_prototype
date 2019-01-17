@@ -17,19 +17,25 @@ using namespace std;
 
 class Driver {
     public:
-
 	std::string directory;
 
 	/// @brief get all edges outwards from ``from``
 	std::vector<Edge> getFrom(Author from);
+    std::Vector<Reference> getFrom(Paper paper);
+    
 	bool writeEdge(Edge edge);  // overwrites
-	bool removeEdge(Edge edge);
+	bool writeEdge(Reference ref);
+
+    bool removeEdge(Edge edge);
+    bool removeEdge(Reference ref);
 
 	// batch equivalents of above
 	std::vector<Edge> getFroms(std::vector<Author> froms);
 	bool writeEdges(std::vector<Edge> edges);
-	bool removeEdges(std::vector<Edge> edges);
+    bool writeEdges(std::vector<Reference> refs);
 
+	bool removeEdges(std::vector<Edge> edges);
+    bool removeEdges(std::vector<Reference> refs);
     Driver(std::string dir);
 };
 
