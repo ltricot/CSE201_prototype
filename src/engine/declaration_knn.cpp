@@ -2,6 +2,8 @@
 #include <string>
 #include <stdlib.h>
 #include <array>
+#include <vector>
+#include <algorithm>
 #include "../../../module_eigen/Eigen/Eigen"
 #include "declaration_knn.hpp"
 /* constructor for name
@@ -91,7 +93,7 @@ std::pair<std::vector<float>,std::vector<std::string>>  Person::getRatings_of_pa
     std::vector<std::string> name_of_papers_of_ID;
     for (int i=0;i<list_of_papers.size();i++){
         std::string name_paper = list_of_papers[i]; /*name paper is a Paper.id thus it is a string */
-        if(std::find(id_interactions.begin(),id_interactions.end(),name_paper)==id_interactions.end() || std::find(name_of_papers_of_ID.begin(),name_of_papers_of_ID.end(),name_paper)== name_of_papers_of_ID.end(){
+        if((std::find(id_interactions.begin(),id_interactions.end(),name_paper)!= id_interactions.end()) || (std::find(name_of_papers_of_ID.begin(),name_of_papers_of_ID.end(),name_paper)!= name_of_papers_of_ID.end())){
             break;
             }
         else {
@@ -99,7 +101,7 @@ std::pair<std::vector<float>,std::vector<std::string>>  Person::getRatings_of_pa
             Eigen::Matrix<double ,30,1> vector_id_researcher = v.get_vector(this->author);
             Eigen::Matrix<double ,30,1> vector_id_paper = v.get_vector(Paper(name_paper));
             float rating_id = vector_id_researcher.dot(vector_id_paper);                 
-            ratings_of_ID.push_back(rating_ID);
+            ratings_of_ID.push_back(rating_id);
             name_of_papers_of_ID.push_back(name_paper);
 
         }
@@ -121,17 +123,23 @@ std::pair<std::vector<float>,std::vector<std::string>>  Person::getRatings_of_pa
  *
  * @return a name of a paper from the vector of paper names given as parameter
  */
-std::string Person::get_a_title_paper(std::pair<std::vector<int>,std::vector<std::string>> &result) {
+std::string Person::get_a_title_paper(std::pair<std::vector<float>,std::vector<std::string>> &result) {
         int proba;
-        int sum = sum(result.first);
+        float sum;
+        for(std::vector<float>::iterator it = result.first.begin(); it != result.first.end(); ++it){
+                sum+= *it;
+        }
+        
         int random = rand();
         int interval = 0;
-        for(int i = 0;i<=result.first.size(),i++){
+        int k = 0;
+        for(int i = 0;i<=result.first.size();i++){
+            k = i;
             if(interval>random*sum){
                 break;
             }
             interval+= result.first[i];
         }
-        proba = result.first[i-1];
-    return result.second[i-1];
+        proba = result.first[k-1];
+    return result.second[k-1];
 }
