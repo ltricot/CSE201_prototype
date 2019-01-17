@@ -14,7 +14,7 @@
 #include "Eigen/Dense"
 #include "primitives.hpp"
 
-class Summaries {
+class Summaries { //to implement 
     public:
 
     class iterator : public std::iterator<
@@ -46,11 +46,11 @@ class TFIDF {
     public:
     // type of a word to paper interaction
     typedef std::tuple<std::string, Paper, double> pEdge;
-    std::vector<pEdge> buffer;
+    std::vector<pEdge> buffer; //object on which we iterate to get new pEdge object
     void update(int threshold);
 
     TFIDF() {
-        update(30000);
+        update(30000); //we initialize the tfidf object with 30000 summaries
     };
     
     std::unordered_set<std::string> papers; //vector of the ids of the papers we got
