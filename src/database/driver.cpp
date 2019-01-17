@@ -53,21 +53,6 @@ bool Driver::writeEdge(Reference ref) {
 	ostr << foo;
 	string row = ostr.str();
 	string col = ref.second.id;
-
-	/*
-	Eigen::Matrix<double, lat_feat, 1> p = (Eigen::MatrixXd::Random(lat_feat, 1) + Eigen::MatrixXd::Constant(lat_feat,1, 1.))*0.5;
-    Eigen::Matrix<double, lat_feat, 1> q =
-        (Eigen::MatrixXd::Random(lat_feat, 1) + Eigen::MatrixXd::Constant(lat_feat, 1, 1.)) *
-            0.5;
-    VectorAccessor<lat_feat> v("MatFact");
-	Eigen::Matrix<double, lat_feat, 1> vect1 = v.get_vector(edge.author);
-    if (vect1(1, 0) == -DBL_MAX) {
-		v.send_vector(edge.author, p);
-		}        
-    if (v.get_vector(edge.paper)(1,0) == -DBL_MAX){
-		v.send_vector(edge.paper, q);
-	}*/
-
 	m.write(row, col, 1, n);
 	return true;
 }
@@ -178,3 +163,4 @@ vector<Edge> Driver::getFroms(vector<Author> froms) {
 	}
 	return ret;
 }
+
