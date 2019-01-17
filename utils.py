@@ -42,12 +42,13 @@ def _run_references_all(data, archives, fm="10", to="19"):
     archs = []
     with open(archives) as f:
         for line in f:
-            paper = line.split('/')[-1]
+            paper = line.split('/')[-1].rstrip('\n')
             if not paper.endswith('tar'):
                 continue
             
             archs.append(paper)
     
+    print(archs)
     getyear = lambda a: int(a[-10:-8])
     archs = [a for a in archs if getyear(a) in range(int(fm), int(to))]
     archs = sorted(archs, key=getyear)
