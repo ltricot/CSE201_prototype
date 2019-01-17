@@ -38,16 +38,25 @@ def _run_download_references(paper, data):
     for line in os.popen(sh):
         print(line, end='')
 
-def _run_references_all(data, archives):
+def _run_references_all(data, archives, fm="10", to="19"):
+    archs = []
     with open(archives) as f:
         for line in f:
             paper = line.split('/')[-1]
             if not paper.endswith('tar'):
                 continue
+            
+            archs.append(paper)
+    
+    getyear = lambda a: int(a[-10:-8])
+    archs = [a for a in archs if getyear(a) in range(int(fm), int(to))]
+    archs = sorted(archs, key=getyear)
+    print(archs)
 
-            sh = f'./build/src/executables/download_references {paper} {data}'
-            for out in os.popen(sh):
-                print(out, end='')
+    for paper in archs:
+        sh = f'./build/src/executables/download_references {paper} {data}'
+        for out in os.popen(sh):
+            print(out, end='')
 
 
 if __name__ == '__main__':
