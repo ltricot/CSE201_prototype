@@ -21,7 +21,7 @@ class Driver {
 
 	/// @brief get all edges outwards from ``from``
 	std::vector<Edge> getFrom(Author from);
-    std::vector<Reference> getFrom(Paper paper);
+    std::Vector<Reference> getFrom(Paper paper);
 
 	bool writeEdge(Edge edge);  // overwrites
 	bool writeEdge(Reference ref);
@@ -109,7 +109,13 @@ template <int rank> class VectorAccessor {
 	    std::ostringstream ostr;
 	    ostr << foo;
 	    string id = ostr.str();
-        return v.getvector<rank> (id);
+        vec tmp =  v.getvector<rank> (id);
+	    vec p = (Eigen::MatrixXd::Random(rank, 1) + Eigen::MatrixXd::Constant(rank,1, 1.))*0.5;
+        if (tmp(1, 0) == -DBL_MAX) {
+		    v.send_vector(edge.author, p);
+            return p;
+		}        
+        return tmp;
     }
 
     vec get_vector(Paper paper){
@@ -120,7 +126,13 @@ template <int rank> class VectorAccessor {
 	    std::ostringstream ostr;
 	    ostr << foo;
 	    string id = ostr.str();
-        return v.getvector<rank> (id);
+        vec tmp  =  v.getvector<rank> (id);
+	    vec p = (Eigen::MatrixXd::Random(rank, 1) + Eigen::MatrixXd::Constant(rank,1, 1.))*0.5;
+        if (tmp(1, 0) == -DBL_MAX) {
+    		v.send_vector(edge.author, p);
+            return p;
+		}        
+        return tmp;
     }
 
     bool send_vector(Author author, vec vect) {

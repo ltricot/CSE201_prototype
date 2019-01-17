@@ -38,30 +38,30 @@ std::string Person::getRecommendation(int& k) {
  */
 
 std::vector<std::string> Person::get_k_NeighborsInteractions(int& k) {
-    std::vector<array*> list_of_neighbours_in_cluster;
-    std::vector<array*> list_of_neighbours_in_cluster = author.cluster(); /*get the list of people in the cluster of my user:algo of jules and marine*/
-    array** total_interactions = new array*[list_of_neighbours_in_cluster.size()];
+    std::vector<std::vector<std::string>> list_of_neighbours_in_cluster;
+    std::vector<std::vector<std::string>> list_of_neighbours_in_cluster = author.cluster(); /*get the list of people in the cluster of my user:algo of jules and marine*/
+    std::vector<std::vector<std::string>> total_interactions;
     int i = 0;
     for (nei = list_of_neighbours_in_cluster.begin(); nei != list_of_neighbours_in_cluster.end(); nei++)
     {
         Driver driver("folder");
         std::vector<Edge> interactions_pairs_nei = driver.getFrom(nei);
         std::vector<std::string> interactions_nei;
-        for(int i =0; i<interactions_pairs.size();i++) {
-            interactions.push_back(interactions_pairs_nei[i].paper.id)
+        for(int i =0; i<=interactions_pairs_nei.size();i++) {
+            interactions_nei.push_back(interactions_pairs_nei[i].paper.id)
             }
         std::vector<std::string> interactions_nei;
-        for(int i =0; i<interactions_pairs.size();i++) {
-        interactions.push_back(interactions_pairs[i].paper.id)
+        for(int i =0; i<=interactions_pairs.size();i++) {
+        interactions_nei.push_back(interactions_pairs[i].paper.id)
     }
     
         total_interactions[i] = interactions_nei;
         
     }
-    std::vector<array*> knn_info;
+    std::vector<std::vector<std::string>> knn_info;
     for(l = 0;l<=k,l++) {
         n = rand() % list_of_neighbours_in_cluster.size() + 1;
-        knn_info[l] = total_interactions[n]; /* knn info is a vector of pointers to arrays , each array is a list of paper names, some papers can appears in several arrays */
+        knn_info[l] = total_interactions[n]; /* knn info is a vector of vector of string, the string is the name of a paper some papers can appears in several times */
 
     }
     

@@ -6,8 +6,8 @@
 #include <string>
 #include <vector>
 
-Client::Client(std::string ip, int port) : ip(ip), port(port) { 
-    std::vector<std::string> topics = getTopics(); 
+Client::Client(std::string ip, int port) : ip(ip), port(port) {
+    std::vector<std::string> topics = getTopics();
 }
 
 std::vector<std::string> Client::getTopics() {
@@ -35,21 +35,18 @@ std::vector<std::string> Client::getLikes(Author author) {
 bool Client::putLikes(Author author, std::vector<std::string> topics) {
     std::string body;
     json j;
-    
-    for(auto topic : this->topics){
-        if(std::find(topics.begin(), topics.end(), topic) != topics.end())
+
+    for (auto topic : this->topics) {
+        if (std::find(topics.begin(), topics.end(), topic) != topics.end())
             j[topic] = 1;
         else
             j[topic] = 0;
     }
     body = j.dump();
 
-    std::string response = put(ip + "/users" + author.name + "likes");
+    std::string response = put(ip + "/users" + author.name + "likes", body);
     json resp = json::parse(response);
-    if (resp["success"] == 1)
-        return true;
-    else
-        return false;
+    return resp["success"] == 1;
 }
 
 Paper Client::getRecommendation(Author author) {
@@ -64,8 +61,8 @@ Paper Client::getSummary(Paper paper) {
     std::vector<Paper> summaries;
     xmlstr = get("http://export.arxiv.org/api/query?id_list=" + paper.id);
     summaries = Crawler::getSummary(xmlstr);
-    for(std::vector<Paper>::iterator it = summaries.begin(); it != summaries.end(); ++it) {
-        if(it->id == paper.id)
+    for (std::vector<Paper>::iterator it = summaries.begin(); it != summaries.end(); ++it) {
+        if (it->id == paper.id)
             return *it;
     }
 
@@ -82,11 +79,15 @@ std::vector<std::string> Client::getArticles(Author author) {
     for (json::iterator it = resp.begin(); it != resp.end(); it++) {
         ret.push_back(*it);
     }
+    return ret;
 }
 
-//the following functions is not finished yet
 bool Client::putArticles(Author author, std::vector<std::string> articles) {
-    std::string response = post(ip + "/users/" + author.name + "/articles", articles[0]);
+    json body;
+    for (std::vector<std::string>::iterator it = articles.begin(); it != articles.end; ++it) {
+        body.push_back(*it);
+    }
+    std::string response = post(ip + "/users/" + author.name + "/articles", body);
     json resp = json::parse(response);
     return resp["success"] == 1;
 }
