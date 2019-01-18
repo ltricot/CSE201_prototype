@@ -2,6 +2,7 @@
 #include "clusteringlast.hpp"
 #include "../database/Reader.h"
 #include <sstream>
+#include <stdio.h>
 
 using namespace std ;
 
