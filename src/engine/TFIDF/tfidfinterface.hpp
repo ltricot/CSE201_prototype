@@ -96,8 +96,8 @@ class TFIDF {
         pEdge operator*() const;
     };
 
-    iterator begin();
-    iterator end();
+    iterator begin() { return iterator(this); }
+    iterator end() { return begin(); }
 
     private:
         std::string sdata ; // name of the driver filled by minhash, from which we read
