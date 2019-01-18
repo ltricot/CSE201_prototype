@@ -55,6 +55,15 @@ class Driver {
 };
 
 
+// please forgive us
+// this is to avoid a link error
+static void _() {
+    Driver d("");
+    d.getKeys<Author>();
+    d.getKeys<Paper>();
+}
+
+
 class SummaryAccessor{
     public:
     std::string directory;

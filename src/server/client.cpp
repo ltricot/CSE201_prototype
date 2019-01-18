@@ -1,7 +1,7 @@
 #include "client.hpp"
 #include "crawler.hpp"
+#include "rapidxml/rapidxml.hpp"
 #include "tools.hpp"
-
 #include <iostream>
 #include <string>
 #include <vector>
@@ -20,6 +20,29 @@ std::vector<std::string> Client::getTopics() {
         ret.push_back(*it);
     }
     return ret;
+}
+
+std::string getTitle(Paper paper) {
+//return value
+std::string title;
+
+//getting the string containing html data
+std::string xmlstr;
+xmlstr = get("https://arxiv.org/abs/" + paper.id);
+
+// "doc" is the XML tree
+rapidxml::xml_document<> doc;
+std::vector<char> xmlcharvec(xmlstr.begin(), xmlstr.end());
+xmlcharvec.push_back('\0');
+doc.parse<0>(&xmlcharvec[0]);
+
+//defining the root of XML tree
+rapidxml::xml_node<> *root = doc.first_node("head"), *entry;
+
+//getting the title
+title = entry->first_node("title")->value();
+
+return title;
 }
 
 std::vector<std::string> Client::getLikes(Author author) {
@@ -85,7 +108,7 @@ std::vector<std::string> Client::getArticles(Author author) {
 
 bool Client::putArticles(Author author, std::vector<std::string> articles) {
     json body;
-    for (std::vector<std::string>::iterator it = articles.begin(); it != articles.end; ++it) {
+    for (std::vector<std::string>::iterator it = articles.begin(); it != articles.end(); ++it) {
         body.push_back(*it);
     }
 
