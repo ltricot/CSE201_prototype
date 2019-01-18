@@ -5,7 +5,7 @@ EdgeAccessor::EdgeAccessor(std::string directory, unsigned int size)
         
     updateBuffer(1.0);  // initialize buffer
     
-    this->someAuthors = this->driver.getKeys() ;
+    this->someAuthors = this->driver.getKeys<Author>() ;
 }
 
 

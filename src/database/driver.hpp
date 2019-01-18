@@ -22,15 +22,10 @@ class Driver {
     public:
 	std::string directory;
 
-<<<<<<< HEAD
-	/// @brief get all edges outwards from ```from``
-    std::vector<Edge> getFrom(Author from);
-=======
     template <class KeyT> std::vector<KeyT> getKeys();
 
 	/// @brief get all edges outwards from ``from``
 	std::vector<Edge> getFrom(Author from);
->>>>>>> e48ccbdd24f506e75969b95104aea0396c12d0e6
     std::vector<Reference> getFrom(Paper paper);
     std::vector<Friends> getFrom(Author from, bool fr=true);  // yes i know this is bad
 
