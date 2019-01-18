@@ -22,6 +22,14 @@ int main(int argc, char *argv[]){
     std::vector<Author> authors ; 
     std::vector<Edge> edges ; 
 
+    std::vector<Author> authors = dcdata.getKeys<Author>() ; 
+
+    for(std::vector<Author>::iterator au = authors.begin() ; au != authors.end() ; au++){
+        std::vector<Edge> temp = (dcdata.getFrom(au)); 
+        edges.insert(edges.end(), temp.begin(), temp.end());
+    }
+
+    #ifdef replacedBygetKeys
     for(auto &p : fs::recursive_directory_iterator(cdata)) {  //not sure about name of directory
         if(p.path().extension() == ".txt") {
             // then we read the first line of the textfile to get the author's name
@@ -38,6 +46,7 @@ int main(int argc, char *argv[]){
             }
         }
     }
+    #endif 
 
     // now we feed minhash with the edges we have collected
     MinHash minhash(30) ;
