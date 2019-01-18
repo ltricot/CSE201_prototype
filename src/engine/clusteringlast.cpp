@@ -13,20 +13,31 @@ void cluster::initializelabel(){
     }
 }
 
-void cluster::findneighbors(){
-    MinHash minhash(150); //MinHash object used to compute the similarities
-    for (int i=0;i<sizeInput;i++){ //for each vector find the neighbors
-        std::map<int,double> NeighSim;
-        for (int j=0;j<sizeInput;j++){
-            if (i!=j){
-                double s= minhash.getSimilarity(nodes[i],nodes[j]);
-                if (s>0){ // here we can also give a threshold above which it is a neighbor but be carefull may raise an exception in case it is empty
-                    NeighSim.insert(std::pair<int,double>(j,s));
-                }
-            }
+void cluster::findneighbors(std::vector<Friends> & similarities){
+    
+    for (std::vector<Friends>::iterator it=similarities.begin();it!=similarities.end();it++){
+        std::vector<Author>::iterator it1 = std::find(nodes.begin(),nodes.end(),std::get<0>(*it));
+        std::vector<Author>::iterator it2 = std::find(nodes.begin(),nodes.end(),std::get<1>(*it));
+
+        if (it1== nodes.end()){
+            nodes.push_back(std::get<0>(*it));
+            neighbors.push_back(std::map<Author,double>());  //do another map
+            int pos1=nodes.size()-1
+            
         }
-        neighbors.push_back(NeighSim);
-        NeighSim.clear();
+        else{
+            int pos1=std::distance(nodes.begin(),it1);
+        }
+        if (it2==nodes.end()){
+            nodes.push_back(std::get<1>(*it));
+            neighbors.push_back(std::map<Author,double>());
+            int pos2=nodes.size()
+        }
+        else {
+            int pos2=std::distance(nodes.begin(),it2);
+        }
+        neighbors[pos1].insert(std::pair<int,double>(pos2,std::get<2>(*it)));
+        neighbors[pos2].insert(std::pair<int,double>(pos1,std::get<2>(*it)));
     }
 }
 
@@ -95,7 +106,6 @@ void cluster::updatelabel(int order[]){
 
 
 void cluster::createcluster(){
-    findneighbors();
     initializelabel();
     getCDF();
     updaterate =1;

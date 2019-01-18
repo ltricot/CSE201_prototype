@@ -23,7 +23,7 @@ int main(int argc, char *argv[]){
     std::vector<Edge> edges ; 
 
     for(auto &p : fs::recursive_directory_iterator(cdata)) {  //not sure about name of directory
-        if(p.path().extension() == ".txt"){
+        if(p.path().extension() == ".txt") {
             // then we read the first line of the textfile to get the author's name
             ifstream infile(p.path()) ;
 
