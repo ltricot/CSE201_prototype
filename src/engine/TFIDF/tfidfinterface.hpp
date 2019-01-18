@@ -16,14 +16,24 @@
 
 
 class Summaries { //to implement 
+    private:
+    std::string sdata ; 
+    Driver driver;
+    std::vector<Paper> pKeys ; 
+
     public:
+    Summaries(std::string sdata) : sdata(sdata), driver(sdata) {}
 
     class iterator : public std::iterator<
             std::input_iterator_tag,
             Paper, int, const Paper*, Paper> {
 
+        private:
+        int cursor;
+        Summaries *parent ; 
+        
         public:
-        iterator();
+        iterator(Summaries *parent): parent(parent), cursor(0){}
 
         // make it so next pEde is available
         iterator operator++();
@@ -32,8 +42,8 @@ class Summaries { //to implement
          * For it != crawler.end()?
          * This is an infinite iterator and so there is no end condition.
          */
-        bool operator==(iterator other) const { return false; }
-        bool operator!=(iterator other) const { return true; }
+        bool operator==(iterator other) const { return other.cursor == cursor }
+        bool operator!=(iterator other) const { return other.cursor != cursor }
 
         // get next pEdge
         Paper operator*() const;
