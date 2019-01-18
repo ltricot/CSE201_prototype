@@ -15,6 +15,7 @@ class Author {
 	Author(std::string name="") : name(name) {}
 };
 
+typedef std::pair<Author, Author> Friends;
 class Paper {
 	/** @brief Contains all information on a paper we ever need to store, or use.
 	 *
@@ -30,7 +31,7 @@ class Paper {
 	Paper(std::string id="", std::string summary="") : id(id), summary(summary) {}
 };
 
-typedef std::pair<Paper, Paper> Reference ;
+typedef std::tuple<Paper, Paper, double> Reference ;
 
 class Edge {
 	/** @brief Store an edge between a paper and an author.
