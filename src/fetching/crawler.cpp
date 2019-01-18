@@ -470,7 +470,8 @@ void Crawler::run() {
     Driver d(cdata);
     SummaryAccessor ds(sdata);
     for(auto edge = this->begin();; ++edge) {
-        d.writeEdge(*edge);
-        ds.sendSummary() ; 
+        Edge ed = *edge;
+        d.writeEdge(ed);
+        ds.sendSummary(ed.paper);
     }
 }
