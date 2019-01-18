@@ -4,5 +4,5 @@
 
 # add_subdirectory (TFIDF)
 
-add_library (engine MinHash.cpp declaration_knn.cpp)
-target_link_libraries (engine PRIVATE database)
+add_library (engine MinHash.cpp declaration_knn.cpp tfidfinterface.cpp)
+target_link_libraries (engine PUBLIC database)
