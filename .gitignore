@@ -2,4 +2,9 @@ build
 .vscode
 html
 data
+cdata
+refdata
+mdata
 err
+*.tar
+temp

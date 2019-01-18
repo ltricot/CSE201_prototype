@@ -5,6 +5,10 @@
 #include <fstream>
 #include <boost/algorithm/string.hpp>
 
+#include <experimental/filesystem>
+namespace fs = std::experimental::filesystem;
+
+
 Reader::Reader() {
 	this->filename = " ";
 	this->delim = ",";
@@ -20,8 +24,11 @@ Reader::Reader(std::string name, std::string delimeter) {
 }
 
 std::vector<std::vector<std::string>> Reader::read() {
-	std::ifstream file(filename);
 	std::vector<std::vector<std::string>> ret;
+	if(!fs::exists(filename))
+		return ret;
+
+	std::ifstream file(filename);
 	std::string line;
 
 	while (std::getline(file, line)) {

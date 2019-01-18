@@ -25,6 +25,7 @@ double Matrix::read(string i, string j) {
 	while (id.length() < 11) {
 		id.insert(0, 1, '0');
 	}
+
 	string id1 = this->root_directory + "/" + id.substr(0, 3);
 	string id2 = id1 + "/" + id.substr(3, 3);
 	string id3 = id2 + "/" + id.substr(6, 3);

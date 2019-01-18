@@ -39,7 +39,7 @@ class Driver {
 
 	bool removeEdges(std::vector<Edge> edges);
     bool removeEdges(std::vector<Reference> refs);
-    bool removeEdges(std::vector<Friends friends>);
+    bool removeEdges(std::vector<Friends> friends);
     Driver(std::string dir);
 };
 

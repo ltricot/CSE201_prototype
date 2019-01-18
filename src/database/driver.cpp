@@ -97,7 +97,7 @@ bool Driver::removeEdge(Friends friends){
 	string row = ostr.str();
 	string col = get<1>(friends).name;
 	m.del(row, col);
-	return true;			
+	return true;
 }
 
 
@@ -112,6 +112,9 @@ vector<Edge> Driver::getFrom(Author from) {
 	string row = ostr.str();
 	vector<vector<string>> res = m.getrow(row);
 	vector<Edge> ret;
+
+	if(res.size() == 0)
+		return ret;
 	res.erase(res.begin());
 
 	for (vector<vector<string>>::iterator it = res.begin(); it < res.end(); it++) {
@@ -136,6 +139,9 @@ vector<Reference> Driver::getFrom(Paper from) {
 	string row = ostr.str();
 	vector<vector<string>> res = m.getrow(row);
 	vector<Reference> ret;
+
+	if(res.size() == 0)
+		return ret;
 	res.erase(res.begin());
 
 	for (vector<vector<string>>::iterator it = res.begin(); it < res.end(); it++) {
@@ -168,7 +174,7 @@ bool Driver::writeEdges(vector<Friends> friends){
 	for (vector<Friends>::iterator it = friends.begin(); it < friends.end(); it++) {
 		this->writeEdge(*it);
 	}
-	return true;	
+	return true;
 }
 
 bool Driver::removeEdges(vector<Edge> edges){
@@ -185,10 +191,11 @@ bool Driver::removeEdges(std::vector<Reference> refs){
 	return true;	
 }
 
-bool removeEdges(std::vector<Friends friends>){
+bool Driver::removeEdges(std::vector<Friends> friends) {
 	for (vector<Friends>::iterator it = friends.begin(); it < friends.end(); it++) {
 		this->removeEdge(*it);
 	}
+
 	return true;	
 }
 
