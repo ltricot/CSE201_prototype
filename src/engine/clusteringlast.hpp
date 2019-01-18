@@ -16,7 +16,7 @@
 
 class cluster {
     public:
-    std::map<int,std::vector<Author>> clusters; //output a map that associates to each label its cluster of authors 
+    std::unordered_map<int,std::vector<Author>> clusters; //output a map that associates to each label its cluster of authors 
     cluster(std::vector<Friends> & similarities) { //constructor
         findneighbors(similarities);
         sizeInput=nodes.size();

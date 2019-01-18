@@ -34,8 +34,8 @@ void cluster::findneighbors(std::vector<Friends> & similarities){
         else {
             int pos2=std::distance(nodes.begin(),it2);
         }
-        neighbors[pos1].insert(std::pair<int,double>(pos2,std::get<2>(*it)));
-        neighbors[pos2].insert(std::pair<int,double>(pos1,std::get<2>(*it)));
+        neighbors[pos1].insert(std::make_pair(pos2,std::get<2>(*it)));
+        neighbors[pos2].insert(std::make_pair>(pos1,std::get<2>(*it)));
     }
 }
 
@@ -46,8 +46,8 @@ void cluster::getCDF(){
         allSim.resize(neighbors[i].size());
         allProb.resize(neighbors[i].size());
         int c=0;
-        //iterate over the map neighbors(index) to have an array of similarities
-        for (std::map<int, double>::iterator it = neighbors[i].begin(); it != neighbors[i].end(); ++it){
+        //iterate over the map neighbors[index] to have an array of similarities
+        for (std::unordered_map<int, double>::iterator it = neighbors[i].begin(); it != neighbors[i].end(); ++it){
             allSim(c)=it->second;
             c++;
         }
@@ -73,7 +73,7 @@ void cluster::getCDF(){
 int cluster::getMaxSim(int & index){
     // simulate a random experience to pick the neighbor
     double flip=(double) (rand()) /  (double) (RAND_MAX); //random float between 0 and 1
-    std::map<int,double>::iterator it= neighbors[index].begin();
+    std::unordered_map<int,double>::iterator it= neighbors[index].begin();
     for (int ind=0;ind<allCDF[index].size();ind++){
         if (allCDF[index][ind]>=flip){
             return it->first;
