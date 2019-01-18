@@ -5,16 +5,6 @@ using std::exp;
 
 
 
-double getSim(Eigen::VectorXd & vec1, Eigen::VectorXd & vec2) {
-    double res=0;
-    for (int k=0; k<vec1.size(); k++){
-        if (vec1(k)==vec2(k)){
-            res+=1;
-        }
-    }
-    return double(res)/vec1.size();
-}
-
 int cluster::T =2;
 
 void cluster::initializelabel(){
@@ -24,11 +14,12 @@ void cluster::initializelabel(){
 }
 
 void cluster::findneighbors(){
+    MinHash minhash(150); //MinHash object used to compute the similarities
     for (int i=0;i<sizeInput;i++){ //for each vector find the neighbors
         std::map<int,double> NeighSim;
         for (int j=0;j<sizeInput;j++){
             if (i!=j){
-                double s= getSim(nodes[i],nodes[j]);
+                double s= minhash.getSimilarity(nodes[i],nodes[j]);
                 if (s>0){ // here we can also give a threshold above which it is a neighbor but be carefull may raise an exception in case it is empty
                     NeighSim.insert(std::pair<int,double>(j,s));
                 }
@@ -115,6 +106,10 @@ void cluster::createcluster(){
     while (updaterate>0.1){ //while the rate of updates in the graph is greater to 1% we continue to update PB TOO SLOW TO HAVE THIS THRESHOLD
         std::random_shuffle(&order[0], &order[sizeInput]);
         updatelabel(order);
+    }
+
+    for (int v=0; v<label.size(); v++) {
+        clusters[label[v]].push_back(nodes[v]);
     }
 }
 

@@ -26,23 +26,8 @@ bool Driver::writeEdge(Edge edge) {
 	ostr << foo;
 	string row = ostr.str();
 	string col = edge.paper.id;
-
-	/*
-	Eigen::Matrix<double, lat_feat, 1> p = (Eigen::MatrixXd::Random(lat_feat, 1) + Eigen::MatrixXd::Constant(lat_feat,1, 1.))*0.5;
-    Eigen::Matrix<double, lat_feat, 1> q =
-        (Eigen::MatrixXd::Random(lat_feat, 1) + Eigen::MatrixXd::Constant(lat_feat, 1, 1.)) *
-            0.5;
-    VectorAccessor<lat_feat> v("MatFact");
-	Eigen::Matrix<double, lat_feat, 1> vect1 = v.get_vector(edge.author);
-    if (vect1(1, 0) == -DBL_MAX) {
-		v.send_vector(edge.author, p);
-		}        
-    if (v.get_vector(edge.paper)(1,0) == -DBL_MAX){
-		v.send_vector(edge.paper, q);
-	}*/
-
 	m.write(row, col, edge.weight, n);
-	return true;
+	return true; 
 }
 
 bool Driver::writeEdge(Reference ref) {
@@ -58,6 +43,21 @@ bool Driver::writeEdge(Reference ref) {
 	m.write(row, col, 1, n);
 	return true;
 }
+
+bool Driver::writeEdge(Friends friends) {
+	hash<string> hasher;
+	Matrix m(this->directory);
+	string n = get<0>(friends).name;
+	size_t foo = hasher(n);
+	foo = foo % 100000000000LU;
+	std::ostringstream ostr;
+	ostr << foo;
+	string row = ostr.str();
+	string col = get<1>(friends).name;
+	m.write(row, col, get<2>(friends), n);
+	return true;
+}
+
 bool Driver::removeEdge(Edge edge) {
 	hash<string> hasher;
 	Matrix m(this->directory);
@@ -85,6 +85,21 @@ bool Driver::removeEdge(Reference ref) {
 	m.del(row, col);
 	return true;
 }
+
+bool Driver::removeEdge(Friends friends){
+	hash<string> hasher;
+	Matrix m(this->directory);
+	string n = get<0>(friends).name;
+	size_t foo = hasher(n);
+	foo = foo % 100000000000LU;	
+	std::ostringstream ostr;
+	ostr << foo;
+	string row = ostr.str();
+	string col = get<1>(friends).name;
+	m.del(row, col);
+	return true;			
+}
+
 
 vector<Edge> Driver::getFrom(Author from) {
 	hash<string> hasher;
@@ -134,14 +149,23 @@ vector<Reference> Driver::getFrom(Paper from) {
 	return ret;
 }
 
+
 bool Driver::writeEdges(vector<Edge> edges) {
 	for (vector<Edge>::iterator it = edges.begin(); it < edges.end(); it++) {
 		this->writeEdge(*it);
 	}
 	return true;
 }
+
 bool Driver::writeEdges(vector<Reference> ref){
 	for (vector<Reference>::iterator it = ref.begin(); it < ref.end(); it++) {
+		this->writeEdge(*it);
+	}
+	return true;	
+}
+
+bool Driver::writeEdges(vector<Friends> friends){
+	for (vector<Friends>::iterator it = friends.begin(); it < friends.end(); it++) {
 		this->writeEdge(*it);
 	}
 	return true;	
@@ -156,6 +180,13 @@ bool Driver::removeEdges(vector<Edge> edges){
 
 bool Driver::removeEdges(std::vector<Reference> refs){
 	for (vector<Reference>::iterator it = refs.begin(); it < refs.end(); it++) {
+		this->removeEdge(*it);
+	}
+	return true;	
+}
+
+bool removeEdges(std::vector<Friends friends>){
+	for (vector<Friends>::iterator it = friends.begin(); it < friends.end(); it++) {
 		this->removeEdge(*it);
 	}
 	return true;	
