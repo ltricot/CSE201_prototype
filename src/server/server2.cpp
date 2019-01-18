@@ -20,6 +20,7 @@ class GUI_Serv {
         httpEndpoint(std::make_shared<Http::Endpoint(addr));
         dir = d;
     }
+	
 	std::string dir;
 
 	Rest::Router router;
@@ -127,6 +128,15 @@ class GUI_Serv {
 	}
 	
 };
+/**@brief Returns the user's liked topics
+ * 
+ * @details Finds the user's text file and returns the topics it contains in the form of a vector
+ * of strings
+ * 
+ * @param id the User's id
+ * 
+ * @return vector of topics
+ */ 
 std::vector<std::string> getUserLikes(std::string id){
 	Reader r(id+".txt")
 	std::vector<std::vector<std::string>> tmp = r.read();
@@ -136,6 +146,9 @@ std::vector<std::string> getUserLikes(std::string id){
 	}
 	return ret;
 }
+
+/**@brief Calls putUserLike(id, like) on each like in likes
+ */
 bool putUserLikes(std::string id, std::vector<std::string> likes){
 	for(std::vector<std::string>::iterator it = likes.begin(); it != likes.end(); it++){
 		bool b = putUserLike(id, *it);
@@ -143,6 +156,14 @@ bool putUserLikes(std::string id, std::vector<std::string> likes){
 	return true;
 }
 
+/**@brief Records the fact that the user liked this topic
+ * 
+ * @details Creates or opens a text file with the user's id, then adds the like
+ * 
+ * @param id the User's id
+ * 
+ * @param like a topic liked by the user
+ */
 bool putUserLike(std::string id, std::string like){
 	std::string filename = id + ".txt";
 	ifstream inp(filepath);
@@ -189,6 +210,16 @@ std::string jsonize(std::vector<std::string>& arts) {
 	return output;
 }
 
+/**@brief Recovers the articles that the user liked. 
+ * 
+ * @details Goes into the interaction matrix and returns the row corresponding to the user's id
+ * 
+ * @param id The user's id
+ *
+ * @param dr The directory of the interaction matrix
+ * 
+ * @return A vector containing the ids of the papers associated to the user
+ */
 std::vector<std::string> getUserArticles(std::string id, std::string dr){
 	Author u(id);
 	Driver d(dr);
@@ -200,6 +231,16 @@ std::vector<std::string> getUserArticles(std::string id, std::string dr){
 	return ret;
 }
 
+/** @brief Records the fact that the user liked these articles
+ * 
+ * @details Adds an edge in the interaction matrix between the user and every papaper
+ * 
+ * @param id the User's id
+ * 
+ * @param articles Vector of articles
+ * 
+ * @param dr The interaction matrix's directory
+ */
 bool putUserArticles(std::string id, std::vector<std::string> articles, std::string dr){
 	Author u(id);
 	Driver d(dr);
