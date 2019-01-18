@@ -48,6 +48,8 @@ class Driver {
     bool removeEdges(std::vector<Friends> friends);
     Driver(std::string dir);
 };
+
+
 class SummaryAccessor{
     std::string directory;
     
@@ -60,7 +62,7 @@ class SummaryAccessor{
     /** @brief Recover the summary of a given paper
      */
     std::string getSummary(Paper paper);
-}
+};
 
 /** @brief Interface between the recommendation algorithms and the
  * database storing an interaction matrix.
@@ -112,7 +114,15 @@ class EdgeAccessor {
     class iterator : public std::iterator<
             std::input_iterator_tag,
             Edge, int, const Edge*, Edge> {
-        // stuff
+        
+        private:
+        int cursor;
+        EdgeAccessor *parent;
+        
+        public:
+        iterator(EdgeAccessor *parent): parent(parent), cursor(0){}
+        iterator operator++();
+        Edge operator*();
     };
 
     iterator begin();
