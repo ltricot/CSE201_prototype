@@ -65,7 +65,7 @@ window_main::window_main(info_user &info, Author &author, Client &client)
 
     QLabel *text_info = new QLabel;
     text_info->setWordWrap(true);
-    text_info->setText("Welcome on the Tinder for researchers (God knows that need it!)\n \
+    text_info->setText("Welcome on the Tinder for researchers (God knows they need it!)\n \
 \n \
 Here is a brief presentation of the application. \n \
 To be simple, we will show you some arXiv articles according to the interests you gave us when you sign in. You will be able to react to them : like, dislike, indifferent.\n \
