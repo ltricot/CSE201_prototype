@@ -25,13 +25,8 @@ int main(int argc, char *argv[]) {
 
     for (map<int,vector<string>>::iterator it=clusters.begin(); it!=clusters.end(); ++it) {
         string label= std::to_string(it->first);
+        addKey(outfolder, *it);
         string path=outfolder + "/" + label + ".txt";
-        string keyfile = outfolder + "/" + "keys.txt";
-
-        ofstream keys(keyfile, std::ios_base::app);
-        keys << label << "\n";
-        keys.close();
-
         ofstream myfile(path);
         for (vector<string>::iterator i=it->second.begin();i!=it->second.end();i++)
             myfile << *i << '\n';
