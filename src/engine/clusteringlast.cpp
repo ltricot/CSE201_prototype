@@ -188,3 +188,67 @@ std::vector<Author> getNeighbors(std::string folder, int label){
     return ret;
 }
 
+void storeNeighbor(std::string folder, int label, Author author){
+    std::ostringstream ostr;
+    ostr << label;
+    std::string lab = ostr.str();
+    std::string app = author.name;
+    ifstream in(folder+ "/" + label + ".txt")
+    ofstream out(folder + "/" + label + "tmp.txt");
+    string line;
+	bool stored = false;
+	while (getline(in, line)) {
+			if (line == app) {
+				out << line << "\n";
+				stored = true;
+			}
+			else {
+				out << line << "\n";
+			}
+		}
+	}
+	in.close();
+
+	if (stored) {
+		out.close();
+		remove( (folder+ "/" + label + ".txt").c_str());
+		rename((folder+ "/" + label + "tmp.txt").c_str(), (folder+ "/" + label + ".txt").c_str());
+		return true;
+	}
+	out << app << "\n";
+	out.close();
+    remove( (folder+ "/" + label + ".txt").c_str());
+    rename((folder+ "/" + label + "tmp.txt").c_str(), (folder+ "/" + label + ".txt").c_str());
+}
+
+void addKey(std::string folder, int label){
+    std::ostringstream ostr;
+    ostr << label;
+    std::string lab = ostr.str();
+    ifstream in(folder+"/keys.txt");
+    ofstream out(folder+ "/" + label + "keystmp.txt");
+    std::string line;
+	bool stored = false;
+	while (getline(in, line)) {
+			if (line == lab) {
+				out << line << "\n";
+				stored = true;
+			}
+			else {
+				out << line << "\n";
+			}
+		}
+	}
+	in.close();
+
+	if (stored) {
+		out.close();
+		remove( (folder+"/keys.txt").c_str());
+		rename((folder+ "/" + label + "keystmp.txt").c_str(), (folder+"/keys.txt").c_str());
+		return true;
+	}
+	out << label << "\n";
+	out.close();
+    remove( (folder+"/keys.txt").c_str());
+    rename((folder+ "/" + label + "keystmp.txt").c_str(), (folder+"/keys.txt").c_str());
+}
