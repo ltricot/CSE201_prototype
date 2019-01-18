@@ -10,6 +10,8 @@
 #include <set>
 #include <algorithm>
 #include <random>
+#include <vector>
+
 #include "primitives.hpp"
 
 class Cluster {
