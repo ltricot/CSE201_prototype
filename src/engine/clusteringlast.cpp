@@ -17,22 +17,23 @@ void cluster::findneighbors(std::vector<Friends> & similarities){
     for (std::vector<Friends>::iterator it=similarities.begin();it!=similarities.end();it++){
         std::vector<Author>::iterator it1 = std::find(nodes.begin(),nodes.end(),std::get<0>(*it));
         std::vector<Author>::iterator it2 = std::find(nodes.begin(),nodes.end(),std::get<1>(*it));
+        int pos1, pos2;
 
         if (it1== nodes.end()){
             nodes.push_back(std::get<0>(*it));
-            neighbors.push_back(std::unordered_map<Author,double>);  //do another map
-            int pos1=nodes.size()-1;
+            neighbors.push_back(std::unordered_map<Author, double>());  //do another map
+            pos1=nodes.size()-1;
         }
         else{
-            int pos1=std::distance(nodes.begin(),it1);
+            pos1=std::distance(nodes.begin(),it1);
         }
         if (it2==nodes.end()){
             nodes.push_back(std::get<1>(*it));
-            neighbors.push_back(std::unordered_map<Author,double>);
-            int pos2=nodes.size()-1;
+            neighbors.push_back(std::unordered_map<Author,double>());
+            pos2=nodes.size()-1;
         }
         else {
-            int pos2=std::distance(nodes.begin(),it2);
+            pos2=std::distance(nodes.begin(),it2);
         }
         neighbors[pos1].insert(std::pair<int,double>(pos2,std::get<2>(*it)));
         neighbors[pos2].insert(std::pair<int,double>(pos1,std::get<2>(*it)));
