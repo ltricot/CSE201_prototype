@@ -6,6 +6,7 @@
 #include <string>
 #include <vector>
 
+
 Client::Client(std::string ip, int port) : ip(ip), port(port) {
     std::vector<std::string> topics = getTopics();
 }
@@ -87,6 +88,7 @@ bool Client::putArticles(Author author, std::vector<std::string> articles) {
     for (std::vector<std::string>::iterator it = articles.begin(); it != articles.end; ++it) {
         body.push_back(*it);
     }
+
     std::string response = post(ip + "/users/" + author.name + "/articles", body);
     json resp = json::parse(response);
     return resp["success"] == 1;

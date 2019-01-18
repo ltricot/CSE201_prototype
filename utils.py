@@ -59,6 +59,9 @@ def _run_references_all(data, archives, fm="10", to="19"):
         
         for _ in os.popen(f'rm {paper}'):
             pass
+        
+        for _ in os.popen(f'rm ./temp/* -rf'):
+            pass
 
 
 if __name__ == '__main__':
