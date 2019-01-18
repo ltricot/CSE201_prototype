@@ -27,6 +27,7 @@ template <class KeyT> std::vector<KeyT> Driver::getKeys() {
                 key.push_back(key); 
             }
         }
+	}
 }
 
 Driver::Driver(string dir){ 
