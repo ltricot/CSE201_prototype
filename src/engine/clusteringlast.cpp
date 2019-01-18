@@ -20,7 +20,7 @@ void cluster::findneighbors(std::vector<Friends> & similarities){
 
         if (it1== nodes.end()){
             nodes.push_back(std::get<0>(*it));
-            neighbors.push_back(std::map<Author,double>());  //do another map
+            neighbors.push_back(std::unordered_map<Author,double>());  //do another map
             int pos1=nodes.size()-1;
         }
         else{
@@ -28,7 +28,7 @@ void cluster::findneighbors(std::vector<Friends> & similarities){
         }
         if (it2==nodes.end()){
             nodes.push_back(std::get<1>(*it));
-            neighbors.push_back(std::map<Author,double>());
+            neighbors.push_back(std::unordered_map<Author,double>());
             int pos2=nodes.size()-1;
         }
         else {
