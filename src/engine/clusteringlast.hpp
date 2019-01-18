@@ -11,6 +11,8 @@
 #include <algorithm>
 #include <random>
 #include <iterator>
+#include <vector>
+
 #include "primitives.hpp"
 
 class Cluster {
