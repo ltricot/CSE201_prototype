@@ -11,6 +11,7 @@
 #include <algorithm>
 #include <random>
 #include <iterator>
+#include <unordered_map>
 #include "primitives.hpp"
 
 class cluster {
@@ -28,7 +29,7 @@ class cluster {
     /* "label" is a std::vector that associates to each vector of the input (each node) its label ie the label at index i is the label of the ith vector*/
     std::vector<int> label;
     std::vector<Author> nodes; //to store the input vector
-    std::vector<std::map<int,double>> neighbors; // vector that at index i contains a map that associates to each neighbors of i its similarity with i
+    std::vector<std::unordered_map<int,double>> neighbors; // vector that at index i contains a map that associates to each neighbors of i its similarity with i
     double updaterate ; //save the rate of updated labels 
     void findneighbors(std::vector<Friends> & similarities); //find the neighbors for each nodes
     void initializelabel(); //function to initialize label such that each vector has a different label
