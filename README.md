@@ -1,4 +1,4 @@
-# Tinder for researchers (god knows they need it)
+# Tinder for researchers 
 
 ![logo](src/GUI/TestGUI/TestGUI/img/logo_2.png)
 
