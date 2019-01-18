@@ -113,7 +113,7 @@ std::pair<std::vector<float>,std::vector<std::string>>  Person::getRatings_of_pa
     for (int i=0;i<list_of_papers.size();i++){
         std::string name_paper = list_of_papers[i]; /*name paper is a Paper.id thus it is a string */
         if((std::find(id_interactions.begin(),id_interactions.end(),name_paper)!= id_interactions.end()) || (std::find(name_of_papers_of_ID.begin(),name_of_papers_of_ID.end(),name_paper)!= name_of_papers_of_ID.end())){
-            break;
+            continue;
         } else {
             VectorAccessor<30> v(vdata); // $$
             Eigen::Matrix<double,30,1> vector_id_researcher = v.get_vector(this->author);
@@ -146,8 +146,7 @@ std::string Person::get_a_title_paper(std::pair<std::vector<float>,std::vector<s
         for(std::vector<float>::iterator it = result.first.begin(); it != result.first.end(); ++it){
                 sum+= *it;
         }
-        
-        int random = rand();
+        float random = ((float) rand()) / (float) RAND_MAX;
         int interval = 0;
         int k = 0;
         for(int i = 0;i<=result.first.size();i++){
