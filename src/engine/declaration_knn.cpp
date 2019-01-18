@@ -4,13 +4,15 @@
 #include <array>
 #include <vector>
 #include <algorithm>
-#include <ifstream>
+#include <fstream>
 
 #include "Eigen/Eigen"
 
 #include "declaration_knn.hpp"
 #include "clusteringlast.hpp"
 
+
+using json = nlohmann::json;
 
 
 /* constructor for name

@@ -174,7 +174,7 @@ std::vector<int> getKeys(std::string folder){
 std::vector<Author> getNeighbors(std::string folder, int label){
     std::ostringstream ostr;
     ostr << label;
-    string lab = ostr.str();
+    std::string lab = ostr.str();
     Reader r(folder+"/"+lab+".txt");
 
     std::vector<std::vector<std::string>> tmp = r.read();

@@ -7,11 +7,16 @@
 #include "json.hpp"
 
 
+using json = nlohmann::json;
+
+
 class Person {
     private:
     
     std::string keyfile;
     std::string outfolder;
+    std::string cdata;
+    std::string vdata;
     Author author;
     json keys;
     

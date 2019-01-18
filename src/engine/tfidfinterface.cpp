@@ -23,7 +23,7 @@ TFIDF::iterator TFIDF::iterator::operator++(){
     }
 }
 
-pEdge TFIDF::iterator::operator*() const{
+TFIDF::pEdge TFIDF::iterator::operator*() const{
         return *cursor;
 }
 
@@ -121,19 +121,22 @@ void TFIDF::calweightMat() {
 	weightMat = tf * idf; 	
 }
  //do the update by pulling new summaries (up to a given threshold) and update accordingly the weightMat and the buffer
-void TFIDF::update(int threshold){
-    Summaries summaries(this->sdata);
-    for (Summaries::iterator it=summaries.begin();it!=summaries.end();it++){
-            if (papers.find(it->id)==papers.end()) {  
-              papers.insert(it->id);
-              std::vector<std::string> parsed_abstract= textParse(it->summary));
-              convertsum(parsed_abstract);
-            }
-            if (papers.size()>threshold){        
-                break;
-            }    
+void TFIDF::update(int threshold) {
+    SummariesIt summaries(this->sdata);
+    for (SummariesIt::iterator it=summaries.begin();it!=summaries.end();++it) {
+        auto itval = *it;
+        if (papers.find(itval.id)==papers.end()) {
+            papers.insert(itval.id);
+            std::vector<std::string> parsed_abstract= textParse(itval.summary);
+            convertsum(parsed_abstract);
         }
-        calweightMat();
+
+        if (papers.size()>threshold){        
+            break;
+        }    
+    }
+
+    calweightMat();
     int i=0;
     for (std::unordered_set<std::string>::iterator it1=papers.begin();it1!=papers.end();it1++){
         int j=0;
@@ -146,21 +149,21 @@ void TFIDF::update(int threshold){
     }
 }
 
-Summaries::Summaries(std::string sdata) : sdata(sdata), driver(sdata) {
-    SummaryAccessor sAccess(sdata);
+SummariesIt::SummariesIt(std::string sdata) : sdata(sdata), driver(sdata), sAccess(sdata) {
+   // SummaryAccessor sAccess(sdata);
     this->pKeys = sAccess.getKeys();
 }
 
 
-Summaries::iterator Summaries::iterator::operator++(){
+SummariesIt::iterator SummariesIt::iterator::operator++(){
     this->cursor = this->cursor + 1;
     return *this;
 }
 
 
-Paper Summaries::iterator::operator*() const{
-    Paper p = this->parent.pKeys[this->cursor];
-    std::string summ = sAccess.getSummary(p);
+Paper SummariesIt::iterator::operator*() const{
+    Paper p = this->parent->pKeys[this->cursor];
+    std::string summ = this->parent->sAccess.getSummary(p); 
     p.summary = summ ; 
     return p ; 
 }
