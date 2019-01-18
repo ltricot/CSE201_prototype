@@ -11,6 +11,13 @@ using namespace std;
 
 const int lat_feat = 30;
 
+
+template <class KeyT> std::vector<KeyT> Driver::getKeys() {
+	std::vector<KeyT> keys;
+
+	// fill it :*
+}
+
 Driver::Driver(string dir){ 
 	this->directory = dir;
     int res = mkdir(dir.c_str(), 0666);
@@ -121,6 +128,31 @@ vector<Edge> Driver::getFrom(Author from) {
 		vector<string> line = *it  ;
 		Edge edge;
 		edge.readVector(line, n);
+		ret.push_back(edge);
+	}
+
+	return ret;
+}
+
+vector<Friends> Driver::getFrom(Author from, bool fr=true) {
+	hash<string> hasher;
+	Matrix m(this->directory);
+	string n = from.name;
+	size_t foo = hasher(n);
+	foo = foo % 100000000000LU;
+	std::ostringstream ostr;
+	ostr << foo;
+	string row = ostr.str();
+	vector<vector<string>> res = m.getrow(row);
+	vector<Friends> ret;
+
+	if(res.size() == 0)
+		return ret;
+	res.erase(res.begin());
+
+	for (vector<vector<string>>::iterator it = res.begin(); it < res.end(); it++) {
+		vector<string> line = *it  ;
+		Friend edge = std::make_tuple(from, Author(line[0]), stod(line[1]));
 		ret.push_back(edge);
 	}
 
