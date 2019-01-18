@@ -15,6 +15,9 @@ using namespace std;
  */
 
 
+// we should have made a template <class F, class T> where F an T
+// are key type and value type
+// but we didn't and now there is no time
 class Driver {
     public:
 	std::string directory;
@@ -24,6 +27,7 @@ class Driver {
 	/// @brief get all edges outwards from ``from``
 	std::vector<Edge> getFrom(Author from);
     std::vector<Reference> getFrom(Paper paper);
+    std::vector<Friends> getFrom(Author from, bool fr=true);  // yes i know this is bad
 
 	bool writeEdge(Edge edge);  // overwrites
 	bool writeEdge(Reference ref);
