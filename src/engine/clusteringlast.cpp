@@ -3,8 +3,10 @@
 #include "../database/Reader.h"
 #include <sstream>
 
+using namespace std ;
+
 using std::exp;
-//using json = nlohmann::json;
+using json = nlohmann::json;
 
 
 
@@ -157,7 +159,7 @@ void Cluster::createcluster(){
             clusters.insert(std::pair<int,std::vector<std::string>>(label[v],std::vector<std::string>()));
         }
         clusters[label[v]].push_back(nodesindex[v]);
-        //authorlabel[nodesindex[v]]=label[v];
+        authorlabel[nodesindex[v]]=label[v];
     }
 }
 
@@ -197,8 +199,8 @@ void storeNeighbor(std::string folder, int label, Author author){
     ostr << label;
     std::string lab = ostr.str();
     std::string app = author.name;
-    ifstream in(folder+ "/" + label + ".txt")
-    ofstream out(folder + "/" + label + "tmp.txt");
+    ifstream inp(folder+ "/" + lab + ".txt");
+    ofstream out(folder + "/" + lab + "tmp.txt");
     std::string line;
 	bool stored = false;
 	while (getline(in, line)) {
@@ -211,7 +213,7 @@ void storeNeighbor(std::string folder, int label, Author author){
 			}
 		}
 	}
-	in.close();
+	inp.close();
 
 	if (stored) {
 		out.close();

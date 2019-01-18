@@ -11,13 +11,13 @@
 #include <algorithm>
 #include <random>
 #include <vector>
-//#include <nlohmann/json.hpp>
+#include "json.hpp"
 #include "primitives.hpp"
 
-//using json=nlohmann::json;
+using json=nlohmann::json;
 class Cluster {
     public:
-    //json authorlabel; //create a json object that associates to each author name its label
+    json authorlabel; //create a json object that associates to each author name its label
     std::map<int,std::vector<std::string>> clusters; //output a map that associates to each label its cluster of authors 
     Cluster(std::vector<Friends> & similarities) { //constructor
         findneighbors(similarities);
