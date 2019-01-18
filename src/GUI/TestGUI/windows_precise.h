@@ -6,6 +6,7 @@
 #include <QScrollArea>
 
 #include <info_user.h>
+#pragma once
 
 
 class windows_precise

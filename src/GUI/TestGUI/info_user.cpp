@@ -2,12 +2,6 @@
 
 info_user::info_user()
 {
-    // Fill the info storage
-    for (int i = 0; i < 154; i++)
-    {
-        info[i] = 0;
-    }
-
     // Create all the checkboxes
     QCheckBox *galax = new QCheckBox("Astrophysics of Galaxies");
     checkboxes[0]=galax;
@@ -326,21 +320,22 @@ void info_user::update()
     {
         if (checkboxes[i]->isChecked())
         {
-            info[i] = 1;
-        }
-        else
-        {
-            info[i] = 0;
+            info.push_back(checkboxes[i]->text().QString::toStdString());
         }
     }
 }
 
 // Update the checkboxes from the storage list
-void info_user::update_from_server(int a[154])
+void info_user::update_from_server(std::vector<std::string> a)
 {
     for (int i = 0; i < 154; i ++)
     {
-        checkboxes[i]->setChecked((a[i] == 1));
+        if (std::find(a.begin(), a.end(), checkboxes[i]->text().QString::toStdString()) != a.end()) {
+            checkboxes[i]->setChecked(true);
+        }
+        else {
+            checkboxes[i]->setChecked(false);
+        }
     }
 }
 

@@ -1,6 +1,7 @@
 #ifndef INFO_USER_H
 #define INFO_USER_H
 #include <QCheckBox>
+#pragma once
 
 // create a class info_user that will store the choices of the user
 class info_user{
@@ -16,14 +17,13 @@ class info_user{
         void update();
 
         // Iterating over the storage list it updates the status of the checkboxes i.e. checks it if 1 and unchecks it if 0
-        void update_from_server(int a[154]);
+        void update_from_server(std::vector<std::string> a);
 
         // give the associated checkbox
         QCheckBox* give_check(int a);
 
-    private:
         // Create a list of 0 and 1
-        int info[154];
+        std::vector<std::string> info;
 
 };
 #endif // INFO_USER_H

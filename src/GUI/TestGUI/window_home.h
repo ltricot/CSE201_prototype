@@ -7,6 +7,7 @@
 #include <QLabel>
 #include <QDesktopWidget>
 #include <QCheckBox>
+#pragma once
 
 
 class window_home
