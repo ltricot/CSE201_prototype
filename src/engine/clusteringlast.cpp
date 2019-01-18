@@ -6,12 +6,17 @@ using std::exp;
 
 int Cluster::T =2;
 
+//@brief function that initialize the vector<int> label
 void Cluster::initializelabel(){
     for (int i=0;i<sizeInput;i++){
         label.push_back(i);
     }
 }
 
+/**@brief function that thanks to the similarities argument can construct the nodes vector and the neighbors vector std::vector<std::map<int,double>>
+*@details add each author in the nodes vector thanks to this each author is characterized by an int (the index)
+*construct the neighbors vector: for each author (so each index in nodes) construct a map that associates to each of its neighbor the similarity
+*/
 void Cluster::findneighbors(std::vector<Friends> & similarities){
     
     for (std::vector<Friends>::iterator it=similarities.begin();it!=similarities.end();it++){
@@ -39,6 +44,10 @@ void Cluster::findneighbors(std::vector<Friends> & similarities){
         neighbors[pos2].insert(std::make_pair(pos1,std::get<2>(*it)));
     }
 }
+/**@brief create the allCDF vector
+  * @details for each author create a cdf by doing a vector that at index j associates the probability to choose one of the previous
+  * neighbors encountered
+*/
 
 void Cluster::getCDF(){
     for (int i=0;i<sizeInput;i++){
@@ -70,6 +79,12 @@ void Cluster::getCDF(){
     }
 }
 
+/**@brief function that returns one of the neighbor of the input author characterized by its index in nodes
+ *@details we simulate a random experiment "take a neighbor": it will take with a greater probability the nearest neighbor
+ * thanks to the cdf constrcted previously
+ *@param the index (an int) of an author 
+ *@return the index of an author
+*/
 
 int Cluster::getMaxSim(int & index){
     // simulate a random experience to pick the neighbor
@@ -83,6 +98,12 @@ int Cluster::getMaxSim(int & index){
     }  
     return it->first;
 }
+
+/**@brief function that updates the label
+  *@details perform a label propagation, visit each node and give its label to one of its neighbor 
+  *also save the update rate 
+  *@param an array to know in which order we visit the nodes 
+*/
 
 void Cluster::updatelabel(int order[]){
     //need to save the rate of updates
@@ -103,6 +124,10 @@ void Cluster::updatelabel(int order[]){
     updaterate= double(nbupdate)/sizeInput;  
 }
 
+/**@brief function that create the clusters
+  *@details first initialize the labels, create the CDF and until the clusters are quite stable perform a label propagation
+  *create the clusters map that associates to each label a vector of Author
+*/
 
 void Cluster::createcluster(){
     initializelabel();
