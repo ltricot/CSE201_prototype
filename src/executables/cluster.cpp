@@ -15,6 +15,7 @@ int main(int argc, char *argv[]) {
 
     vector<Friends> similarities;
     vector<Author> authors = dmdata.getKeys<Author>();
+    int sizeInput= authors.size()
     for (vector<Author>::iterator it = authors.begin(); it != authors.end(); it++) {
         std::vector<Friends> tmp = (dmdata.getFrom(*it, true));
         similarities.insert(similarities.end(), tmp.begin(), tmp.end());
