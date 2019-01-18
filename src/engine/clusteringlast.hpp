@@ -41,3 +41,6 @@ class Cluster {
 
     
 };
+
+std::vector<int> getKeys(std::string folder);
+std::vector<Author> getNeighbors(std::string folder, int label);

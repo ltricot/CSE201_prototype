@@ -9,10 +9,13 @@
 #include <fstream>
 #include <sstream>
 #include <string>
-#include "boost_1_69_0/boost/tokenizer.hpp"
-#include "boost_1_69_0/boost/algorithm/string.hpp"
+
+#include "boost/tokenizer.hpp"
+#include "boost/algorithm/string.hpp"
 #include "Eigen/Dense"
+
 #include "primitives.hpp"
+#include "driver.hpp"
 
 
 class Summaries { 
@@ -42,8 +45,8 @@ class Summaries {
          * For it != crawler.end()?
          * This is an infinite iterator and so there is no end condition.
          */
-        bool operator==(iterator other) const { return other.cursor == cursor }
-        bool operator!=(iterator other) const { return other.cursor != cursor }
+        bool operator==(iterator other) const { return other.cursor == cursor; }
+        bool operator!=(iterator other) const { return other.cursor != cursor; }
 
         // get next pEdge
         Paper operator*() const;

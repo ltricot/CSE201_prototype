@@ -1,6 +1,8 @@
 import sys, os, shutil, signal
 import json
 
+import arxiv
+
 
 def _run_format(src: str):
     def _format(fpath: str):
@@ -38,6 +40,20 @@ def _run_download_references(paper, data):
     sh = f'./build/src/executables/download_references {paper} {data}'
     for line in os.popen(sh):
         print(line, end='')
+
+def _run_get_sources(topicp, out, many="10"):
+    many = int(many)
+    with open(topicp) as f:
+        topics = json.load(f)
+
+    toparts = {t: [] for t in topics}
+    for topic in topics:
+        res = arxiv.query(search_query=topic)
+        for p in res[:many]:
+            toparts[topic].append(p['id'].split('/')[-1])
+    
+    with open(out, 'w') as f:
+        json.dump(toparts, f)
 
 def _run_references_all(data, archives, statep=""):
     archs = []
@@ -96,6 +112,7 @@ if __name__ == '__main__':
         'references': _run_download_references,
         'compile': _run_compile,
         'ref_all': _run_references_all,
+        'sources': _run_get_sources,
     }
 
     cmds[sys.argv[1]].__call__(*sys.argv[2:])
