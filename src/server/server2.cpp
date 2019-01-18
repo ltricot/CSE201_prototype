@@ -4,7 +4,7 @@
 #include <string>
 #include <sstream>
 #include "../database/driver.hpp"
-#include 
+#include <fstream>
 
 using namespace Pistache;
 
@@ -56,8 +56,8 @@ class GUI_Serv {
 
 	void getLikes(const Rest::Request& request, Http::ResponseWriter response) {
 		auto id = request.param(":id").as<int>;
-		//js = getUserLikes(id)
-		js = "{\"physics\" : 0, \"math\": 1, \"computers\": 1}"; //answer for testing response
+		std::string likes = getUserLikes(id)
+		//js = "{\"physics\" : 0, \"math\": 1, \"computers\": 1}"; //answer for testing response
 		response.send(Http::Code::Ok, js);
 	}
 
@@ -92,16 +92,15 @@ class GUI_Serv {
 		for (json::iterator it = d.begin(); it != d.start(); it++){
 			out.push_back(*it);
 		}
-		/*TO BE IMPLEMENTED
-		bool suc = putUserLikes(id, out, dir);
-		if (suc) {
+		bool succ = putUserLikes(id, out);
+		if (succ) {
 			response.send(Http::Code::Ok, "{\"success\": 1}");
 			return;
 		}
 		else{
 			response.send(Http::Code::Not_Found, "{\"failure\": 0}" )
 			return;
-		}*/
+		}
 		response.send(Http::Code::Ok, "{\"success\": 1}");
 	}
 
@@ -127,6 +126,47 @@ class GUI_Serv {
 	}
 	
 };
+std::vector<std::string> getU
+bool putUserLikes(std::string id, std::vector<std::string> likes){
+	for(std::vector<std::string>::iterator it = likes.begin(); it != likes.end(); it++){
+		bool b = putUserLike(id, *it);
+	}
+	return true;
+}
+bool putUserLike(std::string id, std::string like){
+	std::string filename = id + ".txt";
+	ifstream inp(filepath);
+	ofstream out(id  + "tmp.txt");
+
+	string line;
+	bool liked = false;
+	while (getline(inp, line)) {
+			vector<string> vec;
+			boost::algorithm::split(vec, line, boost::is_any_of(","));
+			if (vec[0] == like) {
+				out << line << "\n";
+				liked = true;
+			}
+			else {
+				out << line << "\n";
+			}
+		}
+	}
+	inp.close();
+
+	if (liked) {
+		out.close();
+		remove(filepath.c_str());
+		rename((id + "tmp.txt").c_str(), filepath.c_str());
+		return true;
+	}
+
+	out << like << "\n";
+	out.close();
+	remove(filepath.c_str());
+	rename((id + "tmp.txt").c_str(), filepath.c_str());
+	return true;
+}
 
 std::string jsonize(std::vector<std::string>& arts) {
 	std::string output = "{";
@@ -149,6 +189,7 @@ std::vector<std::string> getUserArticles(std::string id, std::string dr){
 	}
 	return ret;
 }
+
 bool putUserArticles(std::string id, std::vector<std::string> articles, std::string dr){
 	Author u(id);
 	Driver d(dr);
@@ -156,6 +197,7 @@ bool putUserArticles(std::string id, std::vector<std::string> articles, std::str
 		bool b = d.writeEdge(Edge(u, Paper(*it)));
 	}
 	return true;
+}
 
 
 
