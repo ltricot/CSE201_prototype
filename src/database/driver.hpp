@@ -56,6 +56,7 @@ class Driver {
 
 
 class SummaryAccessor{
+    public:
     std::string directory;
     std::string keysfile;
     
@@ -63,7 +64,7 @@ class SummaryAccessor{
     SummaryAccessor(std::string dir);
     
     /// @brief Store the summary related to paper
-    void sendSummary(Paper paper, std::string summary);
+    void sendSummary(Paper paper);
     
     /// @brief Recover the summary of a given paper
     std::string getSummary(Paper paper);

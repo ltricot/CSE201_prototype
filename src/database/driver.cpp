@@ -280,7 +280,7 @@ SummaryAccessor::SummaryAccessor(string dir){
 	int res = mkdir(dir.c_str(), 0666);
 }
 
-void SummaryAccessor::sendSummary(Paper paper, string summary){
+void SummaryAccessor::sendSummary(Paper paper){
 	hash<string> hasher;
 	string n = paper.id;
 	size_t foo = hasher(n);
@@ -291,7 +291,7 @@ void SummaryAccessor::sendSummary(Paper paper, string summary){
 	Summaries s(this->directory);
 	ofstream keys(this->keysfile);
 	keys << n << "\n";
-	s.storeSummary(id, summary);
+	s.storeSummary(id, paper.summary);
 }
 
 string SummaryAccessor::getSummary(Paper paper){

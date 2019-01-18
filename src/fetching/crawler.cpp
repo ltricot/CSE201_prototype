@@ -468,7 +468,9 @@ std::vector<Edge> Crawler::crawl(int steps) {
 
 void Crawler::run() {
     Driver d(cdata);
+    SummaryAccessor ds(sdata);
     for(auto edge = this->begin();; ++edge) {
         d.writeEdge(*edge);
+        ds.sendSummary() ; 
     }
 }
