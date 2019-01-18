@@ -4,8 +4,13 @@
 #include <array>
 #include <vector>
 #include <algorithm>
+#include <ifstream>
+
 #include "Eigen/Eigen"
+
 #include "declaration_knn.hpp"
+#include "clusteringlast.hpp"
+
 
 
 /* constructor for name
@@ -13,6 +18,15 @@ get the interactions in the data base
 get the cluster (list of name of researchers) of jules
 get person identity vector or a paper identity vectior*/
 /*verifier que edge.paper est une string d'un nom de papier */
+
+Person::Person(Author author, std::string cdata, std::string vdata, std::string outfolder, std::string keyfile)
+    : author(author), outfolder(outfolder), keyfile(keyfile), cdata(cdata), vdata(vdata) {
+
+    std::ifstream infile(keyfile);
+    infile >> keys;
+    infile.close();
+}
+
 
 /** @brief Get a recommendation (Title of a paper) for a client
  * 
@@ -43,17 +57,20 @@ std::string Person::getRecommendation(int &k) {
 
 std::vector<std::string> Person::get_k_NeighborsInteractions(int &k) {
     std::vector<Author> list_of_neighbours_in_cluster;
-    list_of_neighbours_in_cluster = this->cluster; /*get the list of people in the cluster of my user:algo of jules and marine: .cluster gives a list of AUthor types*/
+
+    list_of_neighbours_in_cluster = getNeighbors(outfolder, keys[author.name]);
+
     std::vector<std::vector<std::string>> total_interactions;
     int i = 0;
     for (std::vector<Author>::iterator nei = list_of_neighbours_in_cluster.begin(); nei != list_of_neighbours_in_cluster.end(); nei++)
     {   
-        Driver driver("folder");
+        Driver driver(cdata); // $$
         std::vector<Edge> interactions_pairs_nei = driver.getFrom(*nei);
         std::vector<std::string> interactions_nei;
         for(int i =0; i<=interactions_pairs_nei.size();i++) {
             interactions_nei.push_back(interactions_pairs_nei[i].paper.id); /*because Edge is composed of a paper and a author and paper has an atribute .id which is a string*/
-            }
+        }
+
         total_interactions[i] = interactions_nei;
         i++;
     }
@@ -86,7 +103,7 @@ std::vector<std::string> Person::get_k_NeighborsInteractions(int &k) {
 
 std::pair<std::vector<float>,std::vector<std::string>>  Person::getRatings_of_papers(std::vector<std::string> &list_of_papers) { /*list of papers sera id.get_k_Interactions*/
     std::vector<float> ratings_of_ID;
-    Driver driver("folder");
+    Driver driver(cdata); // $$
     std::vector<Edge> interactions_pairs = driver.getFrom(this->author);
     std::vector<std::string> id_interactions; /*name of the papers (string) with which the person has interacted with*/
     for(int i =0; i<interactions_pairs.size();i++) {
@@ -97,18 +114,16 @@ std::pair<std::vector<float>,std::vector<std::string>>  Person::getRatings_of_pa
         std::string name_paper = list_of_papers[i]; /*name paper is a Paper.id thus it is a string */
         if((std::find(id_interactions.begin(),id_interactions.end(),name_paper)!= id_interactions.end()) || (std::find(name_of_papers_of_ID.begin(),name_of_papers_of_ID.end(),name_paper)!= name_of_papers_of_ID.end())){
             break;
-            }
-        else {
-            VectorAccessor<30> v("folder2");
-            Eigen::Matrix<double ,30,1> vector_id_researcher = v.get_vector(this->author);
-            Eigen::Matrix<double ,30,1> vector_id_paper = v.get_vector(Paper(name_paper));
-            float rating_id = vector_id_researcher.dot(vector_id_paper);                 
+        } else {
+            VectorAccessor<30> v(vdata); // $$
+            Eigen::Matrix<double,30,1> vector_id_researcher = v.get_vector(this->author);
+            Eigen::Matrix<double,30,1> vector_id_paper = v.get_vector(Paper(name_paper));
+
+            float rating_id = vector_id_researcher.dot(vector_id_paper);
             ratings_of_ID.push_back(rating_id);
             name_of_papers_of_ID.push_back(name_paper);
-
         }
     }
-    
     
 
     
