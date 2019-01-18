@@ -6,18 +6,25 @@
 #include <window_main.h>
 #include <window_home.h>
 #include <new_id.h>
+#include <client.h>
 
 
 
 
 // create a function that wait for a duration of 10 ms in order to slow down while loops
-void delay()
+void delay_1()
 {
     QTime dieTime= QTime::currentTime().addMSecs(10);
     while (QTime::currentTime() < dieTime)
         QCoreApplication::processEvents(QEventLoop::AllEvents, 100);
 }
 
+void delay_sec()
+{
+    QTime dieTime= QTime::currentTime().addSecs(2);
+    while (QTime::currentTime() < dieTime)
+        QCoreApplication::processEvents(QEventLoop::AllEvents, 100);
+}
 
 int main(int argc, char *argv[])
 {
@@ -30,16 +37,32 @@ int main(int argc, char *argv[])
     window_home window_home;
     info = windows_precise.info;
 
+    // Server
+    std::string ip; // to give
+    int port = 0; // to give
+    Client client = Client(ip, port);
+
     // CREATE THE LOGO
-    QIcon logo =  QIcon("://Images/logo_2.png");
-    app.setWindowIcon(logo) ;
+    QPixmap logo =  QPixmap(":/img/img/logo_2.png");
+    app.setWindowIcon(logo);
+
 
     // CREATION OF THE FIRST WINDOW
     QWidget *home = window_home.home;
 
 
+    // Graphic effect
+    QWidget *charging = new QWidget;
+    QPalette palette;
+    logo = logo.scaled(700, 700);
+    palette.setBrush(QPalette::Background, logo);
+    charging->setPalette(palette);
+    charging->setMinimumSize(700, 700);
+    charging->move(QApplication::desktop()->screen()->rect().center() - charging->rect().center());
+
+
     // BEGINNIN OF THE APPLICATION
-    int ok = QMessageBox::question(home, "Hello", "Welcome to our app, let's start", QMessageBox::Ok); // Display a message box
+    int ok = QMessageBox::question(home, "Hello", "Welcome to Tinder for Researchers, let's start", QMessageBox::Ok); // Display a message box
 
     if (ok == QMessageBox::Ok) // Check that the button has been clicked and manage the different cases
     {
@@ -53,16 +76,15 @@ int main(int argc, char *argv[])
             // if the button has been clicked and that the ID is not empty (we may add if the ID is in id_list ?)
             if (ok && !id.isEmpty())
             {
-                // take the list of int associated to this ID from the data base and update info_user with
-                int a[154]; // will be replaced by the list from server
-                for (int i = 0; i < 154; i ++)
-                {
-                    a[i] = 0;
-                }
-                info.update_from_server(a);
+                Author author(id.QString::toStdString()); // it does not work, why ? RISK OF ERROR ALSO
+
+                info.update_from_server(client.getLikes(author));
                 // display the app
                 home->close();
-                window_main main(info);
+                window_main main(info, author, client);
+                charging->show();
+                delay_sec();
+                charging->hide();
                 main.main->move(QApplication::desktop()->screen()->rect().center() - main.main->rect().center()); // center it
                 main.main->show();
             }
@@ -78,6 +100,7 @@ int main(int argc, char *argv[])
         else // Second case : it is a new user
         {
             QMessageBox::information(home, "Sign in", "We are going to ask you a few questions about your interests, please answer carefully"); // Display an information box
+            Author author("id"); // Give id as name, how to give the id ?
 
             // Home window appears
             home->show();
@@ -90,7 +113,7 @@ int main(int argc, char *argv[])
             while (a)
             {
                 // wait 10ms to avoid saturation
-                delay();
+                delay_1();
                 // if the user has done his choice
                 if (home->isHidden())
                 {
@@ -114,7 +137,7 @@ int main(int argc, char *argv[])
                             windows_precise.scroll_phy->show();
                             while (windows_precise.scroll_phy->isHidden() == false)
                             {
-                                delay();
+                                delay_1();
                                 QObject::connect(windows_precise.val_phy, SIGNAL(clicked()), windows_precise.scroll_phy, SLOT(hide()));
                                 if (windows_precise.scroll_phy->isHidden())
                                 {
@@ -127,7 +150,7 @@ int main(int argc, char *argv[])
                             windows_precise.scroll_math->show();
                             while (windows_precise.scroll_math->isHidden() == false)
                             {
-                                delay();
+                                delay_1();
                                 QObject::connect(windows_precise.val_math, SIGNAL(clicked()), windows_precise.scroll_math, SLOT(hide()));
                                 if (windows_precise.scroll_math->isHidden())
                                 {
@@ -140,7 +163,7 @@ int main(int argc, char *argv[])
                             windows_precise.scroll_cs->show();
                             while (windows_precise.scroll_cs->isHidden() == false)
                             {
-                                delay();
+                                delay_1();
                                 QObject::connect(windows_precise.val_cs, SIGNAL(clicked()), windows_precise.scroll_cs, SLOT(hide()));
                                 if (windows_precise.scroll_cs->isHidden())
                                 {
@@ -153,7 +176,7 @@ int main(int argc, char *argv[])
                             windows_precise.scroll_bio->show();
                             while (windows_precise.scroll_bio->isHidden() == false)
                             {
-                                delay();
+                                delay_1();
                                 QObject::connect(windows_precise.val_bio, SIGNAL(clicked()), windows_precise.scroll_bio, SLOT(hide()));
                                 if (windows_precise.scroll_bio->isHidden())
                                 {
@@ -166,7 +189,7 @@ int main(int argc, char *argv[])
                             windows_precise.scroll_fin->show();
                             while (windows_precise.scroll_fin->isHidden() == false)
                             {
-                                delay();
+                                delay_1();
                                 QObject::connect(windows_precise.val_fin, SIGNAL(clicked()), windows_precise.scroll_fin, SLOT(hide()));
                                 if (windows_precise.scroll_fin->isHidden())
                                 {
@@ -179,7 +202,7 @@ int main(int argc, char *argv[])
                             windows_precise.scroll_stat->show();
                             while (windows_precise.scroll_stat->isHidden() == false)
                             {
-                                delay();
+                                delay_1();
                                 QObject::connect(windows_precise.val_stat, SIGNAL(clicked()), windows_precise.scroll_stat, SLOT(hide()));
                                 if (windows_precise.scroll_stat->isHidden())
                                 {
@@ -192,7 +215,7 @@ int main(int argc, char *argv[])
                             windows_precise.scroll_eess->show();
                             while (windows_precise.scroll_eess->isHidden() == false)
                             {
-                                delay();
+                                delay_1();
                                 QObject::connect(windows_precise.val_eess, SIGNAL(clicked()), windows_precise.scroll_eess, SLOT(hide()));
                                 if (windows_precise.scroll_eess->isHidden())
                                 {
@@ -205,7 +228,7 @@ int main(int argc, char *argv[])
                             windows_precise.scroll_econ->show();
                             while (windows_precise.scroll_econ->isHidden() == false)
                             {
-                                delay();
+                                delay_1();
                                 QObject::connect(windows_precise.val_econ, SIGNAL(clicked()), windows_precise.scroll_econ, SLOT(hide()));
                                 if (windows_precise.scroll_econ->isHidden())
                                 {
@@ -227,11 +250,11 @@ int main(int argc, char *argv[])
                     }
 
                  info.update(); // update the user info
-                 // Give it to the server
+                 client.putLikes(author, info.info); // Give it to the server
                 }
             }
 
-            window_main main(info);
+            window_main main(info, author, client);
             main.main->move(QApplication::desktop()->screen()->rect().center() - main.main->rect().center()); // center it
 
             // Create the window to give a new ID to the user
@@ -242,12 +265,15 @@ int main(int argc, char *argv[])
             bool b = true;
             while (b)
             {
-                delay();
+                delay_1();
                 if (ID->isHidden())
                 {
                     b = false;
                     ID->close();
                     home->close();
+                    charging->show();
+                    delay_sec();
+                    charging->hide();
                     main.main->show();
                 }
             }

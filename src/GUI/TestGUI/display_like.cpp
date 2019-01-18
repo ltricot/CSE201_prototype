@@ -1,26 +1,19 @@
 #include <display_like.h>
 
-past_likes::past_likes()
+past_likes::past_likes(Author a, Client c)
 {
     // Create the window
     likes = new QWidget;
+    author = new Author(a);
+    client = new Client(c);
+
+    QScrollArea *scroll = new QScrollArea;
+    scroll->setWidget(likes);
+    scroll->setWidgetResizable(true);
+    scroll->setVerticalScrollBarPolicy(Qt::ScrollBarAlwaysOn);
     likes->setMinimumSize(500, 500);
-    QVBoxLayout *lay = new QVBoxLayout;
 
-    // Likes
-    QPushButton *like_1 = new QPushButton;
-    like_1->setText("[1812.03857] The role of the time delay in the reflection and transmission of ultrashort electromagnetic pulses on a system of parallel current sheets");
-    lay->addWidget(like_1);
-    QWidget *wind = display_article("1812.03857");
-    QObject::connect(like_1, SIGNAL(clicked()), wind, SLOT(show()));
-
-    // Button to leave
-    QPushButton *close = new QPushButton;
-    close->setText("Quit");
-    lay->addWidget(close);
-
-    likes->setLayout(lay);
-    QObject::connect(close, SIGNAL(clicked()), likes, SLOT(hide()));
+    lay = new QVBoxLayout;
 }
 
 QWidget* past_likes::display_article(std::string ref)
@@ -42,4 +35,42 @@ QWidget* past_likes::display_article(std::string ref)
     article->setLayout(lay_art);
 
     return article;
+}
+
+void past_likes::open_window()
+{
+    lay = new QVBoxLayout;
+    likes = new QWidget;
+
+    QScrollArea *scroll = new QScrollArea;
+    scroll->setWidget(likes);
+    scroll->setWidgetResizable(true);
+    scroll->setVerticalScrollBarPolicy(Qt::ScrollBarAlwaysOn);
+    likes->setMinimumSize(300, 800);
+    scroll->setMinimumSize(300, 800);
+
+    std::vector<std::string> liked_articles = client->getArticles(*author);
+    const std::size_t len = liked_articles.size();
+
+    QPushButton *like_button[len];
+    QWidget *web[len];
+
+    for (std::size_t i = 0; i < len; i++)
+    {
+        like_button[i] = new QPushButton;
+        web[i] = new QWidget;
+    }
+
+    for (std::size_t i = 0; i < len; i++)
+    {
+        like_button[i]->setText(QString::fromStdString(client->getTitle(liked_articles.at(i)))); // To code getTitle(str id) giving the title of the article having id id
+
+        web[i] = display_article(liked_articles.at(i));
+
+        lay->addWidget(like_button[i]);
+        QObject::connect(like_button[i], SIGNAL(clicked()), web[i], SLOT(show()));
+    }
+
+    likes->setLayout(lay);
+    scroll->show();
 }

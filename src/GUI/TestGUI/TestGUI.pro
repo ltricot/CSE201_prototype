@@ -11,7 +11,10 @@ SOURCES += \
     window_int_modif.cpp \
     new_id.cpp \
     display_id.cpp \
-    display_like.cpp
+    display_like.cpp \
+    client.cpp \
+    auto_update.cpp \
+    auto_update_label.cpp
 
 HEADERS += \
     info_user.h \
@@ -21,4 +24,12 @@ HEADERS += \
     window_int_modif.h \
     new_id.h \
     display_id.h \
-    display_like.h
+    display_like.h \
+    client.h \
+    json.h \
+    primitives.h \
+    auto_update.h \
+    auto_update_label.h
+
+RESOURCES += \
+    resources.qrc

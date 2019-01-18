@@ -1,6 +1,6 @@
 #include <display_id.h>
 
-window_id::window_id()
+window_id::window_id(Author author)
 {
     // Window
     id_info = new QWidget; // window
@@ -15,7 +15,7 @@ window_id::window_id()
     id_text->setText("Your ID is:");
     id_lay->addWidget(id_text);
     QLabel *id_itself = new QLabel;
-    id_itself->setText("000000000"); // will be replaced by an ID given by the server
+    id_itself->setText(QString::fromStdString(author.name)); // will be replaced by an ID given by the server
     id_itself->setFont(QFont("Courrier", 25, QFont::Bold));
     id_itself->setAlignment(Qt::AlignCenter);
 
