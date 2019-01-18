@@ -22,7 +22,6 @@ int main(int argc, char *argv[]) {
                 std::string author ; 
                 getline(infile, author);
                 Author au1(author); 
-            // we also take this opportunity of iterating over the authors to construct the edges
             std::vector<Friends> temp = (dcdata.getFrom(au)); 
             similarities.insert(similaries.end(), temp.begin(), temp.end());
             }
@@ -30,15 +29,15 @@ int main(int argc, char *argv[]) {
     }
 
     Cluster clustering(similarities);
-    std::map<int,std::vector<Author>> clusters=clustering.clusters;
+    map<int,std::vector<Author>> clusters=clustering.clusters;
     string outfolder = argv[2];
 
-    for (std::map<int,std::vector<Author>>::iterator it=clusters.begin();it!=clusters.end();it++){
-        std::string label= std::to_string(it->first);
-        std::string path=outfolder+"/"+label+".txt";
+    for (map<int,vector<Author>>::iterator it=clusters.begin();it!=clusters.end();it++){
+        string label= std::to_string(it->first);
+        string path=outfolder+"/"+label+".txt";
         ofstream myfile(path);
         if myfile.is_open{
-            for (std::vector<Author>::iterator i=it->second.begin();i!=it->second.end();i++){
+            for (vector<Author>::iterator i=it->second.begin();i!=it->second.end();i++){
                 myfile<<Author.name
                 myfile<<"\n"
             }
