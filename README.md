@@ -160,3 +160,5 @@ at the top of your file to use the ``Dense`` part of the ``Eigen`` library.
 ``curl`` is included at the ``fetching`` level ``CMakeLists.txt`` file. It is not header only, but is well integrated with ``cmake`` so that there is no need to do anything else than ``#include`` it as you would for the 3 latter libraries.
 
 ``zlib`` is treated the same way as ``curl``.
+
+``pistache`` is used for the http server. [Instructions to install it can be found on their github](https://github.com/oktal/pistache)
