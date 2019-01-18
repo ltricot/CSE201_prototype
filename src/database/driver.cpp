@@ -1,5 +1,6 @@
 #include "driver.hpp"
 #include "Matrix.h"
+#include <stdio.h>
 #include<vector>
 #include<string>
 #include <unordered_map>
@@ -17,8 +18,18 @@ const int lat_feat = 30;
 
 template <class KeyT> std::vector<KeyT> Driver::getKeys() {
 	std::vector<KeyT> keys;
+	
+	Reader r(this->keysfile);
+	vector<vector<string>> tmp = r.read();
 
-	for(auto &p : fs::recursive_directory_iterator(directory)) {
+	for (vector<vector<string>>::iterator it = tmp.begin(); it != tmp.end(); it++){
+		string foo = (*it)[0];
+		KeyT baa(foo);
+		keys.push_back(baa);
+	}
+	
+	return keys;
+	/*for(auto &p : fs::recursive_directory_iterator(directory)) {
         if(p.path().extension() == ".txt") {
             // then we read the first line of the textfile to get the key
             ifstream infile(p.path()) ;
@@ -30,11 +41,12 @@ template <class KeyT> std::vector<KeyT> Driver::getKeys() {
                 key.push_back(key); 
             }
         }
-	}
+	}*/
 }
 
 Driver::Driver(string dir){ 
 	this->directory = dir;
+	this->keysfile = dir + "/keys.txt";
     int res = mkdir(dir.c_str(), 0666);
 }
 
@@ -49,6 +61,9 @@ bool Driver::writeEdge(Edge edge) {
 	string row = ostr.str();
 	string col = edge.paper.id;
 	m.write(row, col, edge.weight, n);
+	FILE * keys;
+	keys = fopen(this->keysfile.c_str(), "a")
+	keys << n << "\n";
 	return true; 
 }
 
@@ -63,6 +78,9 @@ bool Driver::writeEdge(Reference ref) {
 	string row = ostr.str();
 	string col = ref.second.id;
 	m.write(row, col, 1, n);
+	FILE * keys;
+	keys = fopen(this->keysfile.c_str(), "a")
+	keys << n << "\n";
 	return true;
 }
 
@@ -77,6 +95,9 @@ bool Driver::writeEdge(Friends friends) {
 	string row = ostr.str();
 	string col = get<1>(friends).name;
 	m.write(row, col, get<2>(friends), n);
+	FILE * keys;
+	keys = fopen(this->keysfile.c_str(), "a")
+	keys << n << "\n";
 	return true;
 }
 
