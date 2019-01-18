@@ -15,7 +15,7 @@
 
 class Cluster {
     public:
-    std::map<int,std::vector<Author>> clusters; //output a map that associates to each label its cluster of authors 
+    std::map<int,std::vector<string>> clusters; //output a map that associates to each label its cluster of authors 
     Cluster(std::vector<Friends> & similarities) { //constructor
         findneighbors(similarities);
         sizeInput=nodes.size();
@@ -27,8 +27,8 @@ class Cluster {
     static int T; // temperature
     /* "label" is a std::vector that associates to each vector of the input (each node) its label ie the label at index i is the label of the ith vector*/
     std::vector<int> label;
-    std::map<Author,int> nodes; //map from Author to int
-    std::map<int,Author> nodesindex //map from int to Author
+    std::map<string,int> nodes; //map from Author to int
+    std::map<int,string> nodesindex //map from int to Author
     std::vector<std::vector<std::pair<int,double>>> neighbors; // vector that at index i contains a map that associates to each neighbors of i its similarity with i
     double updaterate ; //save the rate of updated labels 
     void findneighbors(std::vector<Friends> & similarities); //find the neighbors for each nodes
