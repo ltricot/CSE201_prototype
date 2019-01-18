@@ -5,6 +5,7 @@
 #include <sstream>
 #include "../database/driver.hpp"
 #include <fstream>
+#include "Reader.h"
 
 using namespace Pistache;
 
@@ -56,7 +57,7 @@ class GUI_Serv {
 
 	void getLikes(const Rest::Request& request, Http::ResponseWriter response) {
 		auto id = request.param(":id").as<int>;
-		std::string likes = getUserLikes(id)
+		std::vector<std::string> likes = getUserLikes(id)
 		//js = "{\"physics\" : 0, \"math\": 1, \"computers\": 1}"; //answer for testing response
 		response.send(Http::Code::Ok, js);
 	}
@@ -126,13 +127,22 @@ class GUI_Serv {
 	}
 	
 };
-std::vector<std::string> getU
+std::vector<std::string> getUserLikes(std::string id){
+	Reader r(id+".txt")
+	std::vector<std::vector<std::string>> tmp = r.read();
+	std::vector<std::string> ret;
+	for (std::vector<std::vector<std::string>>>::iterator it = tmp.begin(); it != tmp.end(); it ++){
+		ret.push_back(*it[0]);
+	}
+	return ret;
+}
 bool putUserLikes(std::string id, std::vector<std::string> likes){
 	for(std::vector<std::string>::iterator it = likes.begin(); it != likes.end(); it++){
 		bool b = putUserLike(id, *it);
 	}
 	return true;
 }
+
 bool putUserLike(std::string id, std::string like){
 	std::string filename = id + ".txt";
 	ifstream inp(filepath);
