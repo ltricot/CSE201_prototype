@@ -1,5 +1,6 @@
 #include "client.hpp"
 #include "rapidxml.hpp"
+#include "curl/curl.h"
 #include "tools.hpp"
 #include <iostream>
 #include <string>
@@ -8,6 +9,12 @@
 
 Client::Client(std::string ip, int port) : ip(ip), port(port) {
     std::vector<std::string> topics = getTopics();
+}
+
+std::string encode(std::string name){
+    CURL *curl = curl_easy_init();
+    char* encoded = curl_easy_escape(curl, name.c_str(), name.size());
+    return encoded;
 }
 
 std::vector<std::string> Client::getTopics() {
@@ -22,7 +29,8 @@ std::vector<std::string> Client::getTopics() {
 }
 
 std::vector<std::string> Client::getLikes(Author author) {
-    std::string response = get(ip + "/users/" + author.name + "/likes");
+    std::string response = get(ip + "/users/" + encode(author.name) + "/likes");
+
     json resp = json::parse(response);
 
     std::vector<std::string> ret;
@@ -44,13 +52,13 @@ bool Client::putLikes(Author author, std::vector<std::string> topics) {
     }
     body = j.dump();
 
-    std::string response = put(ip + "/users" + author.name + "likes", body);
+    std::string response = put(ip + "/users/" + encode(author.name) + "/likes", body);
     json resp = json::parse(response);
     return resp["success"] == 1;
 }
 
 Paper Client::getRecommendation(Author author) {
-    std::string response = get(ip + "/users/" + author.name + "/recommendation");
+    std::string response = get(ip + "/users/" + encode(author.name) + "/recommendation");
     json resp = json::parse(response);
     std::string id = resp["article"];
     return Paper(id);
@@ -58,7 +66,7 @@ Paper Client::getRecommendation(Author author) {
 
 std::vector<std::string> Client::getArticles(Author author) {
 
-    std::string response = get(ip + "/users/" + author.name + "/articles");
+    std::string response = get(ip + "/users/" + encode(author.name) + "/articles");
     json resp = json::parse(response);
 
     std::vector<std::string> ret;
@@ -74,10 +82,11 @@ bool Client::putArticles(Author author, std::vector<std::string> articles) {
         body.push_back(*it);
     }
 
-    std::string response = post(ip + "/users/" + author.name + "/articles", body);
+    std::string response = post(ip + "/users/" + encode(author.name) + "/articles", body);
     json resp = json::parse(response);
     return resp["success"] == 1;
 }
+
 std::string getTitle(Paper paper) {
     //return value
     std::string title;
@@ -100,12 +109,3 @@ std::string getTitle(Paper paper) {
 
     return title;
 }
-
-/* Example how to use getTitle:
-
-int main() { 
-    Paper paper("1207.0580","summary");
-     std::cout << getTitle(paper) << std::endl;
-    return 0;
-}
-*/

@@ -1,5 +1,5 @@
 #include <iostream>
-#include "TFIDF/tfidfinterface.hpp"
+#include "tfidfinterface.hpp"
 #include "driver.hpp"
 
 #include <experimental/filesystem>

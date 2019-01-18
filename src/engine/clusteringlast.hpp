@@ -29,7 +29,7 @@ class Cluster {
     /* "label" is a std::vector that associates to each vector of the input (each node) its label ie the label at index i is the label of the ith vector*/
     std::vector<int> label;
     std::map<string,int> nodes; //map from Author to int
-    std::map<int,string> nodesindex //map from int to Author
+    std::map<int,string> nodesindex; //map from int to Author
     std::vector<std::vector<std::pair<int,double>>> neighbors; // vector that at index i contains a map that associates to each neighbors of i its similarity with i
     double updaterate ; //save the rate of updated labels 
     void findneighbors(std::vector<Friends> & similarities); //find the neighbors for each nodes
@@ -47,3 +47,4 @@ void addKey(std::string folder, int label);
 std::vector<int> getKeys(std::string folder);
 std::vector<Author> getNeighbors(std::string folder, int label);
 void storeNeighbor(std::string folder, int label, Author author);
+void setNeighbors(std::string folder, int label, std::vector<Author> authors);

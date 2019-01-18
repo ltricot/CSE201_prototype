@@ -18,14 +18,15 @@
 #include "driver.hpp"
 
 
-class Summaries { 
+class SummariesIt { 
     private:
     std::string sdata ; 
     Driver driver;
     std::vector<Paper> pKeys ; 
+    SummaryAccessor sAccess;
 
     public:
-    Summaries(std::string sdata) : sdata(sdata), driver(sdata) {}
+    SummariesIt(std::string sdata);
 
     class iterator : public std::iterator<
             std::input_iterator_tag,
@@ -33,10 +34,10 @@ class Summaries {
 
         private:
         int cursor;
-        Summaries *parent ; 
+        SummariesIt *parent ; 
         
         public:
-        iterator(Summaries *parent): parent(parent), cursor(0){}
+        iterator(SummariesIt *parent, int cursor=0): parent(parent), cursor(cursor){}
 
         // make it so next pEde is available
         iterator operator++();
@@ -52,8 +53,8 @@ class Summaries {
         Paper operator*() const;
     };
 
-    iterator begin();
-    iterator end();
+    iterator begin() { return iterator(this); }
+    iterator end() { return iterator(this, pKeys.size()); }
 };
 
 class TFIDF {
@@ -99,8 +100,8 @@ class TFIDF {
         pEdge operator*() const;
     };
 
-    iterator begin() { return iterator(this); }
-    iterator end() { return begin(); }
+    iterator begin();
+    iterator end();
 
     private:
         std::string sdata ; // name of the driver filled by minhash, from which we read
