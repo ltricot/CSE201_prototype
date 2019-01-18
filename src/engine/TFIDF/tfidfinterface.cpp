@@ -138,5 +138,21 @@ void TFIDF::update(int threshold){
     }
 }
 
+Summaries::Summaries(std::string sdata) : sdata(sdata), driver(sdata) {
+    SummaryAccessor sAccess(sdata);
+    this->pKeys = sAccess.getKeys();
+}
 
 
+Summaries::iterator Summaries::iterator::operator++(){
+    this->cursor = this->cursor + 1;
+    return *this;
+}
+
+
+Paper Summaries::iterator::operator*() const{
+    Paper p = this->parent.pKeys[this->cursor];
+    std::string summ = sAccess.getSummary(p);
+    p.summary = summ ; 
+    return p ; 
+}
