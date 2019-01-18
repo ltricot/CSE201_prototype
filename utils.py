@@ -1,4 +1,5 @@
-import sys, os
+import sys, os, shutil, signal
+import json
 
 
 def _run_format(src: str):
@@ -38,7 +39,7 @@ def _run_download_references(paper, data):
     for line in os.popen(sh):
         print(line, end='')
 
-def _run_references_all(data, archives, fm="10", to="19"):
+def _run_references_all(data, archives, statep=""):
     archs = []
     with open(archives) as f:
         for line in f:
@@ -48,20 +49,43 @@ def _run_references_all(data, archives, fm="10", to="19"):
             
             archs.append(paper)
     
-    getyear = lambda a: int(a[-12:-10])
-    archs = [a for a in archs if getyear(a) in range(int(fm), int(to))]
+    getyear = lambda a: int(a[-12:-8])  # sort by year
     archs = sorted(archs, key=getyear)
+    archs = [p for p in archs if getyear(p) in range(1000, 2000)]
 
-    for paper in archs:
+    if os.path.exists(statep):
+        with open(statep) as f:
+            state = json.load(f)
+    else:
+        state = {
+            'paper_errs': [],
+            'temp_err': None,  # != None means error deleting
+            'last': None,
+        }
+
+    def _sig_handler(sig, frame):
+        print(json.dumps(state))
+    signal.signal(signal.SIGINT, _sig_handler);
+
+    fm = archs.index(state['last']) if state['last'] is not None else -2
+    for paper in reversed(archs[:fm + 1]):
+        print(f'at archive {paper}')
         sh = f'./build/src/executables/download_references {paper} {data}'
         for out in os.popen(sh):
             print(out, end='')
-        
-        for _ in os.popen(f'rm {paper}'):
-            pass
-        
-        for _ in os.popen(f'rm ./temp/* -rf'):
-            pass
+
+            if 'what()' in out:
+                state['paper_errs'].append(paper)
+
+        os.remove(paper)
+        shutil.rmtree('temp', onerror=lambda _, path, __: state.__setitem__('temp', paper))
+        os.mkdir('temp')
+
+        with open(statep, 'w') as f:
+            json.dump(state, f)
+        print(state)
+
+    os.rmdir('temp')
 
 
 if __name__ == '__main__':
@@ -74,5 +98,4 @@ if __name__ == '__main__':
         'ref_all': _run_references_all,
     }
 
-    # usage: python utils [fmt|clean|crawl] *args
     cmds[sys.argv[1]].__call__(*sys.argv[2:])

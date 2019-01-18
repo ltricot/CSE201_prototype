@@ -53,5 +53,5 @@ string Summaries::getSummary(string id){
 
         Reader r(filepath);
 
-        return (r.read[0])[0];
+        return (r.read())[0][0];
 }

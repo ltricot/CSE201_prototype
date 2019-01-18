@@ -2,8 +2,8 @@
 #include <string>
 #include <stdlib.h>
 #include <array>
-#include "../database/driver.hpp"
-#include "../fetching/primitives.hpp"
+#include "driver.hpp"
+#include "primitives.hpp"
 
 
 class Person

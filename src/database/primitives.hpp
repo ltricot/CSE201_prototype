@@ -13,6 +13,7 @@ class Author {
 	std::string name;
 
 	Author(std::string name="") : name(name) {}
+	bool operator==(Author other) { return name == other.name; }
 };
 
 typedef std::tuple<Author, Author, double> Friends;
@@ -30,6 +31,7 @@ class Paper {
 	std::string summary;
 
 	Paper(std::string id="", std::string summary="") : id(id), summary(summary) {}
+	bool operator==(Paper other) { return id == other.id; }
 };
 
 typedef std::pair<Paper, Paper> Reference;

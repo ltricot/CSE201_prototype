@@ -4,8 +4,10 @@
 #include <array>
 #include <vector>
 #include <algorithm>
-#include "../../../module_eigen/Eigen/Eigen"
+#include "Eigen/Eigen"
 #include "declaration_knn.hpp"
+
+
 /* constructor for name
 get the interactions in the data base
 get the cluster (list of name of researchers) of jules

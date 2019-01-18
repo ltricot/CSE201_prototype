@@ -61,8 +61,7 @@ bool Driver::writeEdge(Edge edge) {
 	string row = ostr.str();
 	string col = edge.paper.id;
 	m.write(row, col, edge.weight, n);
-	FILE * keys;
-	keys = fopen(this->keysfile.c_str(), "a")
+	ofstream keys(this->keysfile);
 	keys << n << "\n";
 	return true; 
 }
@@ -78,8 +77,7 @@ bool Driver::writeEdge(Reference ref) {
 	string row = ostr.str();
 	string col = ref.second.id;
 	m.write(row, col, 1, n);
-	FILE * keys;
-	keys = fopen(this->keysfile.c_str(), "a")
+	ofstream keys(this->keysfile);
 	keys << n << "\n";
 	return true;
 }
@@ -95,8 +93,7 @@ bool Driver::writeEdge(Friends friends) {
 	string row = ostr.str();
 	string col = get<1>(friends).name;
 	m.write(row, col, get<2>(friends), n);
-	FILE * keys;
-	keys = fopen(this->keysfile.c_str(), "a")
+	ofstream keys(this->keysfile);
 	keys << n << "\n";
 	return true;
 }
@@ -292,8 +289,7 @@ void SummaryAccessor::sendSummary(Paper paper, string summary){
 	ostr << foo;
 	string id = ostr.str();
 	Summaries s(this->directory);
-	FILE * keys;
-	keys = fopen(this->keysfile.c_str(), "a")
+	ofstream keys(this->keysfile);
 	keys << n << "\n";
 	s.storeSummary(id, summary);
 }
