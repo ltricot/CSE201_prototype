@@ -31,14 +31,17 @@ class Crawler {
     private:
 
     bool from;  // when false: from authors. when true: from papers.
-    const Paper source;
+    std::vector<Paper> paperSource;
+    std::vector<Author> authorSource;
+    std::string refdata ;
+    std::string cdata ; 
 
     public:
 
     std::set<std::string> Set ; 
 
     // constructor
-    Crawler(Paper source) : source(source) {}
+    Crawler(std::string cdata, std::string refdata, Paper source) : paperSource({source}), from(true), cdata(cdata), refdata(refdata){}
 
     /**
      * Facilitator function wrapping libcurl calls.
@@ -90,6 +93,8 @@ class Crawler {
      */
     std::vector<Edge> crawl(int steps);
 
+    void run();
+
     class iterator : public std::iterator<
             std::input_iterator_tag,
             Edge, int, const Edge*, Edge> {
@@ -116,7 +121,7 @@ class Crawler {
 
         public:
         // crawler is the parent crawler
-        iterator(Crawler *crawler) : crawler(crawler) {}
+        iterator(Crawler *crawler, bool init=false);
 
         /**
          * Increment the ``cursor`` position.
@@ -124,8 +129,8 @@ class Crawler {
          * If we need more data (our buffer is empty), we must call the parent
          * crawler.
          */
-        iterator& operator++();
-        iterator operator++(int);  // postfix version of above. no work here
+        iterator operator++();
+        // iterator operator++(int);  // postfix version of above. no work here
 
         /**
          * For it != crawler.end()?

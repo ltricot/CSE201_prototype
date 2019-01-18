@@ -1,0 +1,8 @@
+Here is a simpler version of the clustering algorithm that avoids the problem linked to the asymetry of the neighbor 
+relation in the case where we fix the number of neighbors for each node.
+
+to compile:
+
+ g++ -std=c++0x  -c clustering2.cpp -I Eigen/
+ g++ -std=c++0x  -c test_clustering2.cpp -I Eigen/
+ g++ -o prog clustering2.o test_clustering2.o

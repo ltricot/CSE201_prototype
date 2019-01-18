@@ -1,12 +1,12 @@
-#include "clustering.hpp"
+#include "clusteringlast.hpp"
 
 
 std::vector<Eigen::VectorXd> genInput(){
     std::vector<Eigen::VectorXd> res;
-    for (int i=0;i<100;i++){
+    for (int i=0;i<1000;i++){
         Eigen::VectorXd vec;
         vec.resize(5);
-        vec= (Eigen::VectorXd::Random(5).array()+1)*10;
+        vec= (Eigen::VectorXd::Random(5).array()+1)*20;
         vec=vec.array().floor();
         res.push_back(vec); 
     }

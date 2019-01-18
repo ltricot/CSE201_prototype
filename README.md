@@ -25,7 +25,7 @@ The data we must obtain from arxiv is therefore two-fold. We use the arxiv API t
 ### Database
 
 The database is subdivided in a number of storage units:
-1. the academic graph as a key-value store       (custom)
+1. the academic graph as a key-value store     (custom)
 2. the user/paper vectors as a key-value store (custom)
 3. the user likes as a key-value store on Azure Cosmos
 4. the cluster labels as a csv
@@ -48,6 +48,10 @@ A number of algorithms come together to produce the final recommendations. We im
 3. KNN for candidate production @clemie
 4. Matrix Factorization for match scoring and user/paper embedding @shrey183
 5. TF-IDF for content based embedding @MarineHoche
+
+### Putting it all together
+
+![engine architecture graph](./architecture.jpg)
 
 ## Documentation
 

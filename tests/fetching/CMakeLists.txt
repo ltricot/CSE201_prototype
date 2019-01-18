@@ -1,2 +1,2 @@
 add_executable (testcrawler crawlertest.cpp)
-target_link_libraries (testcrawler crawler)
+target_link_libraries (testcrawler crawler database)

@@ -2,12 +2,24 @@
 #include <set>
 #include <sstream>
 #include <string>
+#include <cstring>
 #include <vector>
 
 #include "rapidxml/rapidxml.hpp"
 #include <curl/curl.h>
 
 #include "crawler.hpp"
+#include "driver.hpp"
+
+
+// id of paper from link to paper on arxiv
+std::string getID(std::string link) {
+    std::string temp;
+    std::stringstream link_s(link);
+    while (std::getline(link_s, temp, '/'))
+        ;
+    return temp;
+}
 
 /** ``writefunction`` parameter of a curl call
  *
@@ -43,18 +55,14 @@ std::string Crawler::callArxiv(std::string url) {
 
     // initialize curl session
     // curl_gloabl_init shoyuld be outside of this method
-    curl_global_init(CURL_GLOBAL_ALL);
+
     curl_handle = curl_easy_init();
     curl_easy_setopt(curl_handle, CURLOPT_VERBOSE, 0L); // ugh so much printing
 
     // provide the URL to use in the request
-    // we must esacpe the url (get rid of bad characters)
-    // const char* c_url = url.c_str();
-    // char* escaped = curl_easy_escape(curl_handle, c_url, 0);
-
     curl_easy_setopt(curl_handle, CURLOPT_URL, url.c_str());
     curl_easy_setopt(curl_handle, CURLOPT_VERBOSE,
-                     1L); // very useful for libcurl and/or protocol debugging
+                     0L); // very useful for libcurl and/or protocol debugging
                           // and understanding
     curl_easy_setopt(curl_handle, CURLOPT_NOPROGRESS,
                      1L); // tells the library to shut off the progress meter
@@ -72,12 +80,13 @@ std::string Crawler::callArxiv(std::string url) {
     // cleanup curl stuff
     // curl_free(escaped);
     curl_easy_cleanup(curl_handle);
-    curl_global_cleanup();
-
     return response;
 }
 
+
 std::vector<Edge> Crawler::getPairs(std::string xmlstr) {
+    std::cerr << "Crawler::getPairs" << std::endl;
+
     // return value
     std::vector<Edge> pairs;
 
@@ -100,23 +109,41 @@ std::vector<Edge> Crawler::getPairs(std::string xmlstr) {
     std::string name, article;
 
     // iteration over entries (representing articles)
+    int i = 0;
     for (entry = root->first_node("entry"); entry && entry->name() == std::string("entry");
          entry = entry->next_sibling()) {
-        article = entry->first_node("id")->value();
+        article = getID(entry->first_node("id")->value());
+
+        // Paper(article) has to be created here with the summary 
+        std::vector<Paper> summary = getSummary(xmlstr);
+        Paper paper = summary[i];
+
+        if(paper.id != article) {
+            std::cerr << "Call the cops" << std::endl;
+            std::cerr << paper.id << " != " << article << std::endl;
+            exit(EXIT_FAILURE);
+        }
 
         // iteration over authors of this article
         for (author = entry->first_node("author");
              author && author->name() == std::string("author"); author = author->next_sibling()) {
             name = author->first_node("name")->value();
-
-            pairs.push_back(Edge(Author(name), Paper(article)));
+            pairs.push_back(Edge(Author(name), paper));
         }
+
+        i++; // means we're getting the next paper
     }
 
+    std::cerr << "pairs.size(): " << pairs.size() << std::endl;
     return pairs;
 }
 
+
 std::vector<Edge> Crawler::fromAuthors(std::vector<Author> authors) {
+    std::cerr << "Crawler::fromAuthors" << std::endl;
+    for(auto a : authors)
+        std::cerr << a.name << std::endl;
+
     // return value & auxiliary iteration variable
     std::vector<Edge> pairs;
     std::vector<Edge> pairs_aux;
@@ -132,8 +159,10 @@ std::vector<Edge> Crawler::fromAuthors(std::vector<Author> authors) {
     for (author = authors.begin(); author != authors.end(); author++) {
         url.str("");
         url << "http://export.arxiv.org/api/query?search_query=au:";
-        url << author->name << "&maxresults=100";
+        char *escaped = curl_escape(author->name.c_str(), author->name.length());
+        url << escaped << "&maxresults=100";
         xmlstr = this->callArxiv(url.str());
+        curl_free(escaped);
 
         // extend found pairs with this author's new pairs
         pairs_aux = getPairs(xmlstr);
@@ -145,6 +174,10 @@ std::vector<Edge> Crawler::fromAuthors(std::vector<Author> authors) {
 }
 
 std::vector<Edge> Crawler::fromPapers(std::vector<Paper> papers) {
+    std::cerr << "Crawler::fromPapers" << std::endl;
+    for(auto p : papers)
+        std::cerr << p.id << std::endl;
+
     // return value & auxiliary iteration variable
     std::vector<Edge> pairs;
     std::vector<Edge> pairs_aux;
@@ -177,27 +210,33 @@ std::vector<Edge> Crawler::fromPapers(std::vector<Paper> papers) {
     return pairs;
 }
 
-// id of paper from link to paper on arxiv
-std::string getID(std::string link) {
-    std::string temp;
-    std::stringstream link_s(link);
-    while (std::getline(link_s, temp, '/'))
-        ;
-    return temp;
-}
-
-#ifdef UGH
-Crawler::iterator::iterator(Crawler crawler) { this->parent = crawler; }
+// Crawler::iterator::iterator(Crawler *crawler) { this->parent = crawler; }
 
 bool Crawler::iterator::operator==(iterator other) const { return false; }
 
 bool Crawler::iterator::operator!=(iterator other) const { return true; }
+
 /**
  * @return an Edge
  */
-Edge Crawler::iterator::operator*() const { return *cursor; }
+Edge Crawler::iterator::operator*() const {
+    std::cerr << "Crawler::iterator::operator*" << std::endl;
 
-Crawler::iterator &Crawler::iterator::operator++() {
+    auto ret = *cursor;
+    return ret;
+}
+
+Crawler::iterator::iterator(Crawler *crawler, bool init) : crawler(crawler) {
+    if (init) {  // crawl a bit at initialization
+        std::vector<Edge> edges = crawler->crawl(2);
+        for (Edge edge : edges)
+            buffer.push_back(edge);
+    }
+
+    cursor = buffer.begin();
+}
+
+Crawler::iterator Crawler::iterator::operator++() {
     /* @brief implementation of the incrementation operator of the cursor
      * iterator.
      * @details the buffer is the place where we store the Edges fetched by the
@@ -213,28 +252,42 @@ Crawler::iterator &Crawler::iterator::operator++() {
      */
 
     // while (bloom.seen(*cursor) && cursor != buffer.end())
-    while (crawler->Set.find(*cursor) != Set.end() && cursor != buffer.end()) {
-        cursor++;
-    }
+    // while (crawler->Set.find(cursor) != crawler->Set.end() && cursor != buffer.end()) {
+    //     cursor++;
+    // }
+    std::cerr << "Crawler::iterator::operator++" << std::endl;
 
-    auto edge = *cursor;
+    if (cursor == buffer.end())
+        goto fillup;
+    else if (++cursor == buffer.end())
+        goto fillup;
+    else
+        goto done;
 
-    // if (!bloom.seen(edge))
-    if (crawler->Set.find(edge) == Set.end()) {
-        // bloom.add(edge);
-    }
-
-    if (cursor == buffer.end()) {
-        std::vector<Edge> edges = crawler->crawl(2);
+    fillup: {
+        buffer.clear();
+        std::vector<Edge> edges = crawler->crawl(1);
         for (Edge edge : edges) {
             buffer.push_back(edge);
         }
+
+        cursor = buffer.begin();
     }
+
+    // auto edge = *(*this);
+
+    // if (!bloom.seen(edge))
+    // if (crawler.Set.find(edge) == crawler->Set.end()) {
+    //     bloom.add(edge);
+    // }
+
+    done:
+    return *this ; 
+
 }
-#endif
 
 Crawler::iterator Crawler::begin() {
-    iterator it(this);
+    iterator it(this, true);
     return it;
 }
 
@@ -244,6 +297,8 @@ Crawler::iterator Crawler::end() {
 }
 
 std::vector<Paper> Crawler::getSummary(std::string xmlstr) {
+    std::cerr << "Crawler::getSummary" << std::endl;
+
     // return value
     std::vector<Paper> summ;
 
@@ -267,7 +322,8 @@ std::vector<Paper> Crawler::getSummary(std::string xmlstr) {
     // iteration over entries (representing articles)
     for (entry = root->first_node("entry"); entry && entry->name() == std::string("entry");
          entry = entry->next_sibling()) {
-        article = entry->first_node("id")->value();
+        //article = entry->first_node("id")->value();
+        article = getID(entry->first_node("id")->value()); 
         summary = entry->first_node("summary")->value();
 
         summ.push_back(Paper(article, summary));
@@ -286,85 +342,133 @@ std::vector<Paper> Crawler::getSummary(std::string xmlstr) {
  * @return a vector of (author, paper) pairs.
  */
 std::vector<Edge> Crawler::crawl(int steps) {
+    std::cerr << "Crawler::crawl" << std::endl;
+    Driver driver(this->refdata);
+    Driver d(this->cdata);
+
     std::vector<Edge> buffer;
     std::vector<Edge> tempPapers;
     std::vector<Edge> tempAuthors;
 
     while (steps-- > 0) {
+        // beug
+        // Paper last;
 
         // case where from = 1, i.e. request comes from papers
         // then, we call fromPapers()
         if (from) {
-            std::vector<Paper> start = {source}; // vector of one Paper with value source
-
+            /* FIND WHICH PAPERS TO FOLLOW THROUGH */
+            std::vector<Paper> start = paperSource; // vector of one Paper with value source
             std::vector<Paper> unseen; // vector of Paper objects not already in
                                        // the Set (i.e. we haven't seen them)
 
             for (std::vector<Paper>::iterator paper = start.begin(); paper != start.end();
                  paper++) {
-                if (Set.find(paper->id) != Set.end()) {
-                    unseen.push_back(*paper); // do we need * here ?
+
+                if (Set.find(paper->id) == Set.end()) {
+                    unseen.push_back(*paper);
+                    Set.insert(paper->id);
                 }
             }
+            /* END FIND */
 
+            /* FOLLOW UNSEEN PAPERS */
             tempPapers = fromPapers(unseen);
 
             // we get the references of the papers we havent already seen
 
-            std::vector<Paper> papers;
+            std::vector<Reference> references ;
+
+            //std::vector<Paper> papers;
             for (std::vector<Edge>::iterator edge = tempPapers.begin(); edge != tempPapers.end();
                  edge++) {
-                papers.push_back(edge->paper);
-            }
+                //papers.push_back(edge->paper);
 
-            std::vector<std::pair<Paper, Paper>> references = getReferences(papers);
+                std::vector<Reference> refs = driver.getFrom(edge->paper) ;
+
+                for(std::vector<Reference>::iterator ref = refs.begin(); ref != refs.end();
+                 ref++) {
+                     references.push_back(*ref) ;
+                }
+            }
+          
+            // before : std::vector<Reference> references = getReferences(papers);
+
+
 
             std::vector<Edge> newEdges;
+            
+            for (int i = 0; i != references.size(); i++) {
 
-            for (int i = 0; i != buffer.size(); i++) {
                 if (buffer[i].paper.id == references[i].first.id) {
                     // we add this edge only if we havent seen the author nor
                     // the paper
+
+
                     if (Set.find(buffer[i].author.name) == Set.end() &&
                         Set.find(references[i].second.id) == Set.end()) {
+
                         newEdges.push_back(Edge(buffer[i].author, references[i].second));
+
+                        std::cerr << Edge(buffer[i].author, references[i].second).paper.id << std::endl ; 
                     }
                 }
             }
-
-            // which one will we be needing to do?
+            
 
             // Move elements from newEdges to tempPapers.
             tempPapers.insert(tempPapers.end(), std::make_move_iterator(newEdges.begin()),
                               std::make_move_iterator(newEdges.end()));
 
             // Move elements from tempPapers to buffer.
-            buffer.insert(buffer.end(), std::make_move_iterator(tempPapers.begin()),
-                          std::make_move_iterator(tempPapers.end()));
+            buffer.insert(buffer.end(), tempPapers.begin(), tempPapers.end());
 
-        }
+            // set author source for next iter
+            authorSource.clear();
+            for(auto edge : tempPapers)
+                authorSource.push_back(edge.author);
 
-        // case where from = 0, i.e. request comes from authors
-        // then, we call fromAuthors()
-        else {
+            // beug
+            // last = tempPapers.end()->paper ; 
+
+            // add things to Set
+        } else {
             std::vector<Author> authors;
-            for (std::vector<Edge>::iterator edge = tempPapers.begin(); edge != tempPapers.end();
-                 edge++) {
+            for (std::vector<Author>::iterator author = authorSource.begin(); author != authorSource.end();
+                 author++) {
+
                 // if we havent seen this author we take it
-                if (Set.find(edge->author.name) == Set.end()) {
-                    authors.push_back(edge->author);
+                if (Set.find(author->name) == Set.end()) {
+                    authors.push_back(*author);
+                    Set.insert(author->name);
+
+                    // beug
+                    // last = edge->paper.id ; 
                 }
             }
 
             tempAuthors = fromAuthors(authors);
 
+            paperSource.clear();
+            for(auto edge : tempAuthors)
+                paperSource.push_back(edge.paper);
+
             // Move elements from tempAuthors to buffer.
             buffer.insert(buffer.end(), std::make_move_iterator(tempAuthors.begin()),
                           std::make_move_iterator(tempAuthors.end()));
+            
         }
 
-        from = !from;
+        this->from = !(this->from);
     }
 
+    std::cerr << "buffer.size(): " << buffer.size() << std::endl;
     return buffer;
+}
+
+void Crawler::run() {
+    Driver d(cdata);
+    for(auto edge = this->begin();; ++edge) {
+        d.writeEdge(*edge);
+    }
 }

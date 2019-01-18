@@ -31,7 +31,8 @@ int main(int argc, char *argv[])
     info = windows_precise.info;
 
     // CREATE THE LOGO
-    QIcon logo =  QIcon("/Users/damienbradelle/TestGUI/logo_2.png");
+    QIcon logo =  QIcon("://Images/logo_2.png");
+    app.setWindowIcon(logo) ;
 
     // CREATION OF THE FIRST WINDOW
     QWidget *home = window_home.home;

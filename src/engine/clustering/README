@@ -4,3 +4,7 @@ To compile:
 
 g++ -std=c++0x  -c test_clustering.cpp -I Eigen/
 g++ -std=c++0x  -c clustering.cpp -I Eigen/
+
+
+clusteringlast is a new version of the clustering algorithm that works well contrary to the previous one and that takes
+into account the weight of the similarities.

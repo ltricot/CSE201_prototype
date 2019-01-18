@@ -3,20 +3,20 @@
 #include <fstream>
 #include <sys/stat.h>
 #include <sys/types.h>
-#include <direct.h>
 #include <iostream>
 #include <boost/algorithm/string.hpp>
+
 
 using namespace std;
 
 Matrix::Matrix(string dir) {
 	this->root_directory = dir;
-	int res = _mkdir(dir.c_str());
+    int res = mkdir(dir.c_str() , 0666);
 }
 
 Matrix::Matrix() {
 	this->root_directory = "Matrix";
-	int res = _mkdir("Matrix");
+    int res = mkdir("Matrix", 0666);
 }
 
 double Matrix::read(string i, string j) {
@@ -46,7 +46,6 @@ double Matrix::read(long long i, long long j) {
 	return this->read(id, column);
 }
 void Matrix::write(string i, string j, double val, string name) {
-	cout << i << endl;
 	string &id = i;
 	string &column = j;
 	string app = column + "," + to_string(val);
@@ -58,16 +57,15 @@ void Matrix::write(string i, string j, double val, string name) {
 	string id2 = id1 + "/" + id.substr(3, 3);
 	string id3 = id2 + "/" + id.substr(6, 3);
 
-	const char * path1 = id1.c_str();
-	const char * path2 = id2.c_str();
-	const char * path3 = id3.c_str();
+	const char *path1 = id1.c_str();
+	const char *path2 = id2.c_str();
+	const char *path3 = id3.c_str();
 
-	const int dir_er1 = _mkdir(path1);
-	const int dir_er2 = _mkdir(path2);
-	const int dir_er3 = _mkdir(path3);
+	const int dir_er1 = mkdir(path1, 0666);
+	const int dir_er2 = mkdir(path2, 0666);
+	const int dir_er3 = mkdir(path3, 0666);
 
 	string filepath = id3 + "/" + id.substr(9, 2) + ".txt";
-	cout << filepath;
 	ifstream inp(filepath);
 	ofstream out(id3 + "/" + "tmp.txt");
 
@@ -121,13 +119,13 @@ vector<vector<string>> Matrix::getrow(string i) {
 	string id2 = id1 + "/" + id.substr(3, 3);
 	string id3 = id2 + "/" + id.substr(6, 3);
 
-	const char * path1 = id1.c_str();
-	const char * path2 = id2.c_str();
-	const char * path3 = id3.c_str();
+        const char *path1 = id1.c_str();
+        const char *path2 = id2.c_str();
+        const char *path3 = id3.c_str();
 
-	const int dir_er1 = _mkdir(path1);
-	const int dir_er2 = _mkdir(path2);
-	const int dir_er3 = _mkdir(path3);
+        const int dir_er1 = mkdir(path1, 0666);
+        const int dir_er2 = mkdir(path2, 0666);
+        const int dir_er3 = mkdir(path3, 0666);
 
 	string filepath = id3 + "/" + id.substr(9, 2) + ".txt";
 	Reader r(filepath);
@@ -150,9 +148,10 @@ void Matrix::del (string i, string j) {
 	const char * path2 = id2.c_str();
 	const char * path3 = id3.c_str();
 
-	const int dir_er1 = _mkdir(path1);
-	const int dir_er2 = _mkdir(path2);
-	const int dir_er3 = _mkdir(path3);
+
+	const int dir_er1 = mkdir(path1, 0666);
+	const int dir_er2 = mkdir(path2, 0666);
+	const int dir_er3 = mkdir(path3, 0666);
 
 	string filepath = id3 + "/" + id.substr(9, 2) + ".txt";
 	ifstream inp(filepath);
