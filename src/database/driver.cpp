@@ -134,7 +134,7 @@ vector<Edge> Driver::getFrom(Author from) {
 	return ret;
 }
 
-vector<Friends> Driver::getFrom(Author from, bool fr=true) {
+vector<Friends> Driver::getFrom(Author from, bool fr) {
 	hash<string> hasher;
 	Matrix m(this->directory);
 	string n = from.name;
@@ -152,7 +152,7 @@ vector<Friends> Driver::getFrom(Author from, bool fr=true) {
 
 	for (vector<vector<string>>::iterator it = res.begin(); it < res.end(); it++) {
 		vector<string> line = *it  ;
-		Friend edge = std::make_tuple(from, Author(line[0]), stod(line[1]));
+		Friends edge = std::make_tuple(from, Author(line[0]), stod(line[1]));
 		ret.push_back(edge);
 	}
 
