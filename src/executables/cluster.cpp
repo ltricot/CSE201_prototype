@@ -13,19 +13,10 @@ int main(int argc, char *argv[]) {
     Driver driver(mdata);
 
     vector<Friends> similarities;
-    for(auto &p : fs::recursive_directory_iterator(cdata)) {  //not sure about name of directory
-        if(p.path().extension() == ".txt") {
-            // then we read the first line of the textfile to get the author's name
-            ifstream infile(p.path()) ;
-
-            if(infile.good()){
-                std::string author ; 
-                getline(infile, author);
-                Author au1(author); 
-            std::vector<Friends> temp = (dcdata.getFrom(au,fr=true)); 
-            similarities.insert(similaries.end(), temp.begin(), temp.end());
-            }
-        }
+    vector<Author> authors=driver.getKeys<Author>();
+    for (vector<Author>::iterator it=authors.begin();it!=authors.end();it++){
+        std::vector<Friends> tmp=(dcdata.getFrom(*it,fr=true));
+        similarities.insert(similaries.end(), tmp.begin(), tmp.end());
     }
 
     Cluster clustering(similarities);
