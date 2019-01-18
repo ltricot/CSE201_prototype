@@ -10,29 +10,27 @@ using namespace std;
 
 int main(int argc, char *argv[]) {
     string mdata = argv[1];
-    Driver driver(mdata);
+    string outfolder = argv[2];
+    Driver dmdata(mdata);
 
     vector<Friends> similarities;
-    vector<Author> authors=driver.getKeys<Author>();
-    for (vector<Author>::iterator it=authors.begin();it!=authors.end();it++){
-        std::vector<Friends> tmp=(dcdata.getFrom(*it,fr=true));
-        similarities.insert(similaries.end(), tmp.begin(), tmp.end());
+    vector<Author> authors = dmdata.getKeys<Author>();
+    for (vector<Author>::iterator it = authors.begin(); it != authors.end(); it++) {
+        std::vector<Friends> tmp = (dmdata.getFrom(*it, true));
+        similarities.insert(similarities.end(), tmp.begin(), tmp.end());
     }
 
     Cluster clustering(similarities);
     map<int,std::vector<Author>> clusters=clustering.clusters;
-    string outfolder = argv[2];
 
-    for (map<int,vector<Author>>::iterator it=clusters.begin();it!=clusters.end();it++){
+    for (map<int,vector<Author>>::iterator it=clusters.begin();it!=clusters.end();it++) {
         string label= std::to_string(it->first);
         string path=outfolder+"/"+label+".txt";
         ofstream myfile(path);
-        if myfile.is_open{
-            for (vector<Author>::iterator i=it->second.begin();i!=it->second.end();i++){
-                myfile<<Author.name
-                myfile<<"\n"
-            }
-            myfile.close()
-        }
+
+        for (vector<Author>::iterator i=it->second.begin();i!=it->second.end();i++)
+            myfile << i->name << '\n';
+
+        myfile.close();
     }
 }
