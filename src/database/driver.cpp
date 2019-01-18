@@ -152,7 +152,7 @@ vector<Friends> Driver::getFrom(Author from, bool fr=true) {
 
 	for (vector<vector<string>>::iterator it = res.begin(); it < res.end(); it++) {
 		vector<string> line = *it  ;
-		Friend edge = std::make_tuple(from, Author(line[0]), stod(line[1]));
+		Friends edge = std::make_tuple(from, Author(line[0]), stod(line[1]));
 		ret.push_back(edge);
 	}
 
