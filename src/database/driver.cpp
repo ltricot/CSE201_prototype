@@ -61,7 +61,7 @@ bool Driver::writeEdge(Edge edge) {
 	string row = ostr.str();
 	string col = edge.paper.id;
 	m.write(row, col, edge.weight, n);
-	ofstream keys(this->keysfile);
+	ofstream keys(this->keysfile, std::ios_base::app));
 	keys << n << "\n";
 	return true; 
 }
@@ -77,7 +77,7 @@ bool Driver::writeEdge(Reference ref) {
 	string row = ostr.str();
 	string col = ref.second.id;
 	m.write(row, col, 1, n);
-	ofstream keys(this->keysfile);
+	ofstream keys(this->keysfile, std::ios_base::app));
 	keys << n << "\n";
 	return true;
 }
@@ -93,7 +93,7 @@ bool Driver::writeEdge(Friends friends) {
 	string row = ostr.str();
 	string col = get<1>(friends).name;
 	m.write(row, col, get<2>(friends), n);
-	ofstream keys(this->keysfile);
+	ofstream keys(this->keysfile, std::ios_base::app));
 	keys << n << "\n";
 	return true;
 }
@@ -289,7 +289,7 @@ void SummaryAccessor::sendSummary(Paper paper){
 	ostr << foo;
 	string id = ostr.str();
 	Summaries s(this->directory);
-	ofstream keys(this->keysfile);
+	ofstream keys(this->keysfile, std::ios_base::app));
 	keys << n << "\n";
 	s.storeSummary(id, paper.summary);
 }
