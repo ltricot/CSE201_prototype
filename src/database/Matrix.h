@@ -41,7 +41,7 @@ public:
 	 * */
 	double read(long long i, long long j);
 
-	/** @bried Modify the matrix
+	/** @brief Modify the matrix
 	 *
 	 * @details Recovers the path to the text file of the i'th line, then looks for j in it. If it finds it,
 	 * modifies the value of the weight to val, if not adds it at the end of the file with val as the weight.
@@ -65,7 +65,16 @@ public:
 	 * */
 	void write(string i, string j, double val, string name = "");
 
+
+	/** @brief Recover all the non zero entries in the i'th row
+	 * 
+	 * @details Recovers the path to the text file for the i'th line, then returns all the values stored in it
+	 */
 	vector<vector<std::string>> getrow(string i);
 
+	/** @brief Removes the i,j'th entry of the matrix
+	 * 
+	 * @details Recovers the path to the text file for the i'th line, then looks for j in it. If it finds it, removes it.
+	 */
 	void del(string i, string j);
 };

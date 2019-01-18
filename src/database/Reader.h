@@ -2,15 +2,32 @@
 #include <string>
 #include <vector>
 
+/** @brief Objects which turns a text file into a matrix
+ */
 class Reader {
-	/*Object which reads a table stored in a file*/
+
 public:
-	std::string filename; /*The file's name */
-	std::string delim; /* What delimits the columns */
+	///@brief The file's name
+	std::string filename; 
+
+	///@brief Column seperator, by default it is the comma.
+	std::string delim; 
+
+
 	Reader();
-	Reader(std::string name); /*By default the delimeter is a comma */
+	Reader(std::string name); 
 	Reader(std::string name, std::string delimeter);
-	std::vector<std::vector<std::string>> read(); /*Returns a matrix of the entries in the .txt file*/
+
+	/** @brief Returns a matrix of strings from the file
+	 * 
+	 * @details Seperates columns based on delim, and lines based on line breaks
+	 */
+	std::vector<std::vector<std::string>> read(); 
+
+	/** @brief Prints the content of the file in the console
+	 * 
+	 * @details mainly for debugging
+	 */
 	void print();
 };
 

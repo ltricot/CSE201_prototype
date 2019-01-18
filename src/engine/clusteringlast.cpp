@@ -18,30 +18,35 @@ void Cluster::initializelabel(){
 *construct the neighbors vector: for each author (so each index in nodes) construct a map that associates to each of its neighbor the similarity
 */
 void Cluster::findneighbors(std::vector<Friends> & similarities){
-    
+    int c=0;
     for (std::vector<Friends>::iterator it=similarities.begin();it!=similarities.end();it++){
-        std::vector<Author>::iterator it1 = std::find(nodes.begin(),nodes.end(),std::get<0>(*it));
-        std::vector<Author>::iterator it2 = std::find(nodes.begin(),nodes.end(),std::get<1>(*it));
-        int pos1, pos2;
-
-        if (it1== nodes.end()){
-            nodes.push_back(std::get<0>(*it));
-            neighbors.push_back(std::map<int, double>());  //do another map
-            pos1=nodes.size()-1;
+        Author au1 = std::get<0>(*it);
+        Author au2 = std::get<1>(*it);
+        double sim = std::get<2>(*it);
+        int pos1;
+        int pos2;
+        if (std::map<Author,int>::iterator it1==nodes.find(au1)){
+            nodes.insert(std::make_pair(au1,c));
+            nodesindex.insert(std::make_pair(c,au1));
+            neighbors.push_back(std::vector<std::pair<int,double>>());
+            pos1=c;
+            c++;
         }
         else{
-            pos1=std::distance(nodes.begin(),it1);
+            pos1=nodes[au1];
         }
-        if (it2==nodes.end()){
-            nodes.push_back(std::get<1>(*it));
-            neighbors.push_back(std::map<int,double>());
-            pos2=nodes.size()-1;
+        if (std::map<Author,int>::iterator it2=nodes.find(au2)){
+            nodes.insert(std::make_pair(au2,c));
+            nodesindex.insert(std::make_pair(c,au2));
+            neighbors.push_back(std::vector<std::pair<int,double>>());
+            pos2=c;
+            c++;
         }
-        else {
-            pos2=std::distance(nodes.begin(),it2);
+        else{
+            pos2=nodes[au2];
         }
-        neighbors[pos1].insert(std::make_pair(pos2,std::get<2>(*it)));
-        neighbors[pos2].insert(std::make_pair(pos1,std::get<2>(*it)));
+        neighbors[pos2].push_back(std::make_pair(pos1,sim));
+        neighbors[pos1].push_back(std::make_pair(pos2,sim));
     }
 }
 /**@brief create the allCDF vector
@@ -56,9 +61,9 @@ void Cluster::getCDF(){
         allSim.resize(neighbors[i].size());
         allProb.resize(neighbors[i].size());
         int c=0;
-        //iterate over the map neighbors[index] to have an array of similarities
-        for (std::map<int, double>::iterator it = neighbors[i].begin(); it != neighbors[i].end(); ++it){
-            allSim(c)=it->second;
+        //iterate over the vector neighbors[i] to have an array of similarities
+        for (std::vector<std::pair<int, double>>::iterator it = neighbors[i].begin(); it != neighbors[i].end(); ++it){
+            allSim(c)=*it->second;
             c++;
         }
         allProb= (1/((T*allSim).exp().sum()))*(T*allSim).exp();
@@ -89,14 +94,14 @@ void Cluster::getCDF(){
 int Cluster::getMaxSim(int & index){
     // simulate a random experience to pick the neighbor
     double flip=(double) (rand()) /  (double) (RAND_MAX); //random float between 0 and 1
-    std::map<int,double>::iterator it= neighbors[index].begin();
+    std::vector<std::pair<int,double>>::iterator it= neighbors[index].begin();
     for (int ind=0;ind<allCDF[index].size();ind++){
         if (allCDF[index][ind]>=flip){
-            return it->first;
+            return *it->first;
         }
         it++;
     }  
-    return it->first;
+    return *it->first;
 }
 
 /**@brief function that updates the label
@@ -143,7 +148,7 @@ void Cluster::createcluster(){
     }
 
     for (int v=0; v<label.size(); v++) {
-        clusters[label[v]].push_back(nodes[v]);
+        clusters[label[v]].push_back(nodesindex[v]);
     }
 }
 
