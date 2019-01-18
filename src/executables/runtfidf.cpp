@@ -15,12 +15,12 @@ int main(int argc, char *argv[]){
     Driver dtfidf(tfidfdata);
 
     TFIDF tfidf(sdata);
-    for(TFIDF::iterator ite = tfidf.begin(); ite != tfidf.end() ; ite++){
+    for(TFIDF::iterator ite = tfidf.begin(); ite != tfidf.end() ; ++ite){
         TFIDF::pEdge edge = *ite ;
         Author word = Author(std::get<0>(edge));    // sorry for this abomination
         Paper paper = std::get<1>(edge);
         double weight = std::get<2>(edge);
-        Edge newEdge(word,paper,edge);
+        Edge newEdge(word,paper,weight);
 
         dtfidf.writeEdge(newEdge);
     }
