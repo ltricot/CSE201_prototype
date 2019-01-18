@@ -5,7 +5,10 @@
 #include <unordered_map>
 #include <sstream>
 #include<iostream>
+#include <experimental/filesystem>
 
+
+namespace fs = std::experimental::filesystem;
 using namespace std;
 
 
@@ -15,7 +18,7 @@ const int lat_feat = 30;
 template <class KeyT> std::vector<KeyT> Driver::getKeys() {
 	std::vector<KeyT> keys;
 
-	for(auto &p : fs::recursive_directory_iterator(cdata)) {  
+	for(auto &p : fs::recursive_directory_iterator(directory)) {
         if(p.path().extension() == ".txt") {
             // then we read the first line of the textfile to get the key
             ifstream infile(p.path()) ;
