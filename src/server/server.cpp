@@ -19,9 +19,9 @@ int search_ns(int st, std::string &res){
 }
 
 
-struct MyHandler : public Http::Handler {
+struct MyHandler: public Http::Handler {
     HTTP_PROTOTYPE(MyHandler)
-
+	string dir;
     void onRequest(const Http::Request& request, Http::ResponseWriter writer) {
 	//std::cout << request.resource() << std::endl;
 	
@@ -93,7 +93,7 @@ struct MyHandler : public Http::Handler {
 		//PARSE THE FUCKING JSON
 		//putUserLikes(id, topics);
 		
-			std::string json = "{\"success\": 1}";
+		std::string json = "{\"success\": 1}";
 		
 		writer.send(Http::Code::Ok, json);
 	
@@ -106,9 +106,9 @@ struct MyHandler : public Http::Handler {
 		//auto id = std::stoi(ids, nullptr);			
 		std::string inson = request.body();
 		//PARSE THE FUCKING JSON
-		//putUserLikes(id, topics);
+		//putUserArticles(id, articles, dr);
 		
-			std::string json = "{\"success\": 1}";
+		std::string json = "{\"success\": 1}";
 		
 		writer.send(Http::Code::Ok, json);
 	}
@@ -117,8 +117,35 @@ struct MyHandler : public Http::Handler {
 	}
 }
 };
-	
 
-int main() {
-    Http::listenAndServe<MyHandler>("*:80");
+vector<string> getUserArticles(std::string id, std::string dr){
+	Author u(id);
+	Driver d(dr);
+	vector<Edge> tmp = d.getFrom(u);
+	vector<string> ret;
+	for (vector<Edge>::iterator it = tmp.begin(); it != tmp.end(); it++){
+		ret.push_back((it->paper).id);
+	}
+	return ret;
 }
+void putUserArticles(std::string id, std::vector<std::string> articles, std::string dr){
+	Author u(id);
+	Driver d(dr);
+	for(std::vector<std::string>::iterator it = articles.begin(); it != articles.end(); it+++){
+		bool b = d.writeEdge(Edge(u, Paper(*it)));
+	}
+}	
+
+int main(int argc, char *argv[]) {
+	std::ostringstream ostr;
+	ostr << argv[1];
+	std::string dir = ostr.str();
+	Net::Address addr(Net::Ipv4::any(), Net::Port(80));
+
+    auto opts = Http::Endpoint::options().threads(1);
+    Http::Endpoint server(addr);
+    server.init(opts);
+    server.setHandler(std::make_shared<HelloHandler>());
+    server.serve();
+}
+
