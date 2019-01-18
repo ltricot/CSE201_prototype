@@ -4,6 +4,7 @@
 #include <QPushButton>
 #include <QVBoxLayout>
 #include <QLabel>
+#pragma once
 
 class new_id {
 public:

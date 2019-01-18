@@ -4,6 +4,7 @@
 #include <QPushButton>
 #include <QVBoxLayout>
 #include <QTabWidget>
+#pragma once
 
 #include <info_user.h>
 

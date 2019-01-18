@@ -16,7 +16,7 @@ new_id::new_id()
 
     // Create a label for the ID
     QLabel *id_itself = new QLabel;
-    id_itself->setText("000000000"); // will be replaced by an ID given by the server
+    id_itself->setText("TO BE IMPLEMENTED"); // will be replaced by an ID given by the server
     id_itself->setFont(QFont("Courrier", 25, QFont::Bold));
     id_itself->setAlignment(Qt::AlignCenter);
     ID_layout->addWidget(id_itself);
