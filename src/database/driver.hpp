@@ -57,7 +57,9 @@ class Driver {
 
 class SummaryAccessor{
     std::string directory;
-
+    std::string keysfile;
+    
+    std::vector<Paper> getKeys();
     SummaryAccessor(std::string dir);
     
     /// @brief Store the summary related to paper

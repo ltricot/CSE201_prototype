@@ -27,7 +27,7 @@ template <class KeyT> std::vector<KeyT> Driver::getKeys() {
 		KeyT baa(foo);
 		keys.push_back(baa);
 	}
-	
+
 	return keys;
 	/*for(auto &p : fs::recursive_directory_iterator(directory)) {
         if(p.path().extension() == ".txt") {
@@ -279,6 +279,7 @@ vector<Edge> Driver::getFroms(vector<Author> froms) {
 
 SummaryAccessor::SummaryAccessor(string dir){
 	this->directory = dir;
+	this->keysfile = dir + "/keys.txt";
 	int res = mkdir(dir.c_str(), 0666);
 }
 
@@ -291,6 +292,9 @@ void SummaryAccessor::sendSummary(Paper paper, string summary){
 	ostr << foo;
 	string id = ostr.str();
 	Summaries s(this->directory);
+	FILE * keys;
+	keys = fopen(this->keysfile.c_str(), "a")
+	keys << n << "\n";
 	s.storeSummary(id, summary);
 }
 
@@ -306,4 +310,17 @@ string SummaryAccessor::getSummary(Paper paper){
 	return s.getSummary(id);
 }
 
-std::string SummaryAccessor::getSummary(Paper paper);
+std::vector<Paper> SummaryAccessor::getKeys() {
+	std::vector<Paper> keys;
+	
+	Reader r(this->keysfile);
+	vector<vector<string>> tmp = r.read();
+
+	for (vector<vector<string>>::iterator it = tmp.begin(); it != tmp.end(); it++){
+		string foo = (*it)[0];
+		Paper baa(foo);
+		keys.push_back(baa);
+	}
+
+	return keys;
+}
