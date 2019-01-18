@@ -148,6 +148,9 @@ void Cluster::createcluster(){
     }
 
     for (int v=0; v<label.size(); v++) {
+        if (std::map<int,string>::iterator it==clusters.find(label[v])){
+            clusters.insert(label[v],std::vector<string>());
+        }
         clusters[label[v]].push_back(nodesindex[v]);
     }
 }
