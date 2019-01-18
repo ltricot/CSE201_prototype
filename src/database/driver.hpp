@@ -29,36 +29,38 @@ class Driver {
     std::vector<Reference> getFrom(Paper paper);
     std::vector<Friends> getFrom(Author from, bool fr);  // yes i know this is bad
 
+    /// @brief Store an edge in the Matrix
 	bool writeEdge(Edge edge);  // overwrites
 	bool writeEdge(Reference ref);
     bool writeEdge(Friends friends);
 
+    /// @brief Remove an edge from the Matrix
     bool removeEdge(Edge edge);
     bool removeEdge(Reference ref);
     bool removeEdge(Friends friends);
 
-	// batch equivalents of above
+	/// @brief batch equivalents of writeEdge
 	std::vector<Edge> getFroms(std::vector<Author> froms);
 	bool writeEdges(std::vector<Edge> edges);
     bool writeEdges(std::vector<Reference> refs);
     bool writeEdges(std::vector<Friends> friends );
 
+    /// @brief batch equivalent of removeEdge
 	bool removeEdges(std::vector<Edge> edges);
     bool removeEdges(std::vector<Reference> refs);
     bool removeEdges(std::vector<Friends> friends);
+
     Driver(std::string dir);
 };
 class SummaryAccessor{
     std::string directory;
-    
+
     SummaryAccessor(std::string dir);
     
-    /** @brief Store the summary related to paper
-     */
+    /// @brief Store the summary related to paper
     void sendSummary(Paper paper, std::string summary);
     
-    /** @brief Recover the summary of a given paper
-     */
+    /// @brief Recover the summary of a given paper
     std::string getSummary(Paper paper);
 }
 
@@ -124,12 +126,15 @@ template <int rank> class VectorAccessor {
     typedef Eigen::Matrix<double, rank, 1> vec;
 
   public:
+    
     string directory;
+
 	VectorAccessor(string dir) {
         this->directory = dir;
         int res = mkdir(dir.c_str(), 0666);
 	}
 
+    /// @brief get the vector of an author
 	vec get_vector(Author author){
         Vectors v(directory);
         string n = author.name;
@@ -148,6 +153,7 @@ template <int rank> class VectorAccessor {
         return tmp;
     }
 
+    /// @brief get the vector of a paper
     vec get_vector(Paper paper){
         Vectors v(directory);
         string n = paper.id;
@@ -166,6 +172,7 @@ template <int rank> class VectorAccessor {
         return tmp;
     }
 
+    /// @brief Store the vector of an author
     bool send_vector(Author author, vec vect) {
         Vectors v(directory);
         string n = author.name;
@@ -179,6 +186,7 @@ template <int rank> class VectorAccessor {
         return true;
     }
 
+    /// @brief Store the vector of a Paper
     bool send_vector(Paper paper, vec vect) {
         Vectors v(directory);
         string n = paper.id;
