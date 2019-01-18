@@ -1,14 +1,12 @@
 #include <window_main.h>
 
-void window_main::delay()
-{
-    QTime dieTime= QTime::currentTime().addMSecs(10);
+void window_main::delay() {
+    QTime dieTime = QTime::currentTime().addMSecs(10);
     while (QTime::currentTime() < dieTime)
         QCoreApplication::processEvents(QEventLoop::AllEvents, 100);
 }
 
-window_main::window_main(info_user &info, Author &author, Client &client)
-{
+window_main::window_main(info_user &info, Author &author, Client &client) {
     // Take infos
     window_int_modif mod(info);
     modif_inter = mod.modif_inter;
@@ -16,9 +14,9 @@ window_main::window_main(info_user &info, Author &author, Client &client)
     info_id = id.id_info;
 
     // CREATION OF THE MAIN WINDOW
-    main = new QWidget; // The window
+    main = new QWidget;                             // The window
     main->setWindowTitle("Tinder for Researchers"); // Its title
-    main->setMinimumSize(800, 800); // Its size
+    main->setMinimumSize(800, 800);                 // Its size
     QVBoxLayout *l_main = new QVBoxLayout;
 
     // tabs and scrolls
@@ -35,9 +33,6 @@ window_main::window_main(info_user &info, Author &author, Client &client)
     QIcon dislike_icon = QIcon(":/img/img/dislike.png");
     QIcon like_icon = QIcon(":/img/img/like.png");
 
-
-
-
     // LIKE PAGE
 
     // Like buttons
@@ -53,15 +48,7 @@ window_main::window_main(info_user &info, Author &author, Client &client)
     QObject::connect(like_button, SIGNAL(clicked()), like_widget_view, SLOT(update_like()));
     QObject::connect(dislike_button, SIGNAL(clicked()), like_widget_view, SLOT(update_dislike()));
 
-
-
-
-
-
-
-
     // INFO PAGE
-
 
     QLabel *text_info = new QLabel;
     text_info->setWordWrap(true);
@@ -80,11 +67,10 @@ Finally, in the “parameters”, you can see you ID, modify your interests and 
 Enjoy!");
     l_info->addWidget(text_info);
 
-
     // LIKEABLE PAGE
-    label_update * lab1 = new label_update(client, author);
-    label_update * lab2 = new label_update(client, author);
-    label_update * lab3 = new label_update(client, author);
+    label_update *lab1 = new label_update(client, author);
+    label_update *lab2 = new label_update(client, author);
+    label_update *lab3 = new label_update(client, author);
 
     QGridLayout *l_1 = new QGridLayout;
     QWidget *w_1 = new QWidget;
@@ -153,9 +139,6 @@ Enjoy!");
     w_3->setMaximumSize(700, 100);
     l_recom->addWidget(w_3);
 
-
-
-
     // PARAMETERS
 
     past_likes *pl = new past_likes(author, client);
@@ -172,15 +155,13 @@ Enjoy!");
     l_param->addWidget(my_inte, 2, 0, Qt::AlignCenter);
     // Logo
     QLabel *logo_label = new QLabel;
-    QPixmap logo_pix =  QPixmap(":/img/img/logo_2.png");
+    QPixmap logo_pix = QPixmap(":/img/img/logo_2.png");
     logo_pix = logo_pix.scaled(300, 300);
     logo_label->setPixmap(logo_pix);
     l_param->addWidget(logo_label, 3, 0, 5, 0, Qt::AlignCenter);
     QObject::connect(my_inte, SIGNAL(clicked()), modif_inter, SLOT(show()));
     QObject::connect(my_id, SIGNAL(clicked()), info_id, SLOT(show()));
     QObject::connect(my_like, SIGNAL(clicked()), pl, SLOT(open_window()));
-
-
 
     // Layout
     page_info_scroll->setLayout(l_info);

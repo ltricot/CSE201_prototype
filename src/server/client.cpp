@@ -1,19 +1,18 @@
 #include "client.hpp"
-#include "rapidxml.hpp"
 #include "curl/curl.h"
+#include "rapidxml.hpp"
 #include "tools.hpp"
 #include <iostream>
 #include <string>
 #include <vector>
 
-
 Client::Client(std::string ip, int port) : ip(ip), port(port) {
     std::vector<std::string> topics = getTopics();
 }
 
-std::string encode(std::string name){
+std::string encode(std::string name) {
     CURL *curl = curl_easy_init();
-    char* encoded = curl_easy_escape(curl, name.c_str(), name.size());
+    char *encoded = curl_easy_escape(curl, name.c_str(), name.size());
     return encoded;
 }
 
@@ -88,10 +87,10 @@ bool Client::putArticles(Author author, std::vector<std::string> articles) {
 }
 
 std::string getTitle(Paper paper) {
-    //return value
+    // return value
     std::string title;
 
-    //getting the string containing html data
+    // getting the string containing html data
     std::string xmlstr;
     xmlstr = get("http://export.arxiv.org/api/query?id_list=" + paper.id);
 
@@ -101,10 +100,10 @@ std::string getTitle(Paper paper) {
     xmlcharvec.push_back('\0');
     doc.parse<0>(&xmlcharvec[0]);
 
-    //defining the root of XML tree
+    // defining the root of XML tree
     rapidxml::xml_node<> *root = doc.first_node("feed");
 
-    //getting the title
+    // getting the title
     title = root->first_node("entry")->first_node("title")->value();
 
     return title;

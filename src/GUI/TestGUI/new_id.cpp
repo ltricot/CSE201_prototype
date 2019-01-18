@@ -1,7 +1,6 @@
 #include <new_id.h>
 
-new_id::new_id()
-{
+new_id::new_id() {
     // Create the window
     ID = new QWidget;
 
@@ -10,7 +9,8 @@ new_id::new_id()
 
     // Create a label for the text
     QLabel *text_id = new QLabel;
-    text_id->setText("Here is your user ID. Please note it carefully, you will use it to connect next time.");
+    text_id->setText(
+        "Here is your user ID. Please note it carefully, you will use it to connect next time.");
     text_id->setFont(QFont("Courrier", 15));
     ID_layout->addWidget(text_id);
 

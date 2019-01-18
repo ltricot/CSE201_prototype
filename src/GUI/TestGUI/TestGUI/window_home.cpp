@@ -1,7 +1,6 @@
 #include <window_home.h>
 
-window_home::window_home()
-{
+window_home::window_home() {
     // Create the window
     home = new QWidget;
     home->move(QApplication::desktop()->screen()->rect().center() - home->rect().center());

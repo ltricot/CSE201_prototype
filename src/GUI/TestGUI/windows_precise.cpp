@@ -1,11 +1,9 @@
 #include <windows_precise.h>
 
-windows_precise::windows_precise()
-{
+windows_precise::windows_precise() {
 
     // Create the user profile
     info = info_user();
-
 
     // CREATE AND CONFIGURE A WINDOW FOR EACH SUBJECT
     // Create a new window and a layout for each subject with a scroll area
@@ -65,7 +63,6 @@ windows_precise::windows_precise()
     scroll_econ->setWidgetResizable(true);
     scroll_econ->setVerticalScrollBarPolicy(Qt::ScrollBarAlwaysOn);
 
-
     // Create a text for each subject and add it to the layout associated
     QLabel *title_phy = new QLabel();
     title_phy->setText("More precisely in physics:");
@@ -107,7 +104,6 @@ windows_precise::windows_precise()
     title_econ->setFont(QFont("Courrier", 15, QFont::Bold));
     l_p_econ->addWidget(title_econ);
 
-
     // Give a title to each window and create a new button validate for each of them
     precise_phy->setWindowTitle("About your interests in physics");
     precise_math->setWindowTitle("About your interests in mathematics");
@@ -115,7 +111,8 @@ windows_precise::windows_precise()
     precise_bio->setWindowTitle("About your interests in quantitative biology");
     precise_fin->setWindowTitle("About your interests in quantitative finance");
     precise_stat->setWindowTitle("About your interests in statistics");
-    precise_eess->setWindowTitle("About your interests in electrical engineering and systems science");
+    precise_eess->setWindowTitle(
+        "About your interests in electrical engineering and systems science");
     precise_econ->setWindowTitle("About your interests in economics");
 
     val_phy = new QPushButton;
@@ -135,103 +132,91 @@ windows_precise::windows_precise()
     val_econ = new QPushButton;
     val_econ->setText("Validate");
 
-    //Astro
+    // Astro
     QLabel *astro = new QLabel();
     astro->setText("Astrophysics");
     astro->setFont(QFont("Courrier", 12, QFont::Bold));
     l_p_phy->addWidget(astro);
-    for (int i = 0; i < 6; i++)
-    {
+    for (int i = 0; i < 6; i++) {
         l_p_phy->addWidget(info.checkboxes[i]);
     }
 
-    //Condensed
+    // Condensed
     QLabel *cond_mat = new QLabel();
     cond_mat->setText("Condensed Matter");
     cond_mat->setFont(QFont("Courrier", 12, QFont::Bold));
     l_p_phy->addWidget(cond_mat);
-    for (int i = 6; i < 15; i++)
-    {
+    for (int i = 6; i < 15; i++) {
         l_p_phy->addWidget(info.checkboxes[i]);
     }
 
-    //Non-linear
+    // Non-linear
     QLabel *non_lin = new QLabel();
     non_lin->setText("Nonlinear Sciences");
     non_lin->setFont(QFont("Courrier", 12, QFont::Bold));
     l_p_phy->addWidget(non_lin);
-    for (int i = 15; i < 20; i++)
-    {
+    for (int i = 15; i < 20; i++) {
         l_p_phy->addWidget(info.checkboxes[i]);
     }
 
-    //Physics
+    // Physics
     QLabel *phys = new QLabel();
     phys->setText("Physics");
     phys->setFont(QFont("Courrier", 12, QFont::Bold));
     l_p_phy->addWidget(phys);
-    for (int i = 20; i < 42; i++)
-    {
+    for (int i = 20; i < 42; i++) {
         l_p_phy->addWidget(info.checkboxes[i]);
     }
 
-    //Others
+    // Others
     QLabel *ot = new QLabel();
     ot->setText("Other");
     ot->setFont(QFont("Courrier", 12, QFont::Bold));
     l_p_phy->addWidget(ot);
-    for (int i = 42; i < 51; i++)
-    {
+    for (int i = 42; i < 51; i++) {
         l_p_phy->addWidget(info.checkboxes[i]);
     }
     l_p_phy->addWidget(val_phy);
 
     // maths
-    for (int i = 51; i < 83; i++)
-    {
+    for (int i = 51; i < 83; i++) {
         l_p_math->addWidget(info.checkboxes[i]);
     }
     l_p_math->addWidget(val_math);
 
     // Computer science
-    for (int i = 83; i < 123; i++)
-    {
+    for (int i = 83; i < 123; i++) {
         l_p_cs->addWidget(info.checkboxes[i]);
     }
     l_p_cs->addWidget(val_cs);
 
     // Bio
-    for (int i = 123; i < 133; i++)
-    {
+    for (int i = 123; i < 133; i++) {
         l_p_bio->addWidget(info.checkboxes[i]);
     }
     l_p_bio->addWidget(val_bio);
 
     // Finance
-    for (int i = 133; i < 142; i++)
-    {
+    for (int i = 133; i < 142; i++) {
         l_p_fin->addWidget(info.checkboxes[i]);
     }
     l_p_fin->addWidget(val_fin);
 
     // Statistics
-    for (int i = 142; i < 148; i++)
-    {
-       l_p_stat->addWidget(info.checkboxes[i]);
+    for (int i = 142; i < 148; i++) {
+        l_p_stat->addWidget(info.checkboxes[i]);
     }
     l_p_stat->addWidget(val_stat);
 
     // EESS
-    for (int i = 148; i < 151; i++)
-    {
-       l_p_eess->addWidget(info.checkboxes[i]);
+    for (int i = 148; i < 151; i++) {
+        l_p_eess->addWidget(info.checkboxes[i]);
     }
     l_p_eess->addWidget(val_eess);
 
     // Economics
-    for (int i = 151; i < 154; i++)
-    {
-       l_p_econ->addWidget(info.checkboxes[i]);
+    for (int i = 151; i < 154; i++) {
+        l_p_econ->addWidget(info.checkboxes[i]);
     }
     l_p_econ->addWidget(val_econ);
 

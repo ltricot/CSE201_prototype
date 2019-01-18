@@ -1,12 +1,11 @@
-#include <experimental/filesystem>
-#include <string>
-#include <fstream>
-#include "driver.hpp"
 #include "clusteringlast.hpp"
+#include "driver.hpp"
+#include <experimental/filesystem>
+#include <fstream>
+#include <string>
 
 namespace fs = std::experimental::filesystem;
 using namespace std;
-
 
 int main(int argc, char *argv[]) {
     string mdata = argv[1];
@@ -21,14 +20,14 @@ int main(int argc, char *argv[]) {
     }
 
     Cluster clustering(similarities);
-    map<int,std::vector<std::string>> clusters=clustering.clusters;
+    map<int, std::vector<std::string>> clusters = clustering.clusters;
 
-    for (map<int,vector<string>>::iterator it=clusters.begin(); it!=clusters.end(); ++it) {
-        string label= std::to_string(it->first);
-        addKey(outfolder, *it);
-        string path=outfolder + "/" + label + ".txt";
+    for (map<int, vector<string>>::iterator it = clusters.begin(); it != clusters.end(); ++it) {
+        string label = std::to_string(it->first);
+        addKey(outfolder, it->first);
+        string path = outfolder + "/" + label + ".txt";
         ofstream myfile(path);
-        for (vector<string>::iterator i=it->second.begin();i!=it->second.end();i++)
+        for (vector<string>::iterator i = it->second.begin(); i != it->second.end(); i++)
             myfile << *i << '\n';
 
         myfile.close();

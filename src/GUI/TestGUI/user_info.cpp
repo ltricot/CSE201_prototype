@@ -1,13 +1,11 @@
 #include <info_user.h>
 
-info_user::info_user()
-{
-    for (int i = 0; i < 154; i++)
-    {
+info_user::info_user() {
+    for (int i = 0; i < 154; i++) {
         info[i] = 0;
     }
     QCheckBox *galax = new QCheckBox("Astrophysics of Galaxies");
-    checkboxes[0]=galax;
+    checkboxes[0] = galax;
     QCheckBox *cosmo = new QCheckBox("Cosmology and Nongalactic Astrophysics");
     checkboxes[1] = cosmo;
     QCheckBox *earth = new QCheckBox("Earth and Planetary Astrophysics");
@@ -316,25 +314,18 @@ info_user::info_user()
     checkboxes[153] = theoretical_econ;
 }
 
-void info_user::update()
-{
-    for(int i = 0; i < 154; i ++)
-    {
-        if (checkboxes[i]->isChecked())
-        {
+void info_user::update() {
+    for (int i = 0; i < 154; i++) {
+        if (checkboxes[i]->isChecked()) {
             info[i] = 1;
-        }
-        else
-        {
+        } else {
             info[i] = 0;
         }
     }
 }
 
-void info_user::update_from_server(int a[154])
-{
-    for (int i = 0; i < 154; i ++)
-    {
+void info_user::update_from_server(int a[154]) {
+    for (int i = 0; i < 154; i++) {
         checkboxes[i]->setChecked((a[i] == 1));
     }
 }

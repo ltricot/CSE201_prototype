@@ -1,7 +1,6 @@
 #include <display_like.h>
 
-past_likes::past_likes(Author a, Client c)
-{
+past_likes::past_likes(Author a, Client c) {
     // Create the window
     likes = new QWidget;
     author = new Author(a);
@@ -16,8 +15,7 @@ past_likes::past_likes(Author a, Client c)
     lay = new QVBoxLayout;
 }
 
-QWidget* past_likes::display_article(std::string ref)
-{
+QWidget *past_likes::display_article(std::string ref) {
     article = new QWidget;
     article->setMinimumSize(700, 700);
     QVBoxLayout *lay_art = new QVBoxLayout;
@@ -37,8 +35,7 @@ QWidget* past_likes::display_article(std::string ref)
     return article;
 }
 
-void past_likes::open_window()
-{
+void past_likes::open_window() {
     lay = new QVBoxLayout;
     likes = new QWidget;
 
@@ -55,15 +52,14 @@ void past_likes::open_window()
     QPushButton *like_button[len];
     QWidget *web[len];
 
-    for (std::size_t i = 0; i < len; i++)
-    {
+    for (std::size_t i = 0; i < len; i++) {
         like_button[i] = new QPushButton;
         web[i] = new QWidget;
     }
 
-    for (std::size_t i = 0; i < len; i++)
-    {
-        like_button[i]->setText(QString::fromStdString(client->getTitle(liked_articles.at(i)))); // To code getTitle(str id) giving the title of the article having id id
+    for (std::size_t i = 0; i < len; i++) {
+        like_button[i]->setText(QString::fromStdString(client->getTitle(liked_articles.at(
+            i)))); // To code getTitle(str id) giving the title of the article having id id
 
         web[i] = display_article(liked_articles.at(i));
 

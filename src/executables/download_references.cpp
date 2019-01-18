@@ -1,6 +1,5 @@
-#include <iostream>
 #include "quickrefs.hpp"
-
+#include <iostream>
 
 // Usage: download_references bulk_downloader_folder reffile
 int main(int argc, char *argv[]) {

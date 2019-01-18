@@ -1,85 +1,71 @@
 #include <QApplication>
-#include <QWidget>
-#include <QPushButton>
-#include <QLCDNumber>
-#include <QSlider>
-#include <QProgressBar>
-#include <QMessageBox>
-#include <QVBoxLayout>
-#include <QProcess>
-#include <QString>
-#include <QInputDialog>
 #include <QCheckBox>
+#include <QInputDialog>
+#include <QLCDNumber>
 #include <QLabel>
-#include <QTime>
-#include <QScrollBar>
+#include <QMessageBox>
+#include <QProcess>
+#include <QProgressBar>
+#include <QPushButton>
 #include <QScrollArea>
+#include <QScrollBar>
+#include <QSlider>
+#include <QString>
+#include <QTime>
+#include <QVBoxLayout>
+#include <QWidget>
 #include <random>
 
 // create a function that wait for a duration of 10 ms in order to slow down while loops
-void delay()
-{
-    QTime dieTime= QTime::currentTime().addMSecs(10);
+void delay() {
+    QTime dieTime = QTime::currentTime().addMSecs(10);
     while (QTime::currentTime() < dieTime)
         QCoreApplication::processEvents(QEventLoop::AllEvents, 100);
 }
 
 // create a class info_user that will store the choices of the user
-class info_user{
-    public:
-        // generator fill up the storage with 0
-        info_user()
-        {
-            stock[0] = 51;
-            stock[1] = 32;
-            stock[2] = 40;
-            stock[3] = 10;
-            stock[4] = 9;
-            stock[5] = 6;
-            stock[6] = 3;
-            stock[7] = 3;
+class info_user {
+  public:
+    // generator fill up the storage with 0
+    info_user() {
+        stock[0] = 51;
+        stock[1] = 32;
+        stock[2] = 40;
+        stock[3] = 10;
+        stock[4] = 9;
+        stock[5] = 6;
+        stock[6] = 3;
+        stock[7] = 3;
 
-            for (int i = 0; i < 8; i++)
-            {
-                info[i] = new int[stock[i]];
-                for (int j = 0; j < stock[i]; j++)
-                {
+        for (int i = 0; i < 8; i++) {
+            info[i] = new int[stock[i]];
+            for (int j = 0; j < stock[i]; j++) {
+                info[i][j] = 0;
+            }
+        }
+    }
+
+    // the update function take the checkboxes in input and fill the storage with 0 and 1
+    void update_info_user(QCheckBox **a) {
+        int k = 0;
+        for (int i = 0; i < 8; i++) {
+            for (int j = 0; j < stock[i]; j++) {
+                if (a[k]->isChecked()) {
+                    info[i][j] = 1;
+                } else {
                     info[i][j] = 0;
                 }
-            }
-
-
-        }
-
-        // the update function take the checkboxes in input and fill the storage with 0 and 1
-        void update_info_user(QCheckBox** a)
-        {
-            int k = 0;
-            for(int i = 0; i < 8; i ++)
-            {
-                for(int j = 0; j < stock[i]; j++)
-                {
-                    if (a[k]->isChecked())
-                    {
-                        info[i][j] = 1;
-                    }
-                    else
-                    {
-                        info[i][j] = 0;
-                    }
-                    k ++;
-                }
+                k++;
             }
         }
+    }
 
-    private:
-        int** info = new int*[8];
-        int stock[8];
+  private:
+    int **info = new int *[8];
+    int stock[8];
 };
 
-
-int main(int argc, char *argv[])
-{
+int main(int argc, char *argv[]) {
     // create the application
     QApplication app(argc, argv);
 
@@ -95,38 +81,39 @@ int main(int argc, char *argv[])
     QObject::connect(quit_button, SIGNAL(clicked()), qApp, SLOT(quit()));
 
     // Display a message box
-    int ok = QMessageBox::question(home, "Hello", "Welcome to our app, let's start", QMessageBox::Ok);
+    int ok =
+        QMessageBox::question(home, "Hello", "Welcome to our app, let's start", QMessageBox::Ok);
     // Check that the button has been clicked and manage the different cases
-    if (ok == QMessageBox::Ok)
-    {
+    if (ok == QMessageBox::Ok) {
         // Open a message box that ask if the user want to log in or sign in
-        int answer = QMessageBox::question(home, "Log in", "Have you an account?", QMessageBox::Yes | QMessageBox::No);
+        int answer = QMessageBox::question(home, "Log in", "Have you an account?",
+                                           QMessageBox::Yes | QMessageBox::No);
         // First case : it is a pre-existent user
-        if (answer == QMessageBox::Yes)
-        {
+        if (answer == QMessageBox::Yes) {
             // Ask for the ID and store it in "id"
             bool ok = false;
-            QString id = QInputDialog::getText(home, "Log in", "Please enter your ID", QLineEdit::Normal, QString(), &ok);
+            QString id = QInputDialog::getText(home, "Log in", "Please enter your ID",
+                                               QLineEdit::Normal, QString(), &ok);
 
-            // if the button has been clicked and that the ID is not empty (we may add if the ID is in id_list ?)
-            if (ok && !id.isEmpty())
-            {
-                   // display the app
+            // if the button has been clicked and that the ID is not empty (we may add if the ID is
+            // in id_list ?)
+            if (ok && !id.isEmpty()) {
+                // display the app
                 home->close();
                 main->show();
             }
             // If the ID is empty
-            else
-            {
+            else {
                 // Display an error message in a critical box
                 QMessageBox::critical(home, "Error", "ID error");
             }
         }
         // Second case : it is a new user
-        else
-        {
+        else {
             // Display an information box
-            QMessageBox::information(home, "Sign in", "We are going to ask you a few questions about your interests, please answer carefully");
+            QMessageBox::information(home, "Sign in",
+                                     "We are going to ask you a few questions about your "
+                                     "interests, please answer carefully");
 
             // Create an array to store user info
             info_user info;
@@ -231,7 +218,8 @@ int main(int argc, char *argv[])
             precise_bio->setWindowTitle("About your interests in quantitative biology");
             precise_fin->setWindowTitle("About your interests in quantitative finance");
             precise_stat->setWindowTitle("About your interests in statistics");
-            precise_eess->setWindowTitle("About your interests in electrical engineering and systems science");
+            precise_eess->setWindowTitle(
+                "About your interests in electrical engineering and systems science");
             precise_econ->setWindowTitle("About your interests in economics");
             QPushButton *val_phy = new QPushButton;
             val_phy->setText("Validate");
@@ -250,10 +238,11 @@ int main(int argc, char *argv[])
             QPushButton *val_econ = new QPushButton;
             val_econ->setText("Validate");
 
-            // Create all the checkboxes (don't count, there are 154) and put them in the associated layout ; also add the validate buttons
+            // Create all the checkboxes (don't count, there are 154) and put them in the associated
+            // layout ; also add the validate buttons
             QCheckBox *checkboxes[154];
             QCheckBox *galax = new QCheckBox("Astrophysics of Galaxies");
-            checkboxes[0]=galax;
+            checkboxes[0] = galax;
             QCheckBox *cosmo = new QCheckBox("Cosmology and Nongalactic Astrophysics");
             checkboxes[1] = cosmo;
             QCheckBox *earth = new QCheckBox("Earth and Planetary Astrophysics");
@@ -264,18 +253,18 @@ int main(int argc, char *argv[])
             checkboxes[4] = instru;
             QCheckBox *solar = new QCheckBox("Solar and Stellar Astrophysics");
             checkboxes[5] = solar;
-            //Astro
+            // Astro
             {
-            QLabel *astro = new QLabel();
-            astro->setText("astro");
-            astro->setFont(QFont("Courrier", 12, QFont::Bold));
-            l_p_phy->addWidget(astro);
-            l_p_phy->addWidget(galax);
-            l_p_phy->addWidget(cosmo);
-            l_p_phy->addWidget(earth);
-            l_p_phy->addWidget(heap);
-            l_p_phy->addWidget(instru);
-            l_p_phy->addWidget(solar);
+                QLabel *astro = new QLabel();
+                astro->setText("astro");
+                astro->setFont(QFont("Courrier", 12, QFont::Bold));
+                l_p_phy->addWidget(astro);
+                l_p_phy->addWidget(galax);
+                l_p_phy->addWidget(cosmo);
+                l_p_phy->addWidget(earth);
+                l_p_phy->addWidget(heap);
+                l_p_phy->addWidget(instru);
+                l_p_phy->addWidget(solar);
             }
             QCheckBox *disorder = new QCheckBox("Disordered Systems and Neural Networks");
             checkboxes[6] = disorder;
@@ -295,21 +284,21 @@ int main(int argc, char *argv[])
             checkboxes[13] = corr_elect;
             QCheckBox *supercond = new QCheckBox("Superconductivity");
             checkboxes[14] = supercond;
-            //Condensed
+            // Condensed
             {
-            QLabel *cond_mat = new QLabel();
-            cond_mat->setText("Condensed Matter");
-            cond_mat->setFont(QFont("Courrier", 12, QFont::Bold));
-            l_p_phy->addWidget(cond_mat);
-            l_p_phy->addWidget(disorder);
-            l_p_phy->addWidget(materials);
-            l_p_phy->addWidget(meso);
-            l_p_phy->addWidget(o_condens);
-            l_p_phy->addWidget(quant_gases);
-            l_p_phy->addWidget(soft);
-            l_p_phy->addWidget(stat_mech);
-            l_p_phy->addWidget(corr_elect);
-            l_p_phy->addWidget(supercond);
+                QLabel *cond_mat = new QLabel();
+                cond_mat->setText("Condensed Matter");
+                cond_mat->setFont(QFont("Courrier", 12, QFont::Bold));
+                l_p_phy->addWidget(cond_mat);
+                l_p_phy->addWidget(disorder);
+                l_p_phy->addWidget(materials);
+                l_p_phy->addWidget(meso);
+                l_p_phy->addWidget(o_condens);
+                l_p_phy->addWidget(quant_gases);
+                l_p_phy->addWidget(soft);
+                l_p_phy->addWidget(stat_mech);
+                l_p_phy->addWidget(corr_elect);
+                l_p_phy->addWidget(supercond);
             }
             QCheckBox *adapt = new QCheckBox("Adaptation and Self-Organizing Systems");
             checkboxes[15] = adapt;
@@ -321,17 +310,17 @@ int main(int argc, char *argv[])
             checkboxes[18] = solvable;
             QCheckBox *pattern_form = new QCheckBox("Pattern Formation and Solitons");
             checkboxes[19] = pattern_form;
-            //Non-linear
+            // Non-linear
             {
-            QLabel *non_lin = new QLabel();
-            non_lin->setText("Nonlinear Sciences");
-            non_lin->setFont(QFont("Courrier", 12, QFont::Bold));
-            l_p_phy->addWidget(non_lin);
-            l_p_phy->addWidget(adapt);
-            l_p_phy->addWidget(cell_auto);
-            l_p_phy->addWidget(chaos);
-            l_p_phy->addWidget(solvable);
-            l_p_phy->addWidget(pattern_form);
+                QLabel *non_lin = new QLabel();
+                non_lin->setText("Nonlinear Sciences");
+                non_lin->setFont(QFont("Courrier", 12, QFont::Bold));
+                l_p_phy->addWidget(non_lin);
+                l_p_phy->addWidget(adapt);
+                l_p_phy->addWidget(cell_auto);
+                l_p_phy->addWidget(chaos);
+                l_p_phy->addWidget(solvable);
+                l_p_phy->addWidget(pattern_form);
             }
             QCheckBox *acce = new QCheckBox("Accelerator Physics");
             checkboxes[20] = acce;
@@ -377,34 +366,34 @@ int main(int argc, char *argv[])
             checkboxes[40] = pop_phy;
             QCheckBox *space_phy = new QCheckBox("Space Physics");
             checkboxes[41] = space_phy;
-            //Physics
+            // Physics
             {
-            QLabel *phys = new QLabel();
-            phys->setText("Physics");
-            phys->setFont(QFont("Courrier", 12, QFont::Bold));
-            l_p_phy->addWidget(phys);
-            l_p_phy->addWidget(acce);
-            l_p_phy->addWidget(apply);
-            l_p_phy->addWidget(atmo);
-            l_p_phy->addWidget(atomic);
-            l_p_phy->addWidget(clusters);
-            l_p_phy->addWidget(bio_phy);
-            l_p_phy->addWidget(chem_phy);
-            l_p_phy->addWidget(class_phy);
-            l_p_phy->addWidget(comp_phy);
-            l_p_phy->addWidget(data_ana);
-            l_p_phy->addWidget(fluid);
-            l_p_phy->addWidget(gen_phy);
-            l_p_phy->addWidget(geophy);
-            l_p_phy->addWidget(hist_phy);
-            l_p_phy->addWidget(instru_detect);
-            l_p_phy->addWidget(medic);
-            l_p_phy->addWidget(optics);
-            l_p_phy->addWidget(edu);
-            l_p_phy->addWidget(phy_socie);
-            l_p_phy->addWidget(plasma);
-            l_p_phy->addWidget(pop_phy);
-            l_p_phy->addWidget(space_phy);
+                QLabel *phys = new QLabel();
+                phys->setText("Physics");
+                phys->setFont(QFont("Courrier", 12, QFont::Bold));
+                l_p_phy->addWidget(phys);
+                l_p_phy->addWidget(acce);
+                l_p_phy->addWidget(apply);
+                l_p_phy->addWidget(atmo);
+                l_p_phy->addWidget(atomic);
+                l_p_phy->addWidget(clusters);
+                l_p_phy->addWidget(bio_phy);
+                l_p_phy->addWidget(chem_phy);
+                l_p_phy->addWidget(class_phy);
+                l_p_phy->addWidget(comp_phy);
+                l_p_phy->addWidget(data_ana);
+                l_p_phy->addWidget(fluid);
+                l_p_phy->addWidget(gen_phy);
+                l_p_phy->addWidget(geophy);
+                l_p_phy->addWidget(hist_phy);
+                l_p_phy->addWidget(instru_detect);
+                l_p_phy->addWidget(medic);
+                l_p_phy->addWidget(optics);
+                l_p_phy->addWidget(edu);
+                l_p_phy->addWidget(phy_socie);
+                l_p_phy->addWidget(plasma);
+                l_p_phy->addWidget(pop_phy);
+                l_p_phy->addWidget(space_phy);
             }
             QCheckBox *gen_rela = new QCheckBox("General Relativity and Quantum Cosmology");
             checkboxes[42] = gen_rela;
@@ -424,22 +413,22 @@ int main(int argc, char *argv[])
             checkboxes[49] = nucl_theo;
             QCheckBox *quant_phy = new QCheckBox("Quantum Physics");
             checkboxes[50] = quant_phy;
-            //Others
+            // Others
             {
-            QLabel *ot = new QLabel();
-            ot->setText("Other");
-            ot->setFont(QFont("Courrier", 12, QFont::Bold));
-            l_p_phy->addWidget(ot);
-            l_p_phy->addWidget(gen_rela);
-            l_p_phy->addWidget(hep_exp);
-            l_p_phy->addWidget(hep_lat);
-            l_p_phy->addWidget(hep_pheno);
-            l_p_phy->addWidget(hep_theo);
-            l_p_phy->addWidget(phy_math);
-            l_p_phy->addWidget(nucl_exp);
-            l_p_phy->addWidget(nucl_theo);
-            l_p_phy->addWidget(quant_phy);
-            l_p_phy->addWidget(val_phy);
+                QLabel *ot = new QLabel();
+                ot->setText("Other");
+                ot->setFont(QFont("Courrier", 12, QFont::Bold));
+                l_p_phy->addWidget(ot);
+                l_p_phy->addWidget(gen_rela);
+                l_p_phy->addWidget(hep_exp);
+                l_p_phy->addWidget(hep_lat);
+                l_p_phy->addWidget(hep_pheno);
+                l_p_phy->addWidget(hep_theo);
+                l_p_phy->addWidget(phy_math);
+                l_p_phy->addWidget(nucl_exp);
+                l_p_phy->addWidget(nucl_theo);
+                l_p_phy->addWidget(quant_phy);
+                l_p_phy->addWidget(val_phy);
             }
             QCheckBox *alge_geo = new QCheckBox("Algebraic Geometry");
             checkboxes[51] = alge_geo;
@@ -507,39 +496,39 @@ int main(int argc, char *argv[])
             checkboxes[82] = sympletic;
             // maths
             {
-            l_p_math->addWidget(alge_geo);
-            l_p_math->addWidget(alge_topo);
-            l_p_math->addWidget(pde);
-            l_p_math->addWidget(categ_theo);
-            l_p_math->addWidget(ode);
-            l_p_math->addWidget(combi);
-            l_p_math->addWidget(commut);
-            l_p_math->addWidget(complex_var);
-            l_p_math->addWidget(diff_geo);
-            l_p_math->addWidget(dyn_syst);
-            l_p_math->addWidget(func_anal);
-            l_p_math->addWidget(gen_math);
-            l_p_math->addWidget(gen_topo);
-            l_p_math->addWidget(geo_topo);
-            l_p_math->addWidget(group_theo);
-            l_p_math->addWidget(hist);
-            l_p_math->addWidget(info_theo_math);
-            l_p_math->addWidget(k_theo);
-            l_p_math->addWidget(logic_math);
-            l_p_math->addWidget(math_phy);
-            l_p_math->addWidget(metric_geo);
-            l_p_math->addWidget(num_theo);
-            l_p_math->addWidget(num_ana);
-            l_p_math->addWidget(op_alg);
-            l_p_math->addWidget(opti);
-            l_p_math->addWidget(proba);
-            l_p_math->addWidget(quantum_alg);
-            l_p_math->addWidget(repr_theo);
-            l_p_math->addWidget(ring);
-            l_p_math->addWidget(spec);
-            l_p_math->addWidget(stat_theo_math);
-            l_p_math->addWidget(sympletic);
-            l_p_math->addWidget(val_math);
+                l_p_math->addWidget(alge_geo);
+                l_p_math->addWidget(alge_topo);
+                l_p_math->addWidget(pde);
+                l_p_math->addWidget(categ_theo);
+                l_p_math->addWidget(ode);
+                l_p_math->addWidget(combi);
+                l_p_math->addWidget(commut);
+                l_p_math->addWidget(complex_var);
+                l_p_math->addWidget(diff_geo);
+                l_p_math->addWidget(dyn_syst);
+                l_p_math->addWidget(func_anal);
+                l_p_math->addWidget(gen_math);
+                l_p_math->addWidget(gen_topo);
+                l_p_math->addWidget(geo_topo);
+                l_p_math->addWidget(group_theo);
+                l_p_math->addWidget(hist);
+                l_p_math->addWidget(info_theo_math);
+                l_p_math->addWidget(k_theo);
+                l_p_math->addWidget(logic_math);
+                l_p_math->addWidget(math_phy);
+                l_p_math->addWidget(metric_geo);
+                l_p_math->addWidget(num_theo);
+                l_p_math->addWidget(num_ana);
+                l_p_math->addWidget(op_alg);
+                l_p_math->addWidget(opti);
+                l_p_math->addWidget(proba);
+                l_p_math->addWidget(quantum_alg);
+                l_p_math->addWidget(repr_theo);
+                l_p_math->addWidget(ring);
+                l_p_math->addWidget(spec);
+                l_p_math->addWidget(stat_theo_math);
+                l_p_math->addWidget(sympletic);
+                l_p_math->addWidget(val_math);
             }
             QCheckBox *ai = new QCheckBox("Artificial Intelligence");
             checkboxes[83] = ai;
@@ -623,47 +612,47 @@ int main(int argc, char *argv[])
             checkboxes[122] = syst_control;
             // Computer science
             {
-            l_p_cs->addWidget(ai);
-            l_p_cs->addWidget(comp_lang);
-            l_p_cs->addWidget(complexity);
-            l_p_cs->addWidget(cefs);
-            l_p_cs->addWidget(comp_geo);
-            l_p_cs->addWidget(cs_game_theo);
-            l_p_cs->addWidget(vision_pattern);
-            l_p_cs->addWidget(comp_socie);
-            l_p_cs->addWidget(crypto);
-            l_p_cs->addWidget(data);
-            l_p_cs->addWidget(databases);
-            l_p_cs->addWidget(library);
-            l_p_cs->addWidget(discrete);
-            l_p_cs->addWidget(dpcc);
-            l_p_cs->addWidget(emerging);
-            l_p_cs->addWidget(formal_lang);
-            l_p_cs->addWidget(gene_lit);
-            l_p_cs->addWidget(graphics);
-            l_p_cs->addWidget(hardware);
-            l_p_cs->addWidget(human_comp);
-            l_p_cs->addWidget(info_retrie);
-            l_p_cs->addWidget(info_theo_cs);
-            l_p_cs->addWidget(logic_cs);
-            l_p_cs->addWidget(mach_lear_cs);
-            l_p_cs->addWidget(math_software_cs);
-            l_p_cs->addWidget(multiagent);
-            l_p_cs->addWidget(multimedia);
-            l_p_cs->addWidget(network_int);
-            l_p_cs->addWidget(neural_comp);
-            l_p_cs->addWidget(num_anal);
-            l_p_cs->addWidget(op_syst);
-            l_p_cs->addWidget(o_cs);
-            l_p_cs->addWidget(perf);
-            l_p_cs->addWidget(programming);
-            l_p_cs->addWidget(robot);
-            l_p_cs->addWidget(social_net);
-            l_p_cs->addWidget(soft_engi);
-            l_p_cs->addWidget(sound_cs);
-            l_p_cs->addWidget(symbol_cs);
-            l_p_cs->addWidget(syst_control);
-            l_p_cs->addWidget(val_cs);
+                l_p_cs->addWidget(ai);
+                l_p_cs->addWidget(comp_lang);
+                l_p_cs->addWidget(complexity);
+                l_p_cs->addWidget(cefs);
+                l_p_cs->addWidget(comp_geo);
+                l_p_cs->addWidget(cs_game_theo);
+                l_p_cs->addWidget(vision_pattern);
+                l_p_cs->addWidget(comp_socie);
+                l_p_cs->addWidget(crypto);
+                l_p_cs->addWidget(data);
+                l_p_cs->addWidget(databases);
+                l_p_cs->addWidget(library);
+                l_p_cs->addWidget(discrete);
+                l_p_cs->addWidget(dpcc);
+                l_p_cs->addWidget(emerging);
+                l_p_cs->addWidget(formal_lang);
+                l_p_cs->addWidget(gene_lit);
+                l_p_cs->addWidget(graphics);
+                l_p_cs->addWidget(hardware);
+                l_p_cs->addWidget(human_comp);
+                l_p_cs->addWidget(info_retrie);
+                l_p_cs->addWidget(info_theo_cs);
+                l_p_cs->addWidget(logic_cs);
+                l_p_cs->addWidget(mach_lear_cs);
+                l_p_cs->addWidget(math_software_cs);
+                l_p_cs->addWidget(multiagent);
+                l_p_cs->addWidget(multimedia);
+                l_p_cs->addWidget(network_int);
+                l_p_cs->addWidget(neural_comp);
+                l_p_cs->addWidget(num_anal);
+                l_p_cs->addWidget(op_syst);
+                l_p_cs->addWidget(o_cs);
+                l_p_cs->addWidget(perf);
+                l_p_cs->addWidget(programming);
+                l_p_cs->addWidget(robot);
+                l_p_cs->addWidget(social_net);
+                l_p_cs->addWidget(soft_engi);
+                l_p_cs->addWidget(sound_cs);
+                l_p_cs->addWidget(symbol_cs);
+                l_p_cs->addWidget(syst_control);
+                l_p_cs->addWidget(val_cs);
             }
             QCheckBox *biomol = new QCheckBox("Biomolecules");
             checkboxes[123] = biomol;
@@ -687,17 +676,17 @@ int main(int argc, char *argv[])
             checkboxes[132] = tissues;
             // Bio
             {
-            l_p_bio->addWidget(biomol);
-            l_p_bio->addWidget(cell_beha);
-            l_p_bio->addWidget(genom);
-            l_p_bio->addWidget(mol_net);
-            l_p_bio->addWidget(neuron);
-            l_p_bio->addWidget(o_bio);
-            l_p_bio->addWidget(pop_evol);
-            l_p_bio->addWidget(quant_method);
-            l_p_bio->addWidget(subcell);
-            l_p_bio->addWidget(tissues);
-            l_p_bio->addWidget(val_bio);
+                l_p_bio->addWidget(biomol);
+                l_p_bio->addWidget(cell_beha);
+                l_p_bio->addWidget(genom);
+                l_p_bio->addWidget(mol_net);
+                l_p_bio->addWidget(neuron);
+                l_p_bio->addWidget(o_bio);
+                l_p_bio->addWidget(pop_evol);
+                l_p_bio->addWidget(quant_method);
+                l_p_bio->addWidget(subcell);
+                l_p_bio->addWidget(tissues);
+                l_p_bio->addWidget(val_bio);
             }
             QCheckBox *comp_fin = new QCheckBox("Computational Finance");
             checkboxes[133] = comp_fin;
@@ -719,16 +708,16 @@ int main(int argc, char *argv[])
             checkboxes[141] = trade;
             // Finance
             {
-            l_p_fin->addWidget(comp_fin);
-            l_p_fin->addWidget(econ_fin);
-            l_p_fin->addWidget(gen_fin);
-            l_p_fin->addWidget(math_fin);
-            l_p_fin->addWidget(porto);
-            l_p_fin->addWidget(price);
-            l_p_fin->addWidget(risk);
-            l_p_fin->addWidget(stat_fin);
-            l_p_fin->addWidget(trade);
-            l_p_fin->addWidget(val_fin);
+                l_p_fin->addWidget(comp_fin);
+                l_p_fin->addWidget(econ_fin);
+                l_p_fin->addWidget(gen_fin);
+                l_p_fin->addWidget(math_fin);
+                l_p_fin->addWidget(porto);
+                l_p_fin->addWidget(price);
+                l_p_fin->addWidget(risk);
+                l_p_fin->addWidget(stat_fin);
+                l_p_fin->addWidget(trade);
+                l_p_fin->addWidget(val_fin);
             }
             QCheckBox *applications = new QCheckBox("Applications");
             checkboxes[142] = applications;
@@ -744,13 +733,13 @@ int main(int argc, char *argv[])
             checkboxes[147] = stat_theo;
             // Statistics
             {
-            l_p_stat->addWidget(applications);
-            l_p_stat->addWidget(compute);
-            l_p_stat->addWidget(mach_lear_stat);
-            l_p_stat->addWidget(method);
-            l_p_stat->addWidget(o_stat);
-            l_p_stat->addWidget(stat_theo);
-            l_p_stat->addWidget(val_stat);
+                l_p_stat->addWidget(applications);
+                l_p_stat->addWidget(compute);
+                l_p_stat->addWidget(mach_lear_stat);
+                l_p_stat->addWidget(method);
+                l_p_stat->addWidget(o_stat);
+                l_p_stat->addWidget(stat_theo);
+                l_p_stat->addWidget(val_stat);
             }
             QCheckBox *audio = new QCheckBox("Audio and speech processing");
             checkboxes[148] = audio;
@@ -760,10 +749,10 @@ int main(int argc, char *argv[])
             checkboxes[150] = signal;
             // EESS
             {
-            l_p_eess->addWidget(audio);
-            l_p_eess->addWidget(image);
-            l_p_eess->addWidget(signal);
-            l_p_eess->addWidget(val_eess);
+                l_p_eess->addWidget(audio);
+                l_p_eess->addWidget(image);
+                l_p_eess->addWidget(signal);
+                l_p_eess->addWidget(val_eess);
             }
             QCheckBox *econometrics = new QCheckBox("Econometrics");
             checkboxes[151] = econometrics;
@@ -773,10 +762,10 @@ int main(int argc, char *argv[])
             checkboxes[153] = theoretical_econ;
             // Economics
             {
-            l_p_econ->addWidget(econometrics);
-            l_p_econ->addWidget(general_economics);
-            l_p_econ->addWidget(theoretical_econ);
-            l_p_econ->addWidget(val_econ);
+                l_p_econ->addWidget(econometrics);
+                l_p_econ->addWidget(general_economics);
+                l_p_econ->addWidget(theoretical_econ);
+                l_p_econ->addWidget(val_econ);
             }
 
             // set the layout for each window
@@ -792,15 +781,14 @@ int main(int argc, char *argv[])
             // check if the user has finished its choice
             QObject::connect(validate_button, SIGNAL(clicked()), home, SLOT(hide()));
 
-            // Check every 10ms if the user has validated its choice and display the next windows on each subject
+            // Check every 10ms if the user has validated its choice and display the next windows on
+            // each subject
             bool a = true;
-            while (a)
-            {
+            while (a) {
                 // wait 10ms to avoid saturation
                 delay();
                 // if the user has done his choice
-                if (home->isHidden())
-                {
+                if (home->isHidden()) {
                     a = false; // stop the while loop
                     // create a boolean for each checkbox of the main topics
                     bool t_phy = physics->isChecked();
@@ -812,125 +800,111 @@ int main(int argc, char *argv[])
                     bool t_elec = elec->isChecked();
                     bool t_econ = econ->isChecked();
                     // if the user selected at least one of them
-                    if (t_phy or t_math or t_cs or t_bio or t_fin or t_stat or t_elec or t_econ)
-                    {
+                    if (t_phy or t_math or t_cs or t_bio or t_fin or t_stat or t_elec or t_econ) {
                         // display windows for each subject in order to make rpecise chocies
-                        if (t_phy)
-                        {
+                        if (t_phy) {
                             precise_phy->show();
-                            while (precise_phy->isHidden() == false)
-                            {
+                            while (precise_phy->isHidden() == false) {
                                 delay();
-                                QObject::connect(val_phy, SIGNAL(clicked()), precise_phy, SLOT(hide()));
-                                if (precise_phy->isHidden())
-                                {
+                                QObject::connect(val_phy, SIGNAL(clicked()), precise_phy,
+                                                 SLOT(hide()));
+                                if (precise_phy->isHidden()) {
                                     t_phy = false;
                                 }
                             }
                         }
-                        if (t_math and not t_phy)
-                        {
+                        if (t_math and not t_phy) {
                             precise_math->show();
-                            while (precise_math->isHidden() == false)
-                            {
+                            while (precise_math->isHidden() == false) {
                                 delay();
-                                QObject::connect(val_math, SIGNAL(clicked()), precise_math, SLOT(hide()));
-                                if (precise_math->isHidden())
-                                {
+                                QObject::connect(val_math, SIGNAL(clicked()), precise_math,
+                                                 SLOT(hide()));
+                                if (precise_math->isHidden()) {
                                     t_math = false;
                                 }
                             }
                         }
-                        if (t_cs and not t_phy and not t_math)
-                        {
+                        if (t_cs and not t_phy and not t_math) {
                             precise_cs->show();
-                            while (precise_cs->isHidden() == false)
-                            {
+                            while (precise_cs->isHidden() == false) {
                                 delay();
-                                QObject::connect(val_cs, SIGNAL(clicked()), precise_cs, SLOT(hide()));
-                                if (precise_cs->isHidden())
-                                {
+                                QObject::connect(val_cs, SIGNAL(clicked()), precise_cs,
+                                                 SLOT(hide()));
+                                if (precise_cs->isHidden()) {
                                     t_cs = false;
                                 }
                             }
                         }
-                        if (t_bio and not t_phy and not t_math and not t_cs)
-                        {
+                        if (t_bio and not t_phy and not t_math and not t_cs) {
                             precise_bio->show();
-                            while (precise_bio->isHidden() == false)
-                            {
+                            while (precise_bio->isHidden() == false) {
                                 delay();
-                                QObject::connect(val_bio, SIGNAL(clicked()), precise_bio, SLOT(hide()));
-                                if (precise_bio->isHidden())
-                                {
+                                QObject::connect(val_bio, SIGNAL(clicked()), precise_bio,
+                                                 SLOT(hide()));
+                                if (precise_bio->isHidden()) {
                                     t_bio = false;
                                 }
                             }
                         }
-                        if (t_fin and not t_phy and not t_math and not t_cs and not t_bio)
-                        {
+                        if (t_fin and not t_phy and not t_math and not t_cs and not t_bio) {
                             precise_fin->show();
-                            while (precise_fin->isHidden() == false)
-                            {
+                            while (precise_fin->isHidden() == false) {
                                 delay();
-                                QObject::connect(val_fin, SIGNAL(clicked()), precise_fin, SLOT(hide()));
-                                if (precise_fin->isHidden())
-                                {
+                                QObject::connect(val_fin, SIGNAL(clicked()), precise_fin,
+                                                 SLOT(hide()));
+                                if (precise_fin->isHidden()) {
                                     t_fin = false;
                                 }
                             }
                         }
-                        if (t_stat and not t_phy and not t_math and not t_cs and not t_bio and not t_fin)
-                        {
+                        if (t_stat and not t_phy and not t_math and not t_cs and not t_bio and
+                            not t_fin) {
                             precise_stat->show();
-                            while (precise_stat->isHidden() == false)
-                            {
+                            while (precise_stat->isHidden() == false) {
                                 delay();
-                                QObject::connect(val_stat, SIGNAL(clicked()), precise_stat, SLOT(hide()));
-                                if (precise_stat->isHidden())
-                                {
+                                QObject::connect(val_stat, SIGNAL(clicked()), precise_stat,
+                                                 SLOT(hide()));
+                                if (precise_stat->isHidden()) {
                                     t_stat = false;
                                 }
                             }
                         }
-                        if (t_elec and not t_phy and not t_math and not t_cs and not t_bio and not t_fin and not t_stat)
-                        {
+                        if (t_elec and not t_phy and not t_math and not t_cs and not t_bio and
+                            not t_fin and not t_stat) {
                             precise_eess->show();
-                            while (precise_eess->isHidden() == false)
-                            {
+                            while (precise_eess->isHidden() == false) {
                                 delay();
-                                QObject::connect(val_eess, SIGNAL(clicked()), precise_eess, SLOT(hide()));
-                                if (precise_eess->isHidden())
-                                {
+                                QObject::connect(val_eess, SIGNAL(clicked()), precise_eess,
+                                                 SLOT(hide()));
+                                if (precise_eess->isHidden()) {
                                     t_elec = false;
                                 }
                             }
                         }
-                        if (t_econ and not t_phy and not t_math and not t_cs and not t_bio and not t_fin and not t_stat and not t_elec)
-                        {
+                        if (t_econ and not t_phy and not t_math and not t_cs and not t_bio and
+                            not t_fin and not t_stat and not t_elec) {
                             precise_econ->show();
-                            while (precise_econ->isHidden() == false)
-                            {
+                            while (precise_econ->isHidden() == false) {
                                 delay();
-                                QObject::connect(val_econ, SIGNAL(clicked()), precise_econ, SLOT(hide()));
-                                if (precise_econ->isHidden())
-                                {
+                                QObject::connect(val_econ, SIGNAL(clicked()), precise_econ,
+                                                 SLOT(hide()));
+                                if (precise_econ->isHidden()) {
                                     t_econ = false;
                                 }
                             }
                         }
                     }
                     // display an error if none has been selected
-                    else
-                    {
-                        int u = QMessageBox::critical(home, "Choice error", "You have to select at least an interest", QMessageBox::Ok);
-                        if (u == QMessageBox::Ok)
-                        {
+                    else {
+                        int u = QMessageBox::critical(home, "Choice error",
+                                                      "You have to select at least an interest",
+                                                      QMessageBox::Ok);
+                        if (u == QMessageBox::Ok) {
                             home->show();
                             a = true;
                         }
                     }
-                 info.update_info_user(checkboxes); // update the user info
+                    info.update_info_user(checkboxes); // update the user info
                 }
             }
 
@@ -938,7 +912,8 @@ int main(int argc, char *argv[])
             QWidget *ID = new QWidget;
             QVBoxLayout *ID_layout = new QVBoxLayout;
             QLabel *text_id = new QLabel;
-            text_id->setText("Here is your user ID. Please note it carefully, you will use it to connect next time.");
+            text_id->setText("Here is your user ID. Please note it carefully, you will use it to "
+                             "connect next time.");
             text_id->setFont(QFont("Courrier", 15));
             ID_layout->addWidget(text_id);
             QLabel *id_itself = new QLabel;
@@ -953,18 +928,16 @@ int main(int argc, char *argv[])
             QObject::connect(val_id, SIGNAL(clicked()), ID, SLOT(hide()));
 
             bool b = true;
-            while (b)
-            {
+            while (b) {
                 delay();
-                if (ID->isHidden())
-                {
+                if (ID->isHidden()) {
                     b = false;
                     ID->close();
                     home->close();
                     main->show();
                 }
             }
-            }
         }
+    }
     return app.exec();
 }

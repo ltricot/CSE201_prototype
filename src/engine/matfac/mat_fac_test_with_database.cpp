@@ -1,13 +1,11 @@
 /*#include <was/storage_account.h>
-#include <was/table.h>*/
-#include <iostream>
-#include <string>
 #include "CSE201_prototype\src\database\ReferencesReader.h"
 #include "CSE201_prototype\src\database\driver.hpp"
+#include <iostream>
+#include <string>
+#include <was/table.h>*/
 
 using namespace std;
-
-
 
 const int lat_feat = 10;
 
@@ -49,7 +47,7 @@ class mat_factorization {
 };
 
 int main() {
-     // Testing the database
+    // Testing the database
     ReferencesReader r("CSE201_prototype\src\database\References.txt");
     vector<Edge> foo;
     foo = r.GetEdges();
@@ -70,13 +68,12 @@ int main() {
     Driver d;
     d.writeEdge(e);
 
-	mat_factorization M(0.02, 0.002);
+    mat_factorization M(0.02, 0.002);
     for (int j = 0; j < 1000; j++) {
 
-    for (vector<Edge>::iterator it = foo.begin(); it < foo.end(); it++) {
+        for (vector<Edge>::iterator it = foo.begin(); it < foo.end(); it++) {
             M.regularized_update(*it);
+        }
     }
-    }
-	return 0;
+    return 0;
 }
-

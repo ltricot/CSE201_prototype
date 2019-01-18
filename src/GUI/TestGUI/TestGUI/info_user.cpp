@@ -1,10 +1,9 @@
 #include <info_user.h>
 
-info_user::info_user()
-{
+info_user::info_user() {
     // Create all the checkboxes
     QCheckBox *galax = new QCheckBox("Astrophysics of Galaxies");
-    checkboxes[0]=galax;
+    checkboxes[0] = galax;
     QCheckBox *cosmo = new QCheckBox("Cosmology and Nongalactic Astrophysics");
     checkboxes[1] = cosmo;
     QCheckBox *earth = new QCheckBox("Earth and Planetary Astrophysics");
@@ -314,36 +313,29 @@ info_user::info_user()
 }
 
 // Update of the storage list from the checkboxes
-void info_user::update()
-{
-    for(int i = 0; i < 154; i ++)
-    {
-        if (checkboxes[i]->isChecked())
-        {
+void info_user::update() {
+    for (int i = 0; i < 154; i++) {
+        if (checkboxes[i]->isChecked()) {
             info.push_back(checkboxes[i]->text().QString::toStdString());
         }
     }
 }
 
 // Update the checkboxes from the storage list
-void info_user::update_from_server(std::vector<std::string> a)
-{
-    for (int i = 0; i < 154; i ++)
-    {
-        if (std::find(a.begin(), a.end(), checkboxes[i]->text().QString::toStdString()) != a.end()) {
+void info_user::update_from_server(std::vector<std::string> a) {
+    for (int i = 0; i < 154; i++) {
+        if (std::find(a.begin(), a.end(), checkboxes[i]->text().QString::toStdString()) !=
+            a.end()) {
             checkboxes[i]->setChecked(true);
-        }
-        else {
+        } else {
             checkboxes[i]->setChecked(false);
         }
     }
 }
 
 // Checks a given checkbox
-QCheckBox* info_user::give_check(int a)
-{
-    if (a > -1 or a < 154)
-    {
+QCheckBox *info_user::give_check(int a) {
+    if (a > -1 or a < 154) {
         return checkboxes[a];
     }
 }
