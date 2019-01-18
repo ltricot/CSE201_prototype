@@ -4,15 +4,15 @@ using std::exp;
 
 
 
-int cluster::T =2;
+int Cluster::T =2;
 
-void cluster::initializelabel(){
+void Cluster::initializelabel(){
     for (int i=0;i<sizeInput;i++){
         label.push_back(i);
     }
 }
 
-void cluster::findneighbors(std::vector<Friends> & similarities){
+void Cluster::findneighbors(std::vector<Friends> & similarities){
     
     for (std::vector<Friends>::iterator it=similarities.begin();it!=similarities.end();it++){
         std::vector<Author>::iterator it1 = std::find(nodes.begin(),nodes.end(),std::get<0>(*it));
@@ -40,7 +40,7 @@ void cluster::findneighbors(std::vector<Friends> & similarities){
     }
 }
 
-void cluster::getCDF(){
+void Cluster::getCDF(){
     for (int i=0;i<sizeInput;i++){
         Eigen::ArrayXd allSim; // vector of similarities between the ith node and all its neighbors
         Eigen::ArrayXd allProb; //vector of e^si/sum(e^si)
@@ -71,7 +71,7 @@ void cluster::getCDF(){
 }
 
 
-int cluster::getMaxSim(int & index){
+int Cluster::getMaxSim(int & index){
     // simulate a random experience to pick the neighbor
     double flip=(double) (rand()) /  (double) (RAND_MAX); //random float between 0 and 1
     std::map<int,double>::iterator it= neighbors[index].begin();
@@ -84,7 +84,7 @@ int cluster::getMaxSim(int & index){
     return it->first;
 }
 
-void cluster::updatelabel(int order[]){
+void Cluster::updatelabel(int order[]){
     //need to save the rate of updates
     int nbupdate =0;
     std::set<int> visited;
@@ -104,7 +104,7 @@ void cluster::updatelabel(int order[]){
 }
 
 
-void cluster::createcluster(){
+void Cluster::createcluster(){
     initializelabel();
     getCDF();
     updaterate =1;
