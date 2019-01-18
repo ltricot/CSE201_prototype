@@ -34,7 +34,7 @@ int main(int argc, char *argv[]) {
 
         ofstream myfile(path);
         for (vector<string>::iterator i=it->second.begin();i!=it->second.end();i++)
-            myfile << i << '\n';
+            myfile << *i << '\n';
 
         myfile.close();
     }

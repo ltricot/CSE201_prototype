@@ -4,6 +4,7 @@
 #include <sstream>
 
 using std::exp;
+//using json = nlohmann::json;
 
 
 
@@ -28,9 +29,9 @@ void Cluster::findneighbors(std::vector<Friends> & similarities){
         double sim = std::get<2>(*it);
         int pos1;
         int pos2;
-        if (std::map<string,int>::iterator it1==nodes.find(au1.name)){
-            nodes.insert(std::make_pair(au1.name,c));
-            nodesindex.insert(std::make_pair(c,au1.name));
+        if (nodes.find(au1.name)==nodes.end()){
+            nodes.insert(std::pair<std::string,int>(au1.name,c));
+            nodesindex.insert(std::pair<int,std::string>(c,au1.name));
             neighbors.push_back(std::vector<std::pair<int,double>>());
             pos1=c;
             c++;
@@ -38,9 +39,9 @@ void Cluster::findneighbors(std::vector<Friends> & similarities){
         else{
             pos1=nodes[au1.name];
         }
-        if (std::map<string,int>::iterator it2=nodes.find(au2.name)){
-            nodes.insert(std::make_pair(au2.name,c));
-            nodesindex.insert(std::make_pair(c,au2.name));
+        if (nodes.find(au2.name)==nodes.end()){
+            nodes.insert(std::pair<std::string,int>(au2.name,c));
+            nodesindex.insert(std::pair<int,std::string>(c,au2.name));
             neighbors.push_back(std::vector<std::pair<int,double>>());
             pos2=c;
             c++;
@@ -48,9 +49,10 @@ void Cluster::findneighbors(std::vector<Friends> & similarities){
         else{
             pos2=nodes[au2.name];
         }
-        neighbors[pos2].push_back(std::make_pair(pos1,sim));
-        neighbors[pos1].push_back(std::make_pair(pos2,sim));
+        neighbors[pos2].push_back(std::pair<int,double>(pos1,sim));
+        neighbors[pos1].push_back(std::pair<int,double>(pos2,sim));
     }
+    sizeInput=c;
 }
 /**@brief create the allCDF vector
   * @details for each author create a cdf by doing a vector that at index j associates the probability to choose one of the previous
@@ -151,10 +153,11 @@ void Cluster::createcluster(){
     }
 
     for (int v=0; v<label.size(); v++) {
-        if (std::map<int,string>::iterator it==clusters.find(label[v])){
-            clusters.insert(label[v],std::vector<string>());
+        if ( clusters.find(label[v])==clusters.end()) {
+            clusters.insert(std::pair<int,std::vector<std::string>>(label[v],std::vector<std::string>()));
         }
         clusters[label[v]].push_back(nodesindex[v]);
+        //authorlabel[nodesindex[v]]=label[v];
     }
 }
 
