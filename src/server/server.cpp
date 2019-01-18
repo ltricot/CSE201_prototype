@@ -28,12 +28,12 @@ struct MyHandler: public Http::Handler {
 	auto url_s = request.resource();
 	auto bod = request.body();
 	auto method = request.method();
-
+	
 	std::stringstream ss_url;
 	std::stringstream ss_body;
 	std::string body;
 	std::string url;
-
+	
 	ss_url << url_s;
 	url = ss_url.str();
 	
@@ -69,9 +69,9 @@ struct MyHandler: public Http::Handler {
 				//std::string json = getUserReco(id);
 				//the above is for later
 				json = "{\"article\": \"1812.01234_v2\" }";
-	
+		
 			}
-
+		
 			else if (top == "articles") {
 				//std::string json = getUserArts(id);
 				//the above is for later
@@ -106,12 +106,15 @@ struct MyHandler: public Http::Handler {
 		//auto id = std::stoi(ids, nullptr);			
 		std::string inson = request.body();
 		//PARSE THE FUCKING JSON
+		
 		//putUserArticles(id, articles, dr);
 		
 		std::string json = "{\"success\": 1}";
+
 		
 		writer.send(Http::Code::Ok, json);
 	}
+
 	else {
 		writer.send(Http::Code::Method_Not_Allowed);
 	}
