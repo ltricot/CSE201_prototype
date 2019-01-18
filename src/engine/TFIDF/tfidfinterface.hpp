@@ -15,7 +15,7 @@
 #include "primitives.hpp"
 
 
-class Summaries { //to implement 
+class Summaries { 
     private:
     std::string sdata ; 
     Driver driver;
@@ -60,7 +60,7 @@ class TFIDF {
     std::vector<pEdge> buffer; //object on which we iterate to get new pEdge object
     void update(int threshold);
 
-    TFIDF() {
+    TFIDF(std::string sdata) : sdata(sdata) {
         update(30000); //we initialize the tfidf object with 30000 summaries
     };
     
@@ -100,6 +100,7 @@ class TFIDF {
     iterator end();
 
     private:
+        std::string sdata ; // name of the driver filled by minhash, from which we read
         int counter=0; //to count the number of words and do the mapping in vocab
         std::vector<std::vector<double>> Occ2d; //iterative version of OccMat
         /*matrix whose coefficients is the number of occurences of the word of the column 

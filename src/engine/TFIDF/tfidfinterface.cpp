@@ -122,7 +122,7 @@ void TFIDF::calweightMat() {
 }
  //do the update by pulling new summaries (up to a given threshold) and update accordingly the weightMat and the buffer
 void TFIDF::update(int threshold){
-    Summaries summaries;
+    Summaries summaries(this->sdata);
     for (Summaries::iterator it=summaries.begin();it!=summaries.end();it++){
             if (papers.find(it->id)==papers.end()) {  
               papers.insert(it->id);

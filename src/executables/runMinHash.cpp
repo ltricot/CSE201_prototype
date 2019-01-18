@@ -18,14 +18,12 @@ int main(int argc, char *argv[]){
                     // two authors arent "friends"
 
     // now we get all the authors in the edges of cdata (stored in .txt)
-
-    std::vector<Author> authors ; 
     std::vector<Edge> edges ; 
 
     std::vector<Author> authors = dcdata.getKeys<Author>() ; 
 
     for(std::vector<Author>::iterator au = authors.begin() ; au != authors.end() ; au++){
-        std::vector<Edge> temp = (dcdata.getFrom(au)); 
+        std::vector<Edge> temp = (dcdata.getFrom(*au)); 
         edges.insert(edges.end(), temp.begin(), temp.end());
     }
 

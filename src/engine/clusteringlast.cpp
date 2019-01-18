@@ -63,7 +63,7 @@ void Cluster::getCDF(){
         int c=0;
         //iterate over the vector neighbors[i] to have an array of similarities
         for (std::vector<std::pair<int, double>>::iterator it = neighbors[i].begin(); it != neighbors[i].end(); ++it){
-            allSim(c)=*it->second;
+            allSim(c)=it->second;
             c++;
         }
         allProb= (1/((T*allSim).exp().sum()))*(T*allSim).exp();
@@ -97,11 +97,11 @@ int Cluster::getMaxSim(int & index){
     std::vector<std::pair<int,double>>::iterator it= neighbors[index].begin();
     for (int ind=0;ind<allCDF[index].size();ind++){
         if (allCDF[index][ind]>=flip){
-            return *it->first;
+            return it->first;
         }
         it++;
     }  
-    return *it->first;
+    return it->first;
 }
 
 /**@brief function that updates the label
