@@ -27,7 +27,7 @@ class Driver {
 	/// @brief get all edges outwards from ``from``
 	std::vector<Edge> getFrom(Author from);
     std::vector<Reference> getFrom(Paper paper);
-    std::vector<Friends> getFrom(Author from, bool fr=true);  // yes i know this is bad
+    std::vector<Friends> getFrom(Author from, bool fr);  // yes i know this is bad
 
 	bool writeEdge(Edge edge);  // overwrites
 	bool writeEdge(Reference ref);

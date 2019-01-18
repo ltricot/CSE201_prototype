@@ -134,7 +134,7 @@ vector<Edge> Driver::getFrom(Author from) {
 	return ret;
 }
 
-vector<Friends> Driver::getFrom(Author from, bool fr=true) {
+vector<Friends> Driver::getFrom(Author from, bool fr) {
 	hash<string> hasher;
 	Matrix m(this->directory);
 	string n = from.name;
