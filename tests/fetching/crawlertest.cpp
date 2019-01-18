@@ -11,7 +11,7 @@ TEST_CASE("fetching/crawler/getPairs",
           "test whether XML is well parsed to fetch author / paper edges") {
     std::vector<Edge> edges;
     Paper source("0804.0446v3");
-    Crawler crawler("", "", source);
+    Crawler crawler("", "", "", source);
 
     edges = crawler.getPairs(kortchemski);
 
@@ -39,7 +39,7 @@ TEST_CASE("fetching/crawler/getID", "test getID on different arxiv urls") {
 
 TEST_CASE("fetching/crawler/fromAuthors", "test arxiv query with author as parameter") {
     Paper source("0804.0446v3");
-    Crawler crawler("", "", source);
+    Crawler crawler("", "", "", source);
     std::vector<Author> authors = {Author("kortchemski")};
     auto edges = crawler.fromAuthors(authors);
     REQUIRE(edges.size() == 12);
@@ -47,7 +47,7 @@ TEST_CASE("fetching/crawler/fromAuthors", "test arxiv query with author as param
 
 TEST_CASE("fetching/crawler/getSummary", "test if getSummary gets all the summaries") {
     Paper source("0804.0446v3");
-    Crawler crawler("", "", source);
+    Crawler crawler("", "", "", source);
     std::vector<Paper> summaries = crawler.getSummary(kortchemski);
     std::cout << "i am here" << summaries.size() << std::endl;
 
