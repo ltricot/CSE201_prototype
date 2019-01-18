@@ -337,10 +337,9 @@ PDFConverter::PDFConverter(std::string id) {
     curl_easy_setopt(handle, CURLOPT_WRITEFUNCTION,
                      PDFConverter::fillBuffer); // set callback for writing received data (pass a
                                                 // pointer to your callback function)
-    curl_easy_setopt(
-        handle, CURLOPT_WRITEDATA,
-        &(this->pdfBuffer)); // will write the data to the pdfBuffer given with this option
-                             // not sure how to access pdfBuffer though
+    curl_easy_setopt(handle, CURLOPT_WRITEDATA,
+                     &(this->pdfBuffer)); // will write the data to the pdfBuffer given with this
+                                          // option not sure how to access pdfBuffer though
 
     // only things missing for libcurl, that will be taken care of by the Papers object :
     // curl_easy_perform(curl_handle);

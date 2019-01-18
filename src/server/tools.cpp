@@ -202,12 +202,12 @@ int main() {
 
     Example how to use get() function
     std::cout << get("http://www.example.com") << std::endl;
-    
+
 
 
     Example how to use post() function
     std::cout << put("http://httpbin.org/post", "random_text") << std::endl;
-    
+
 
 
     Example how to use put() function
