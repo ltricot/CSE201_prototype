@@ -1,6 +1,5 @@
 #include "client.hpp"
-#include "crawler.hpp"
-#include "rapidxml/rapidxml.hpp"
+#include "rapidxml.hpp"
 #include "tools.hpp"
 #include <iostream>
 #include <string>
@@ -20,29 +19,6 @@ std::vector<std::string> Client::getTopics() {
         ret.push_back(*it);
     }
     return ret;
-}
-
-std::string getTitle(Paper paper) {
-//return value
-std::string title;
-
-//getting the string containing html data
-std::string xmlstr;
-xmlstr = get("https://arxiv.org/abs/" + paper.id);
-
-// "doc" is the XML tree
-rapidxml::xml_document<> doc;
-std::vector<char> xmlcharvec(xmlstr.begin(), xmlstr.end());
-xmlcharvec.push_back('\0');
-doc.parse<0>(&xmlcharvec[0]);
-
-//defining the root of XML tree
-rapidxml::xml_node<> *root = doc.first_node("head"), *entry;
-
-//getting the title
-title = entry->first_node("title")->value();
-
-return title;
 }
 
 std::vector<std::string> Client::getLikes(Author author) {
@@ -80,20 +56,6 @@ Paper Client::getRecommendation(Author author) {
     return Paper(id);
 }
 
-Paper Client::getSummary(Paper paper) {
-    std::string xmlstr;
-    std::vector<Paper> summaries;
-    xmlstr = get("http://export.arxiv.org/api/query?id_list=" + paper.id);
-    summaries = Crawler::getSummary(xmlstr);
-    for (std::vector<Paper>::iterator it = summaries.begin(); it != summaries.end(); ++it) {
-        if (it->id == paper.id)
-            return *it;
-    }
-
-    std::cout << "Call the cops" << std::endl;
-    exit(EXIT_FAILURE);
-}
-
 std::vector<std::string> Client::getArticles(Author author) {
 
     std::string response = get(ip + "/users/" + author.name + "/articles");
@@ -116,3 +78,34 @@ bool Client::putArticles(Author author, std::vector<std::string> articles) {
     json resp = json::parse(response);
     return resp["success"] == 1;
 }
+std::string getTitle(Paper paper) {
+    //return value
+    std::string title;
+
+    //getting the string containing html data
+    std::string xmlstr;
+    xmlstr = get("http://export.arxiv.org/api/query?id_list=" + paper.id);
+
+    // "doc" is the XML tree
+    rapidxml::xml_document<> doc;
+    std::vector<char> xmlcharvec(xmlstr.begin(), xmlstr.end());
+    xmlcharvec.push_back('\0');
+    doc.parse<0>(&xmlcharvec[0]);
+
+    //defining the root of XML tree
+    rapidxml::xml_node<> *root = doc.first_node("feed");
+
+    //getting the title
+    title = root->first_node("entry")->first_node("title")->value();
+
+    return title;
+}
+
+/* Example how to use getTitle:
+
+int main() { 
+    Paper paper("1207.0580","summary");
+     std::cout << getTitle(paper) << std::endl;
+    return 0;
+}
+*/

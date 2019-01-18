@@ -111,6 +111,7 @@ void MinHash::getInfo(){
     std::cout <<  "the number of articles is " << counter<<std::endl;
     std::cout << "counter = " << counter << std::endl;
     std::cout << "size = " << users2articles["1"].size() << std::endl;
+
     std::cout << "an example of authors article list is ";
     for (int i = 0; i < users2articles["1"].size(); i++) {
         std::cout << users2articles["1"].at(i) << ' ';}
@@ -119,20 +120,5 @@ void MinHash::getInfo(){
     std::cout << "an example of authors article list is ";
     for (int i = 0; i < users2articles["2"].size(); i++) {
         std::cout << users2articles["2"].at(i) << ' ';}
-    std::cout<< " "<<std::endl;
-
-    std::cout << "an example of authors article list is ";
-    for (int i = 0; i < users2articles["3"].size(); i++) {
-        std::cout << users2articles["3"].at(i) << ' ';}
-    std::cout<< " "<<std::endl;
-
-    std::cout << "an example of authors article list is ";
-    for (int i = 0; i < users2articles["4"].size(); i++) {
-        std::cout << users2articles["4"].at(i) << ' ';}
-    std::cout<< " "<<std::endl;
-
-    std::cout << "an example of authors article list is ";
-    for (int i = 0; i < users2articles["5"].size(); i++) {
-        std::cout << users2articles["5"].at(i) << ' ';}
     std::cout<< " "<<std::endl;
 }
