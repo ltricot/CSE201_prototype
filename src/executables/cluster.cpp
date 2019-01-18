@@ -23,13 +23,16 @@ int main(int argc, char *argv[]) {
     Cluster clustering(similarities);
     map<int,std::vector<Author>> clusters=clustering.clusters;
 
-    for (map<int,vector<Author>>::iterator it=clusters.begin();it!=clusters.end();it++) {
+    for (map<int,vector<string>>::iterator it=clusters.begin();it!=clusters.end();it++) {
         string label= std::to_string(it->first);
         string path=outfolder+"/"+label+".txt";
+        string keyfile = outfolder + "/" + "keys.txt";
+        ofstream keys(this->keyfile, std::ios_base::app));
+        keys << label << "\n";
+        keys.close();
         ofstream myfile(path);
-
-        for (vector<Author>::iterator i=it->second.begin();i!=it->second.end();i++)
-            myfile << i->name << '\n';
+        for (vector<string>::iterator i=it->second.begin();i!=it->second.end();i++)
+            myfile << i << '\n';
 
         myfile.close();
     }

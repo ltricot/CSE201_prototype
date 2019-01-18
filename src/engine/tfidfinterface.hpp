@@ -9,13 +9,16 @@
 #include <fstream>
 #include <sstream>
 #include <string>
-#include "boost_1_69_0/boost/tokenizer.hpp"
-#include "boost_1_69_0/boost/algorithm/string.hpp"
+
+#include "boost/tokenizer.hpp"
+#include "boost/algorithm/string.hpp"
 #include "Eigen/Dense"
+
 #include "primitives.hpp"
+#include "driver.hpp"
 
 
-class Summaries { //to implement 
+class Summaries { 
     private:
     std::string sdata ; 
     Driver driver;
@@ -42,8 +45,8 @@ class Summaries { //to implement
          * For it != crawler.end()?
          * This is an infinite iterator and so there is no end condition.
          */
-        bool operator==(iterator other) const { return other.cursor == cursor }
-        bool operator!=(iterator other) const { return other.cursor != cursor }
+        bool operator==(iterator other) const { return other.cursor == cursor; }
+        bool operator!=(iterator other) const { return other.cursor != cursor; }
 
         // get next pEdge
         Paper operator*() const;
@@ -60,7 +63,7 @@ class TFIDF {
     std::vector<pEdge> buffer; //object on which we iterate to get new pEdge object
     void update(int threshold);
 
-    TFIDF() {
+    TFIDF(std::string sdata) : sdata(sdata) {
         update(30000); //we initialize the tfidf object with 30000 summaries
     };
     
@@ -96,10 +99,11 @@ class TFIDF {
         pEdge operator*() const;
     };
 
-    iterator begin();
-    iterator end();
+    iterator begin() { return iterator(this); }
+    iterator end() { return begin(); }
 
     private:
+        std::string sdata ; // name of the driver filled by minhash, from which we read
         int counter=0; //to count the number of words and do the mapping in vocab
         std::vector<std::vector<double>> Occ2d; //iterative version of OccMat
         /*matrix whose coefficients is the number of occurences of the word of the column 

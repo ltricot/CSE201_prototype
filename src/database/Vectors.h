@@ -14,12 +14,20 @@
 
 using namespace std;
 
-
+/** @brief Special class for a collection of vectors, stored in the file system
+ * 
+ * @details Class implementation of a file system which acts as a way to store vectors. 
+ *  Each vector is associated to either an author or a paper, with each one of those 
+ * associated to a unique (well, almost unique, some conflicts may exists but hopefully not a lot) identifier. 
+ * This identifier is then used to make a .txt file and place it in the tree/file system. This is the same file system
+ * as the one described and used for the Matrix class
+ */
 class Vectors {
     public:
     string root_directory;
     Vectors(string dir);
 
+    ///@brief Stores the vector
     template <int size> void storevector(string id, Eigen::Matrix<double, size, 1> vec){
 	    while (id.length() < 11) {
 		    id.insert(0, 1, '0');
@@ -46,6 +54,7 @@ class Vectors {
         }
     }
     
+    ///@brief Restores the vector
     template <int size> Eigen::Matrix<double, size, 1> getvector(string id){
         while (id.length() < 11){
             id.insert(0, 1, '0');

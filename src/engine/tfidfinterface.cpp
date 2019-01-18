@@ -37,7 +37,12 @@ TFIDF::iterator TFIDF::end() {
     return it;
 }
 
-//convert a summary in a vector of words
+/**@brief convert a summary in a vector of words
+ *@details use the tokenizer of the boost library to convert a summary in a vector of words 
+ *@param a summary
+ *@return a vector of words
+*/
+
 std::vector<std::string> TFIDF::textParse(const std::string & summary) { 
 		std::vector<std::string> vec;
 		boost::tokenizer<> tok(summary);
@@ -51,7 +56,10 @@ std::vector<std::string> TFIDF::textParse(const std::string & summary) {
 		return vec;
 }
 
-//use a parsed summary to update the Occ2d and vocab -> save the number of occurences of each word for a summary
+/**@brief use a parsed summary to update the Occ2d and vocab 
+* @details save the number of occurences of each word for a summary
+*/
+
 void TFIDF::convertsum(const std::vector<std::string> & parsed_sum){ 
     std::vector<double> OccVec(vocab.size(),0); //array that stores the number of occurences of a word
     for (std::string word : parsed_sum) {
@@ -114,7 +122,7 @@ void TFIDF::calweightMat() {
 }
  //do the update by pulling new summaries (up to a given threshold) and update accordingly the weightMat and the buffer
 void TFIDF::update(int threshold){
-    Summaries summaries;
+    Summaries summaries(this->sdata);
     for (Summaries::iterator it=summaries.begin();it!=summaries.end();it++){
             if (papers.find(it->id)==papers.end()) {  
               papers.insert(it->id);

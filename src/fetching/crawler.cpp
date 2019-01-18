@@ -156,13 +156,19 @@ std::vector<Edge> Crawler::fromAuthors(std::vector<Author> authors) {
     // each iteration is one call to arxiv
     // it is likely that we should have some waiting period between each call
     // so as not to be blocked by arxiv (they are a small organization)
-    for (author = authors.begin(); author != authors.end(); author++) {
+
+    for (author = authors.begin(); author < authors.end(); author += 15) {
         url.str("");
-        url << "http://export.arxiv.org/api/query?search_query=au:";
-        char *escaped = curl_escape(author->name.c_str(), author->name.length());
-        url << escaped << "&maxresults=100";
+        url << "http://export.arxiv.org/api/query?search_query=";
+
+        for(auto a = author ; a < min(authors.end(), author +15 ); a++, url << "+OR+"){
+            char *escaped = curl_escape(a->name.c_str(), a->name.length());
+            url << "au:" << escaped ; 
+            curl_free(escaped);
+        }
+
         xmlstr = this->callArxiv(url.str());
-        curl_free(escaped);
+
 
         // extend found pairs with this author's new pairs
         pairs_aux = getPairs(xmlstr);
@@ -193,7 +199,7 @@ std::vector<Edge> Crawler::fromPapers(std::vector<Paper> papers) {
     for (article = papers.begin(); article < papers.end(); article += 15) {
         url.str("");
         url << "http://export.arxiv.org/api/query?id_list=";
-        for (std::vector<Paper>::iterator art = article; art < min(papers.end(), article + 30);
+        for (std::vector<Paper>::iterator art = article; art < min(papers.end(), article + 15);
              art++) {
             url << article->id << ',';
         }
