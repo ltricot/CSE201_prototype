@@ -1,7 +1,7 @@
 #include <string>
 
 #include "json.hpp"
-#include "primitives.hpp"
+#include "../database/primitives.hpp"
 
 
 using json = nlohmann::json;

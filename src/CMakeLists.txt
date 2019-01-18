@@ -1,6 +1,7 @@
 add_subdirectory (database)
 add_subdirectory (fetching)
 add_subdirectory (engine)
+add_subdirectory (server)
 
 target_include_directories (crawler PUBLIC "database")
 target_include_directories (engine PUBLIC "database")
