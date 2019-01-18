@@ -1,5 +1,6 @@
 // based on the label propagation principle
 #include "clusteringlast.hpp"
+#include "../database/Reader.h"
 using std::exp;
 
 
@@ -154,4 +155,18 @@ void Cluster::createcluster(){
         clusters[label[v]].push_back(nodesindex[v]);
     }
 }
+
+std::vector<int> getKeys(std::string folder){
+    Reader r(folder+"/keys.txt");
+
+    std::vector<std::vector<std::string>> tmp = r.read();
+
+    std::vector<int> ret;
+
+    for(std::vector<std::vector<std::string>>::iterator it=tmp.begin(); it != tmp.end(); it ++){
+        ret.push_back(std::stoi((*it)[0]));
+    }
+    return ret;
+}
+
 
