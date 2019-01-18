@@ -48,7 +48,12 @@ class Driver {
     bool removeEdges(std::vector<Friends> friends);
     Driver(std::string dir);
 };
-
+class SummaryAccessor{
+    std::string directory;
+    SummaryAccessor(std::string dir);
+    void sendSummary(Paper paper, std::string summary);
+    std::string getSummary(Paper paper);
+}
 
 /** @brief Interface between the recommendation algorithms and the
  * database storing an interaction matrix.

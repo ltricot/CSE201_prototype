@@ -6,7 +6,7 @@
 #include <sstream>
 #include<iostream>
 #include <experimental/filesystem>
-
+#include "Summaries.h"
 
 namespace fs = std::experimental::filesystem;
 using namespace std;
@@ -255,3 +255,34 @@ vector<Edge> Driver::getFroms(vector<Author> froms) {
 	return ret;
 }
 
+
+SummaryAccessor::SummaryAccessor(string dir){
+	this->directory = dir;
+	int res = mkdir(dir.c_str(), 0666);
+}
+
+void SummaryAccessor::sendSummary(Paper paper, string summary){
+	hash<string> hasher;
+	string n = paper.id;
+	size_t foo = hasher(n);
+	foo = foo % 100000000000LU;
+	std::ostringstream ostr;
+	ostr << foo;
+	string id = ostr.str();
+	Summaries s(this->directory);
+	s.storeSummary(id, summary);
+}
+
+string SummaryAccessor::getSummary(Paper paper){
+	hash<string> hasher;
+	string n = paper.id;
+	size_t foo = hasher(n);
+	foo = foo % 100000000000LU;
+	std::ostringstream ostr;
+	ostr << foo;
+	string id = ostr.str();
+	Summaries s(this->directory);
+	return s.getSummary(id);
+}
+
+std::string SummaryAccessor::getSummary(Paper paper);
