@@ -19,8 +19,8 @@ class Driver {
     public:
 	std::string directory;
 
-	/// @brief get all edges outwards from ``from``
-	std::vector<Edge> getFrom(Author from);
+	/// @brief get all edges outwards from ```from``
+    std::vector<Edge> getFrom(Author from);
     std::vector<Reference> getFrom(Paper paper);
 
 	bool writeEdge(Edge edge);  // overwrites
@@ -58,6 +58,9 @@ class EdgeAccessor {
     private:
     Driver driver;
 
+    // stores some authors fetched from the database
+    std::vector<Author> someAuthors ; 
+
     /// stores the size of the internal buffer
     unsigned int bufferSize;
 
@@ -79,11 +82,16 @@ class EdgeAccessor {
     void updateBuffer(float proportion);
 
     public:
+    /** @brief constructor of the EdgeAccessor objects.
+     * 
+     * @param directory name of the database directory we
+     * want to read data from
+     * @param size size of the internal buffer
+     * 
+     */
     EdgeAccessor(std::string directory, unsigned int size)
-        : driver(Driver(directory)), bufferSize(size) {
-        updateBuffer(1.0);  // initialize buffer
-    }
-
+        : driver(Driver(directory)), bufferSize(size) {} 
+    
     class iterator : public std::iterator<
             std::input_iterator_tag,
             Edge, int, const Edge*, Edge> {
