@@ -44,7 +44,7 @@ class TFIDF {
         TFIDF *parent;
         std::vector<pEdge>::iterator cursor;
         public:
-        iterator(TFIDF *parent){
+        iterator(TFIDF *parent) {
             cursor = parent->buffer.begin();
         };
 
