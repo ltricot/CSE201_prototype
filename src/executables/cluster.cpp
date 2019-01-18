@@ -22,7 +22,7 @@ int main(int argc, char *argv[]) {
                 std::string author ; 
                 getline(infile, author);
                 Author au1(author); 
-            std::vector<Friends> temp = (dcdata.getFrom(au)); 
+            std::vector<Friends> temp = (dcdata.getFrom(au,fr=true)); 
             similarities.insert(similaries.end(), temp.begin(), temp.end());
             }
         }
