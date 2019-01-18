@@ -50,8 +50,15 @@ class Driver {
 };
 class SummaryAccessor{
     std::string directory;
+    
     SummaryAccessor(std::string dir);
+    
+    /** @brief Store the summary related to paper
+     */
     void sendSummary(Paper paper, std::string summary);
+    
+    /** @brief Recover the summary of a given paper
+     */
     std::string getSummary(Paper paper);
 }
 
