@@ -20,10 +20,10 @@ int main(int argc, char *argv[]) {
     }
 
     Cluster clustering(similarities);
-    map<int,std::vector<Author>> clusters=clustering.clusters;
+    unordered_map<int,std::vector<Author>> clusters=clustering.clusters;
     string outfolder = argv[2];
 
-    for (map<int,vector<Author>>::iterator it=clusters.begin();it!=clusters.end();it++){
+    for (unordered_map<int,vector<Author>>::iterator it=clusters.begin();it!=clusters.end();it++){
         string label= std::to_string(it->first);
         string path=outfolder+"/"+label+".txt";
         ofstream myfile(path);
