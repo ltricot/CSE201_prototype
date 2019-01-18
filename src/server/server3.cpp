@@ -1,4 +1,5 @@
 // @author Miha Smaka
+#include <algorithms>
 #include <pistache/http.h>
 #include <pistache/endpoint.h>
 #include <pistache/router.h>
