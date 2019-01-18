@@ -21,6 +21,7 @@ using namespace std;
 class Driver {
     public:
 	std::string directory;
+    std::string keysfile;
 
     template <class KeyT> std::vector<KeyT> getKeys();
 

@@ -34,7 +34,7 @@ void Summaries::storeSummary(string id, string summary){
         string filepath = id3 + "/" + id.substr(9, 2) + ".txt";
         
         ofstream out(filepath);
-
+        
         out << summary;
         out.close();
         return;
