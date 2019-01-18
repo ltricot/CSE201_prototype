@@ -19,6 +19,8 @@ class Driver {
     public:
 	std::string directory;
 
+    template <class KeyT> std::vector<KeyT> getKeys();
+
 	/// @brief get all edges outwards from ``from``
 	std::vector<Edge> getFrom(Author from);
     std::vector<Reference> getFrom(Paper paper);
@@ -42,7 +44,6 @@ class Driver {
     bool removeEdges(std::vector<Friends> friends);
     Driver(std::string dir);
 };
-
 
 
 /** @brief Interface between the recommendation algorithms and the

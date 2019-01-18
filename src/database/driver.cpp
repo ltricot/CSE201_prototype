@@ -11,6 +11,13 @@ using namespace std;
 
 const int lat_feat = 30;
 
+
+template <class KeyT> std::vector<KeyT> Driver::getKeys() {
+	std::vector<KeyT> keys;
+
+	// fill it :*
+}
+
 Driver::Driver(string dir){ 
 	this->directory = dir;
     int res = mkdir(dir.c_str(), 0666);
