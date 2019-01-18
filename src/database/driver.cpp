@@ -15,7 +15,18 @@ const int lat_feat = 30;
 template <class KeyT> std::vector<KeyT> Driver::getKeys() {
 	std::vector<KeyT> keys;
 
-	// fill it :*
+	for(auto &p : fs::recursive_directory_iterator(cdata)) {  
+        if(p.path().extension() == ".txt") {
+            // then we read the first line of the textfile to get the key
+            ifstream infile(p.path()) ;
+
+            if(infile.good()){
+                std::string keystr ; 
+                getline(infile, keystr);
+				KeyT key(keystr) ; 
+                key.push_back(key); 
+            }
+        }
 }
 
 Driver::Driver(string dir){ 
