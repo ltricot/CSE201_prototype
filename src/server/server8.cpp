@@ -168,7 +168,7 @@ class GUI_Serv {
         Routes::Get(router, "/users/:id/recommendation", Routes::bind(&GUI_Serv::getReco, this));
         Routes::Get(router, "/users/:id/articles", Routes::bind(&GUI_Serv::getArts, this));
         Routes::Put(router, "/users/:id/likes", Routes::bind(&GUI_Serv::putLikes, this));
-        Routes::Post(router, "/users/:id/articles", Routes::bind(&GUI_Serv::postArts, this));
+        Routes::Put(router, "/users/:id/articles", Routes::bind(&GUI_Serv::putArts, this));
     }
 
     void init() {
@@ -259,7 +259,7 @@ class GUI_Serv {
         }
     }
 
-    void postArts(const Rest::Request &request, Http::ResponseWriter response) {
+    void putArts(const Rest::Request &request, Http::ResponseWriter response) {
         auto id = (std::string)request.param(":id").as<std::string>();
         auto bod = request.body();
         std::stringstream ss_body;

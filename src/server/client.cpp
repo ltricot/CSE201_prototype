@@ -33,9 +33,13 @@ std::vector<std::string> Client::getTopics() {
 
 std::vector<std::string> Client::getLikes(Author author) {
     std::string response = get(ip + "/users/" + encode(author.name) + "/likes");
-    std::cout << response << std::endl;
+    if (response == "{}") 
+        return {};
+    
     json resp = json::parse(response);
+đ    
     std::vector<std::string> ret;
+
     for(std::string topic : topics) {
         int like = resp[topic];
         if(like == 1)
@@ -58,6 +62,7 @@ bool Client::putLikes(Author author, std::vector<std::string> topics) {
 
     std::string response = put(ip + "/users/" + encode(author.name) + "/likes", body);
     json resp = json::parse(response);
+
     return resp["success"] == 1;
 }
 
@@ -70,9 +75,9 @@ Paper Client::getRecommendation(Author author) {
 
 std::vector<std::string> Client::getArticles(Author author) {
     std::string response = get(ip + "/users/" + encode(author.name) + "/articles");
-    std::cout << response << std::endl;
+    if (response == "[]") 
+        return {};
     json resp = json::parse(response);
-
     std::vector<std::string> ret;
     for (json::iterator it = resp.begin(); it != resp.end(); it++) {
         ret.push_back(*it);
@@ -86,8 +91,8 @@ bool Client::putArticles(Author author, std::vector<std::string> articles) {
         body.push_back(*it);
     }
 
-    std::string response = post(ip + "/users/" + encode(author.name) + "/articles", body);
-    json resp = json::parse(response);
+    std::string response = put(ip + "/users/" + encode(author.name) + "/articles", body.dump());
+    json resp = json::parse(response);    
     return resp["success"] == 1;
 }
 

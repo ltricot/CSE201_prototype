@@ -133,10 +133,11 @@ std::string post(std::string url, std::string body) {
     }
 
     // error handling
-    if (response.size() == 0) {
+   /* if (response.size() == 0) {
         return "curl_easy_perform() failed";
-    }
+    }*/
     return response;
+
 }
 
 std::string put(std::string url, std::string body) {
