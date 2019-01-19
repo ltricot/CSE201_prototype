@@ -121,7 +121,7 @@ bool putUserArticles(std::string id, std::vector<std::string> articles, std::str
     return true;
 }
 
-std::string encode(std::string nameEnc) {
+std::string decode(std::string nameEnc) {
     CURL *curl = curl_easy_init();
     int *cp;
     char *decoded = curl_easy_unescape(curl, nameEnc.c_str(), nameEnc.size(), cp);
@@ -195,7 +195,7 @@ class GUI_Serv {
     }
 
     void getLikes(const Rest::Request &request, Http::ResponseWriter response) {
-        auto id = request.param(":id").as<std::string>();
+        auto id = decode(request.param(":id").as<std::string>());
         std::vector<std::string> ret = getUserLikes(id, user_dir);
 
         json j;
@@ -211,14 +211,14 @@ class GUI_Serv {
     }
 
     void getReco(const Rest::Request &request, Http::ResponseWriter response) {
-        auto id = request.param(":id").as<std::string>();
+        auto id = decode(request.param(":id").as<std::string>());
         // js = getUserRecs(id)
         GUI_Serv::js = "{\"article\": \"1812.01234_v2\"}";
         response.send(Http::Code::Ok, GUI_Serv::js);
     }
 
     void getArts(const Rest::Request &request, Http::ResponseWriter response) {
-        auto id = request.param(":id").as<std::string>();
+        auto id = decode(request.param(":id").as<std::string>());
         std::vector<std::string> articles = getUserArticles((std::string)id, GUI_Serv::dir);
         if (articles.empty()) {
             response.send(Http::Code::Ok, "[]");
@@ -230,7 +230,7 @@ class GUI_Serv {
     }
 
     void putLikes(const Rest::Request &request, Http::ResponseWriter response) {
-        auto id = request.param(":id").as<std::string>();
+        auto id = decode(request.param(":id").as<std::string>());
         auto bod = request.body();
         std::stringstream ss_body;
         ss_body << bod;
@@ -256,7 +256,7 @@ class GUI_Serv {
     }
 
     void postArts(const Rest::Request &request, Http::ResponseWriter response) {
-        auto id = request.param(":id").as<std::string>();
+        auto id = decode(request.param(":id").as<std::string>());
         auto bod = request.body();
         std::stringstream ss_body;
         ss_body << bod;
