@@ -253,22 +253,22 @@ class GUI_Serv {
         std::string data = ss_body.str();
         json d = json::parse(data);
         std::vector<std::string> out;
-        json::iterator it;
-        for (it = d.begin(); it != d.end(); it++) {
-            out.push_back(*it);
+
+        for (auto el : d.items()) {
+            if (el.value() == 1) {
+                out.push_back(el.key());
+            }
         }
 
-        /*TO BE IMPLEMENTED
-        bool suc = putUserLikes(id, out, dir);
+        bool suc =  putUserLikes(id, out);
+
         if (suc) {
-                response.send(Http::Code::Ok, "{\"success\": 1}");
-                return;
+            response.send(Http::Code::Ok, "{\"success\": 1}");
+        
+        } else {
+            response.send(Http::Code::Not_Found, "{\"failure\": 0}");
+    
         }
-        else{
-                response.send(Http::Code::Not_Found, "{\"failure\": 0}" )
-                return;
-        }*/
-        response.send(Http::Code::Ok, "{\"success\": 1}");
     }
 
     void postArts(const Rest::Request &request, Http::ResponseWriter response) {
@@ -286,10 +286,10 @@ class GUI_Serv {
         bool suc = putUserArticles((std::string)id, out, GUI_Serv::dir);
         if (suc) {
             response.send(Http::Code::Ok, "{\"success\": 1}");
-            return;
+    
         } else {
             response.send(Http::Code::Not_Found, "{\"failure\": 0}");
-            return;
+    
         }
     }
 };
