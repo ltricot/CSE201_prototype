@@ -25,8 +25,8 @@ using json = nlohmann::json;
  *
  * @return vector of topics
  */
-std::vector<std::string> getUserLikes(std::string id) {
-    Reader r(id + ".txt");
+std::vector<std::string> getUserLikes(std::string id, std::string dr) {
+    Reader r(dr + "/" +id + ".txt");
     std::vector<std::vector<std::string>> tmp = r.read();
     std::vector<std::string> ret;
     for(auto it : tmp) {
@@ -43,8 +43,8 @@ std::vector<std::string> getUserLikes(std::string id) {
 *
 * @param like a topic liked by the user
 */
-bool putUserLike(std::string id, std::string like) {
-    std::string filename = id + ".txt";
+bool putUserLike(std::string id, std::string like, std::string dr) {
+    std::string filename = dr + "/" + id + ".txt";
     ifstream inp(filename);
     ofstream out(id + "tmp.txt");
 
@@ -160,14 +160,15 @@ std::string jsonize(std::vector<std::string> &arts) {
 class GUI_Serv {
   public:
     std::string dir;
+    std::string user_dir;
     Rest::Router router;
     std::shared_ptr<Http::Endpoint> httpEndpoint;
     std::vector<std::string> topics;
 
-    GUI_Serv(std::string d, Address addr) {
+    GUI_Serv(std::string d, std::string d2, Address addr) {
         GUI_Serv::httpEndpoint = std::make_shared<Http::Endpoint>(addr);
         dir = d;
-
+        user_dir = d2;
         ifstream inp("topics.json");
         json j = json::parse(inp);
         this->topics = j.get<std::vector<std::string>>();
@@ -298,8 +299,12 @@ int main(int argc, char **argv) {
     ostr << argv[1];
     std::string dir = ostr.str();
 
+    std::ostringstream ostr2;
+    ostr2 << argv[2];
+    std::string userdir = ostr2.str();
+
     Address addr(Ipv4::any(), Port(80));
-    GUI_Serv serv(dir, addr);
+    GUI_Serv serv(dir, userdir, addr);
 
     serv.init();
     serv.start();
