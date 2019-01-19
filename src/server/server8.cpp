@@ -169,6 +169,7 @@ class GUI_Serv {
         GUI_Serv::httpEndpoint = std::make_shared<Http::Endpoint>(addr);
         dir = d;
         user_dir = d2;
+        int res = mkdir(d2.c_str(), 0666);
         ifstream inp("topics.json");
         json j = json::parse(inp);
         this->topics = j.get<std::vector<std::string>>();
@@ -234,12 +235,10 @@ class GUI_Serv {
     void getArts(const Rest::Request &request, Http::ResponseWriter response) {
         auto id = request.param(":id").as<std::string>();
         std::vector<std::string> articles = getUserArticles((std::string)id, GUI_Serv::dir);
-
         if (articles.empty()) {
-            response.send(Http::Code::No_Content, "The user does not exist.");
+            response.send(Http::Code::Ok, "[]");
             return;
-        }
-
+        } 
         json s = articles;
         GUI_Serv::js = s.dump();
         response.send(Http::Code::Ok, GUI_Serv::js);
