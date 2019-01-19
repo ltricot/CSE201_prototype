@@ -196,7 +196,7 @@ class GUI_Serv {
     }
 
     void getLikes(const Rest::Request &request, Http::ResponseWriter response) {
-        auto id = decodeUrl((std::string) request.param(":id").as<std::string>());
+        auto id = (std::string) request.param(":id").as<std::string>();
         std::vector<std::string> ret = getUserLikes(id, user_dir);
 
         json j;
@@ -213,14 +213,14 @@ class GUI_Serv {
     }
 
     void getReco(const Rest::Request &request, Http::ResponseWriter response) {
-        auto id = decodeUrl((std::string) request.param(":id").as<std::string>());
+        auto id = (std::string) request.param(":id").as<std::string>();
         // js = getUserRecs(id)
         GUI_Serv::js = "{\"article\": \"1812.01234_v2\"}";
         response.send(Http::Code::Ok, GUI_Serv::js);
     }
 
     void getArts(const Rest::Request &request, Http::ResponseWriter response) {
-        auto id = decodeUrl((std::string)request.param(":id").as<std::string>());
+        auto id = (std::string)request.param(":id").as<std::string>();
         std::vector<std::string> articles = getUserArticles((std::string)id, GUI_Serv::dir);
         if (articles.empty()) {
             response.send(Http::Code::Ok, "[]");
@@ -232,7 +232,7 @@ class GUI_Serv {
     }
 
     void putLikes(const Rest::Request &request, Http::ResponseWriter response) {
-        auto id = decodeUrl((std::string)request.param(":id").as<std::string>());
+        auto id = (std::string)request.param(":id").as<std::string>();
         auto bod = request.body();
         std::stringstream ss_body;
         ss_body << bod;
@@ -258,7 +258,7 @@ class GUI_Serv {
     }
 
     void postArts(const Rest::Request &request, Http::ResponseWriter response) {
-        auto id = decodeUrl((std::string)request.param(":id").as<std::string>());
+        auto id = (std::string)request.param(":id").as<std::string>();
         auto bod = request.body();
         std::stringstream ss_body;
         ss_body << bod;
