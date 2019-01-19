@@ -168,14 +168,9 @@ class GUI_Serv {
         GUI_Serv::httpEndpoint = std::make_shared<Http::Endpoint>(addr);
         dir = d;
 
-        std::string line;
-        ostringstream ostr;
         ifstream inp("topics.json");
-        while(getline(inp, line))
-            ostr << line;
-        json j = ostr.str();
-
-        topics = j.get<std::vector<std::string>>();
+        json j = json::parse(inp);
+        this->topics = j.get<std::vector<std::string>>();
     }
 
     void setupRouter() {
@@ -222,7 +217,8 @@ class GUI_Serv {
             else
                 j[top] = 0;
 
-        GUI_Serv::js = j.dump();
+        std::string js = j.dump();
+        GUI_Serv::js = js;
         response.send(Http::Code::Ok, GUI_Serv::js);
     }
 
@@ -236,13 +232,14 @@ class GUI_Serv {
     void getArts(const Rest::Request &request, Http::ResponseWriter response) {
         auto id = request.param(":id").as<std::string>();
         std::vector<std::string> articles = getUserArticles((std::string)id, GUI_Serv::dir);
-        articles.push_back("1812.01234_v2"); // these two construct a manual response
-        articles.push_back("1609.43210");    // for testing purposes
+
         if (articles.empty()) {
             response.send(Http::Code::No_Content, "The user does not exist.");
             return;
         }
-        GUI_Serv::js = jsonize(articles);
+
+        json s = articles;
+        GUI_Serv::js = s.dump();
         response.send(Http::Code::Ok, GUI_Serv::js);
     }
 
