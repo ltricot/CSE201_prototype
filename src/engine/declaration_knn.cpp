@@ -23,9 +23,7 @@ Person::Person(Author author, std::string cdata, std::string vdata, std::string 
                std::string keyfile)
     : author(author), outfolder(outfolder), keyfile(keyfile), cdata(cdata), vdata(vdata) {
 
-    std::ifstream infile(keyfile);
-    infile >> keys;
-    infile.close();
+    // keys = getAuthorClusters(keyfile);
 }
 
 /** @brief Get a recommendation (Title of a paper) for a client

@@ -32,7 +32,7 @@ int main(int argc, char *argv[]) {
         if(fs::exists(outfolder))
             fs::create_directory(outfolder);
 
-        addKey(outfolder, it->first);
+        // addKey(outfolder, it->first);
         setNeighbors(outfolder, it->first, authors);
 
         #ifdef outdated
