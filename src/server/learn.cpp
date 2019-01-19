@@ -11,21 +11,24 @@ int main() {
 
     std::vector<std::string> topics = Tom.getTopics();
     for (auto i = topics.begin(); i != topics.end(); ++i)
-        std::cout << *i << ' ';
+        std::cout << *i << std::endl;
+    
+    std::cout << "\n\n\n\n\n\n" << std::endl;
 
     std::vector<std::string> likes = Tom.getLikes(Shakespeare);
     for (auto i = likes.begin(); i != likes.end(); ++i)
-        std::cout << *i << ' ';
+        std::cout << *i << std::endl;
+
+    bool outcome2 = Tom.putLikes(Shakespeare, {"physics", "math", "computers"});
+    std::cout << outcome2 << std::endl;
 
     std::vector<std::string> articles = Tom.getArticles(Shakespeare);
     for (auto i = articles.begin(); i != articles.end(); ++i)
-        std::cout << *i << ' ';
+        std::cout << *i << std::endl;
 
     bool outcome = Tom.putArticles(Shakespeare, {"1901.05944"});
     std::cout << outcome << std::endl;
 
-    bool outcome2 = Tom.putLikes(Shakespeare, {"physics", "math", "computers"});
-    std::cout << outcome2 << std::endl;
 
     Paper paper = Tom.getRecommendation(Shakespeare);
     std::cout << paper.id << std::endl;
