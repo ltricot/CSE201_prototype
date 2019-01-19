@@ -79,7 +79,7 @@ class GUI_Serv {
 
   private:
     void getTopics(const Rest::Request &request, Http::ResponseWriter response) {
-        GUI_Serv::js = "[\"SEND NUDES\"]";
+        GUI_Serv::js = "[\"physics\", \"math\", \"computers\"]";
         response.send(Http::Code::Ok, GUI_Serv::js);
     }
 

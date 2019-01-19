@@ -4,10 +4,11 @@
 #include "tools.hpp"
 #include <iostream>
 #include <string>
+#include <map>
 #include <vector>
 
 Client::Client(std::string ip, int port) : ip(ip), port(port) {
-    std::vector<std::string> topics = getTopics();
+    topics = getTopics();
 }
 
 std::string encode(std::string name) {
@@ -31,10 +32,11 @@ std::vector<std::string> Client::getLikes(Author author) {
     std::string response = get(ip + "/users/" + encode(author.name) + "/likes");
 
     json resp = json::parse(response);
-
     std::vector<std::string> ret;
-    for (json::iterator it = resp.begin(); it != resp.end(); it++) {
-        ret.push_back(*it);
+    for(std::string topic : topics) {
+        int like = resp[topic];
+        if(like == 1)
+            ret.push_back(topic);
     }
     return ret;
 }
