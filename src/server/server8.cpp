@@ -169,6 +169,7 @@ class GUI_Serv {
         GUI_Serv::httpEndpoint = std::make_shared<Http::Endpoint>(addr);
         dir = d;
         user_dir = d2;
+        int res = mkdir(d2.c_str(), 0666);
         ifstream inp("topics.json");
         json j = json::parse(inp);
         this->topics = j.get<std::vector<std::string>>();
