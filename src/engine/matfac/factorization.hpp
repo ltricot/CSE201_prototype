@@ -1,18 +1,21 @@
 #include <string>
 #include <Eigen/core>
+#include <map>
+#include "primitives.hpp"
 
-
+#ifdef pasbesoin
 class Author {
     public:
     std::string name;
-}
+};
 
 class Paper {
     public:
     std::string id;
-}
+};
 
 typedef std::pair<Author, Paper> Edge;
+#endif
 
 
 class Factorizer {

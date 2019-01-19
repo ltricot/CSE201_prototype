@@ -1,9 +1,10 @@
-/*#include <was/storage_account.h>
-#include "CSE201_prototype\src\database\ReferencesReader.h"
-#include "CSE201_prototype\src\database\driver.hpp"
+//#include <was/storage_account.h>
+#include "ReferencesReader.h"
+#include "driver.hpp"
 #include <iostream>
 #include <string>
-#include <was/table.h>*/
+//#include <was/table.h>
+#include <Eigen>
 
 using namespace std;
 
@@ -22,7 +23,7 @@ class mat_factorization {
     }
 
     void regularized_update(Edge e) {
-        VectorAccessor<lat_feat> v;
+        VectorAccessor<lat_feat> v; // not the proper way to use VectorAccessor
 
         // Get Vectors
         Eigen::MatrixXd P_auth = v.get_vector(e.author);
@@ -32,7 +33,7 @@ class mat_factorization {
         double approx_value = m(0, 0);
 
         double eij = e.weight - approx_value;
-        cout << eij << endl;
+        std::cout << eij << std::endl;
         // Update Vectors
 
         for (int k = 0; k < lat_feat; k++) {
@@ -46,13 +47,14 @@ class mat_factorization {
     }
 };
 
+#ifdef asupprimer 
 int main() {
     // Testing the database
     ReferencesReader r("CSE201_prototype\src\database\References.txt");
     vector<Edge> foo;
     foo = r.GetEdges();
     for (vector<Edge>::iterator it = foo.begin(); it < foo.end(); it++) {
-        cout << (*it).author.name << endl;
+        std::cout << (*it).author.name << endl;
     }
     Matrix m = r.MakeMatrix();
     /*cout << m.read("37", "2313072105") << endl;
@@ -77,3 +79,4 @@ int main() {
     }
     return 0;
 }
+#endif
