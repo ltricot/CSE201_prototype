@@ -121,28 +121,14 @@ bool putUserArticles(std::string id, std::vector<std::string> articles, std::str
     return true;
 }
 
-std::string decode(std::string &str) {
-    // credit to stackoverflow
-    // https://stackoverflow.com/questions/154536/encode-decode-urls-in-c
-    std::string out;
-    char c;
-    int f, sec;
-    int l = str.length();
-
-    for (int i = 0; i < l; i++) {
-        if (str[i] != '%') {
-            if (str[i] == '+')
-                out += ' ';
-            else
-                out += str[i];
-        } else {
-            sscanf(str.substr(i + 1, 2).c_str(), "%x", &i);
-            c = static_cast<char>(i);
-            out += c;
-            i = i + 2;
-        }
-    }
-    return out;
+std::string decodeUrl(std::string nameEnc) {
+    CURL *curl = curl_easy_init();
+    int *cp;
+    char *decoded = curl_easy_unescape(curl, nameEnc.c_str(), nameEnc.size(), cp);
+    std::string ret(decoded, decoded + *cp);
+    curl_free(decoded);
+    curl_easy_cleanup(curl);
+    return ret;
 }
 
 std::string jsonize(std::vector<std::string> &arts) {
@@ -210,7 +196,7 @@ class GUI_Serv {
     }
 
     void getLikes(const Rest::Request &request, Http::ResponseWriter response) {
-        auto id = decode((std::string) request.param(":id").as<std::string>());
+        auto id = decodeUrl((std::string) request.param(":id").as<std::string>());
         std::vector<std::string> ret = getUserLikes(id, user_dir);
 
         json j;
@@ -227,14 +213,14 @@ class GUI_Serv {
     }
 
     void getReco(const Rest::Request &request, Http::ResponseWriter response) {
-        auto id = decode((std::string) request.param(":id").as<std::string>());
+        auto id = decodeUrl((std::string) request.param(":id").as<std::string>());
         // js = getUserRecs(id)
         GUI_Serv::js = "{\"article\": \"1812.01234_v2\"}";
         response.send(Http::Code::Ok, GUI_Serv::js);
     }
 
     void getArts(const Rest::Request &request, Http::ResponseWriter response) {
-        auto id = decode((std::string)request.param(":id").as<std::string>());
+        auto id = decodeUrl((std::string)request.param(":id").as<std::string>());
         std::vector<std::string> articles = getUserArticles((std::string)id, GUI_Serv::dir);
         if (articles.empty()) {
             response.send(Http::Code::Ok, "[]");
@@ -246,7 +232,7 @@ class GUI_Serv {
     }
 
     void putLikes(const Rest::Request &request, Http::ResponseWriter response) {
-        auto id = decode((std::string)request.param(":id").as<std::string>());
+        auto id = decodeUrl((std::string)request.param(":id").as<std::string>());
         auto bod = request.body();
         std::stringstream ss_body;
         ss_body << bod;
@@ -272,7 +258,7 @@ class GUI_Serv {
     }
 
     void postArts(const Rest::Request &request, Http::ResponseWriter response) {
-        auto id = decode((std::string)request.param(":id").as<std::string>());
+        auto id = decodeUrl((std::string)request.param(":id").as<std::string>());
         auto bod = request.body();
         std::stringstream ss_body;
         ss_body << bod;
