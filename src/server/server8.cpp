@@ -1,16 +1,18 @@
 // @author Miha Smaka
-#include "../database/driver.hpp"
+#include "driver.hpp"
 #include "json.hpp"
 #include <iostream>
 #include "pistache/endpoint.h"
 #include "pistache/http.h"
 #include "pistache/router.h"
+#include <fstream>
 #include <sstream>
 #include <string>
 
 using namespace Pistache;
 
 using json = nlohmann::json;
+
 
 std::string jsonize(std::vector<std::string> &arts) {
     std::string output = "[";
@@ -24,34 +26,25 @@ std::string jsonize(std::vector<std::string> &arts) {
     return output;
 }
 
-std::vector<std::string> getUserArticles(std::string id, std::string dr) {
-    Author u(id);
-    Driver d(dr);
-    vector<Edge> tmp = d.getFrom(u);
-    vector<string> ret;
-    for (vector<Edge>::iterator it = tmp.begin(); it != tmp.end(); it++) {
-        ret.push_back((it->paper).id);
-    }
-    return ret;
-}
-bool putUserArticles(std::string id, std::vector<std::string> articles, std::string dr) {
-    Author u(id);
-    Driver d(dr);
-    for (std::vector<std::string>::iterator it = articles.begin(); it != articles.end(); it++) {
-        bool b = d.writeEdge(Edge(u, Paper(*it)));
-    }
-    return true;
-}
-
 class GUI_Serv {
   public:
     std::string dir;
     Rest::Router router;
     std::shared_ptr<Http::Endpoint> httpEndpoint;
+    std::vector<std::string> topics;
 
     GUI_Serv(std::string d, Address addr) {
         GUI_Serv::httpEndpoint = std::make_shared<Http::Endpoint>(addr);
         dir = d;
+
+        std::string line;
+        ostringstream ostr;
+        ifstream inp("topics.json");
+        while(getline(inp, line))
+            ostr << line;
+        json j = ostr.str();
+
+        topics = j.get<std::vector<std::string>>();
     }
 
     void setupRouter() {
@@ -86,9 +79,16 @@ class GUI_Serv {
 
     void getLikes(const Rest::Request &request, Http::ResponseWriter response) {
         auto id = request.param(":id").as<std::string>();
-        std::vector<std::string> ret = getUserLikes(id)
-        GUI_Serv::js =
-            "{\"physics\" : 0, \"math\": 1, \"computers\": 1}"; // answer for testing response
+        std::vector<std::string> ret = getUserLikes(id);
+
+        json j;
+        for (auto top : topics)
+            if(std::find(ret.begin(), ret.end(), top) != ret.end())
+                j[top] = 1;
+            else
+                j[top] = 0;
+
+        GUI_Serv::js = j.dump();
         response.send(Http::Code::Ok, GUI_Serv::js);
     }
 
