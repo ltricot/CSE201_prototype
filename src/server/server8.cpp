@@ -125,8 +125,9 @@ std::string decode(std::string nameEnc) {
     CURL *curl = curl_easy_init();
     int *cp;
     char *decoded = curl_easy_unescape(curl, nameEnc.c_str(), nameEnc.size(), cp);
-    std::string ret = decoded;
+    std::string ret(decoded, decoded + *cp);
     curl_free(decoded);
+    curl_easy_cleanup(curl);
     return ret;
 }
 
