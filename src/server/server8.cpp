@@ -75,9 +75,9 @@ bool putUserLike(std::string id, std::string like, std::string dr) {
 
 /**@brief Calls putUserLike(id, like) on each like in likes
  */
-bool putUserLikes(std::string id, std::vector<std::string> likes) {
+bool putUserLikes(std::string id, std::vector<std::string> likes, std::string dr) {
     for (auto it : likes)
-        bool b = putUserLike(id, it);
+        bool b = putUserLike(id, it, dr);
     return true;
 }
 
@@ -260,11 +260,11 @@ class GUI_Serv {
             }
         }
 
-        bool suc =  putUserLikes(id, out);
+        bool suc =  putUserLikes(id, out, user_dir);
 
         if (suc) {
             response.send(Http::Code::Ok, "{\"success\": 1}");
-        
+
         } else {
             response.send(Http::Code::Not_Found, "{\"failure\": 0}");
     
@@ -295,13 +295,10 @@ class GUI_Serv {
 };
 
 int main(int argc, char **argv) {
-    std::ostringstream ostr;
-    ostr << argv[1];
-    std::string dir = ostr.str();
+    
+    std::string dir = argv[1];
 
-    std::ostringstream ostr2;
-    ostr2 << argv[2];
-    std::string userdir = ostr2.str();
+    std::string userdir = argv[2];
 
     Address addr(Ipv4::any(), Port(80));
     GUI_Serv serv(dir, userdir, addr);
