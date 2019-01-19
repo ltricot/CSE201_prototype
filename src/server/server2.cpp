@@ -171,7 +171,6 @@ class GUI_Serv {
                 out << line << "\n";
             }
         }
-    }
     inp.close();
 
     if (liked) {

@@ -86,7 +86,7 @@ class GUI_Serv {
 
     void getLikes(const Rest::Request &request, Http::ResponseWriter response) {
         auto id = request.param(":id").as<std::string>();
-        // js = getUserLikes(id)
+        std::vector<std::string> ret = getUserLikes(id)
         GUI_Serv::js =
             "{\"physics\" : 0, \"math\": 1, \"computers\": 1}"; // answer for testing response
         response.send(Http::Code::Ok, GUI_Serv::js);
