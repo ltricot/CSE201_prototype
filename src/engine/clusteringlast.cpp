@@ -264,6 +264,7 @@ void addKey(std::string folder, int label) {
         out.close();
         remove((folder + "/keys.txt").c_str());
         rename((folder + "/" + lab + "keystmp.txt").c_str(), (folder + "/keys.txt").c_str());
+        return;
     }
     out << lab << "\n";
     out.close();
