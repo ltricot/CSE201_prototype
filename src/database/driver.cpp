@@ -62,11 +62,13 @@ void Driver::storekey(string dir){
         out.close();
         remove((this->directory + "/keys.txt").c_str());
         rename((this->directory + "/" + dir + "keystmp.txt").c_str(), (this->directory + "/keys.txt").c_str());
+        return;
     }
     out << dir << "\n";
     out.close();
     remove((this->directory + "/keys.txt").c_str());
     rename((this->directory + "/" + dir + "keystmp.txt").c_str(), (this->directory + "/keys.txt").c_str());
+    return;
 }
 
 Driver::Driver(string dir) {
@@ -317,11 +319,13 @@ void SummaryAccessor::storekey(string dir){
         out.close();
         remove((this->directory + "/keys.txt").c_str());
         rename((this->directory + "/" + dir + "keystmp.txt").c_str(), (this->directory + "/keys.txt").c_str());
+        return;
     }
     out << dir << "\n";
     out.close();
     remove((this->directory + "/keys.txt").c_str());
     rename((this->directory + "/" + dir + "keystmp.txt").c_str(), (this->directory + "/keys.txt").c_str());
+    return;
 }
 
 
