@@ -33,7 +33,7 @@ std::vector<std::string> Client::getTopics() {
 
 std::vector<std::string> Client::getLikes(Author author) {
     std::string response = get(ip + "/users/" + encode(author.name) + "/likes");
-    std::cout << response << endl;
+    std::cout << response << std::endl;
     json resp = json::parse(response);
     std::vector<std::string> ret;
     for(std::string topic : topics) {
