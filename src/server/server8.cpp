@@ -202,7 +202,8 @@ class GUI_Serv {
 
   private:
     void getTopics(const Rest::Request &request, Http::ResponseWriter response) {
-        GUI_Serv::js = "[\"physics\", \"math\", \"computers\"]";
+        json j = topics;
+        GUI_Serv::js = j.dump();
         response.send(Http::Code::Ok, GUI_Serv::js);
     }
 
