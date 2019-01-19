@@ -72,6 +72,8 @@ class SummaryAccessor{
     std::string keysfile;
     
     std::vector<Paper> getKeys();
+    void storekey(std::string key);
+
     SummaryAccessor(std::string dir);
     
     /// @brief Store the summary related to paper
