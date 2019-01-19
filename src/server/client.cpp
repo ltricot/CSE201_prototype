@@ -14,7 +14,9 @@ Client::Client(std::string ip, int port) : ip(ip), port(port) {
 std::string encode(std::string name) {
     CURL *curl = curl_easy_init();
     char *encoded = curl_easy_escape(curl, name.c_str(), name.size());
-    return encoded;
+    std::string ret = encoded;
+    curl_free(encoded);
+    return ret;
 }
 
 std::vector<std::string> Client::getTopics() {
