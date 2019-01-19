@@ -210,7 +210,7 @@ class GUI_Serv {
 
     void getLikes(const Rest::Request &request, Http::ResponseWriter response) {
         auto id = request.param(":id").as<std::string>();
-        std::vector<std::string> ret = getUserLikes(id);
+        std::vector<std::string> ret = getUserLikes(id, user_dir);
 
         json j;
         for (auto top : topics)
