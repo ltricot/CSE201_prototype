@@ -1,10 +1,12 @@
 // @author Miha Smaka
 #include "driver.hpp"
+#include "Reader.h"
 #include "json.hpp"
 #include <iostream>
 #include "pistache/endpoint.h"
 #include "pistache/http.h"
 #include "pistache/router.h"
+#include <iostream>
 #include <fstream>
 #include <sstream>
 #include <string>
@@ -67,7 +69,10 @@ class GUI_Serv {
         httpEndpoint->serve();
     }
 
-    void shutdown() { httpEndpoint->shutdown(); }
+    void shutdown() {
+        std::cout << "y u stop :(((((" << std::endl;
+        httpEndpoint->shutdown();
+    }
 
     std::string js;
 
@@ -124,6 +129,7 @@ class GUI_Serv {
         for (it = d.begin(); it != d.end(); it++) {
             out.push_back(*it);
         }
+
         /*TO BE IMPLEMENTED
         bool suc = putUserLikes(id, out, dir);
         if (suc) {
@@ -159,31 +165,31 @@ class GUI_Serv {
         }
     }
 };
- /**@brief Returns the user's liked topics
-     *
-     * @details Finds the user's text file and returns the topics it contains in the form of a
-     * vector of strings
-     *
-     * @param id the User's id
-     *
-     * @return vector of topics
-     */
-    std::vector<std::string> getUserLikes(std::string id) {
-        Reader r(id + ".txt") std::vector<std::vector<std::string>> tmp = r.read();
-        std::vector<std::string> ret;
-        for (std::vector<std::vector<std::string>>> ::iterator it = tmp.begin(); it != tmp.end();
-             it++) {
-            ret.push_back(*it[0]);
-        }
-        return ret;
+
+/** @brief Returns the user's liked topics
+ *
+ * @details Finds the user's text file and returns the topics it contains in the form of a
+ * vector of strings
+ *
+ * @param id the User's id
+ *
+ * @return vector of topics
+ */
+std::vector<std::string> getUserLikes(std::string id) {
+    Reader r(id + ".txt");
+    std::vector<std::vector<std::string>> tmp = r.read();
+    std::vector<std::string> ret;
+    for(auto it : tmp) {
+        ret.push_back(it[0]);
     }
+    return ret;
+}
 
 /**@brief Calls putUserLike(id, like) on each like in likes
-     */
+ */
 bool putUserLikes(std::string id, std::vector<std::string> likes) {
-    for (std::vector<std::string>::iterator it = likes.begin(); it != likes.end(); it++) {
-        bool b = putUserLike(id, *it);
-    }
+    for (auto it : likes)
+        bool b = putUserLike(id, it);
     return true;
 }
 
@@ -197,7 +203,7 @@ bool putUserLikes(std::string id, std::vector<std::string> likes) {
 */
 bool putUserLike(std::string id, std::string like) {
     std::string filename = id + ".txt";
-    ifstream inp(filepath);
+    ifstream inp(filename);
     ofstream out(id + "tmp.txt");
 
     string line;
