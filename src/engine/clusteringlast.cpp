@@ -227,6 +227,7 @@ void storeNeighbor(std::string folder, int label, Author author) {
         out.close();
         remove((folder + "/" + lab + ".txt").c_str());
         rename((folder + "/" + lab + "tmp.txt").c_str(), (folder + "/" + lab + ".txt").c_str());
+        return;
     }
     out << app << "\n";
     out.close();
@@ -264,6 +265,7 @@ void addKey(std::string folder, int label) {
         out.close();
         remove((folder + "/keys.txt").c_str());
         rename((folder + "/" + lab + "keystmp.txt").c_str(), (folder + "/keys.txt").c_str());
+        return;
     }
     out << lab << "\n";
     out.close();

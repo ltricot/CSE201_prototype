@@ -18,5 +18,8 @@ target_link_libraries (tfidf database engine stdc++fs)
 add_executable (runmf runMF.cpp)
 target_link_libraries (runmf database engine stdc++fs)
 
+add_executable (runknn runKNN.cpp)
+target_link_libraries (runknn engine stdc++fs)
+
 # add_executable (serve serve.cpp)
 # target_link_libraries (serve database)

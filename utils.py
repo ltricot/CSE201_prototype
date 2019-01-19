@@ -73,7 +73,19 @@ def _run_tfidf(sdata, tfidfdata):
         print(line, end='')
 
 def _run_clustering(mdata, clusterdata):
-    sh = f'./build/src/executable'
+    sh = f'./build/src/executables/cluster {mdata} {clusterdata}'
+    for line in os.popen(sh):
+        print(line, end='')
+
+def _run_mf(cdata, vdata, alpha, beta):
+    sh = f'./build/src/executables/runmf {cdata} {vdata} {alpha} {beta}'
+    for line in os.popen(sh):
+        print(line, end='')
+
+def _run_serve(cdata, vdata, clusterdata, keys, k="30"):
+    sh = f'./build/src/server/serve {cdata} {vdata} {clusterdata} {keys} {k}'
+    for line in os.popen(sh):
+        orint(line, end='')
 
 def _run_references_all(data, archives, statep=""):
     archs = []
@@ -128,11 +140,16 @@ if __name__ == '__main__':
     cmds = {
         'fmt': _run_format,
         'clean': _run_clean,
-        'crawl': _run_crawl,
         'compile': _run_compile,
-        'ref_all': _run_references_all,
-        'sources': _run_get_sources,
         'estimate': _run_estimate,
+        'sources': _run_get_sources,
+        'crawl': _run_crawl,
+        'ref_all': _run_references_all,
+        'minhash': _run_minhash,
+        'tfidf': _run_tfidf,
+        'cluster': _run_clustering,
+        'runmf': _run_mf,
+        'serve': _run_serve,
     }
 
     cmds[sys.argv[1]].__call__(*sys.argv[2:])

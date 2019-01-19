@@ -28,8 +28,11 @@ int main(int argc, char *argv[]) {
         std::vector<Author> authors;
         for (auto au_s : it->second)
             authors.push_back(Author(au_s));
+        
+        if(fs::exists(outfolder))
+            fs::create_directory(outfolder);
 
-        addKey(outfolder, it->first);
+        // addKey(outfolder, it->first);
         setNeighbors(outfolder, it->first, authors);
 
         #ifdef outdated

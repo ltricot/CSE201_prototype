@@ -23,9 +23,7 @@ Person::Person(Author author, std::string cdata, std::string vdata, std::string 
                std::string keyfile)
     : author(author), outfolder(outfolder), keyfile(keyfile), cdata(cdata), vdata(vdata) {
 
-    std::ifstream infile(keyfile);
-    infile >> keys;
-    infile.close();
+    // keys = getAuthorClusters(keyfile);
 }
 
 /** @brief Get a recommendation (Title of a paper) for a client
@@ -176,4 +174,20 @@ Person::get_a_title_paper(std::pair<std::vector<float>, std::vector<std::string>
     }
     proba = result.first[k - 1];
     return result.second[k - 1];
+}
+
+std::map<std::string, int> getAuthorClusters(std::string cldata){
+    std::map<std::string int> ret;
+    Reader r(cldata + "/keys.txt");
+    std::vector<std::vector<std::string>> tmp;
+    for (std::vector<std::vector<std::string>>::iterator it = tmp.begin(); it != tmp.end(); it++){
+        std::string label = (*it)[0];
+        Reader r2(cldata + "/" + label + ".txt");
+        std::vector<std::vector<std::string>> tmp2;
+        for (std::vector<std::vector<std::string>>::iterator it2 = tmp2.begin(); it2 != tmp2.end(); it2++){
+            std::string author = (*it)[0];
+            ret[author] = std::stoi(label);
+        }      
+    }
+    return ret;
 }
