@@ -16,6 +16,135 @@ using namespace Pistache;
 using json = nlohmann::json;
 
 
+/** @brief Returns the user's liked topics
+ *
+ * @details Finds the user's text file and returns the topics it contains in the form of a
+ * vector of strings
+ *
+ * @param id the User's id
+ *
+ * @return vector of topics
+ */
+std::vector<std::string> getUserLikes(std::string id) {
+    Reader r(id + ".txt");
+    std::vector<std::vector<std::string>> tmp = r.read();
+    std::vector<std::string> ret;
+    for(auto it : tmp) {
+        ret.push_back(it[0]);
+    }
+    return ret;
+}
+
+/**@brief Records the fact that the user liked this topic
+ *
+* @details Creates or opens a text file with the user's id, then adds the like
+*
+* @param id the User's id
+*
+* @param like a topic liked by the user
+*/
+bool putUserLike(std::string id, std::string like) {
+    std::string filename = id + ".txt";
+    ifstream inp(filename);
+    ofstream out(id + "tmp.txt");
+
+    string line;
+    bool liked = false;
+        while (getline(inp, line)) {
+            if (line == like) {
+                out << line << "\n";
+                liked = true;
+            } else {
+                out << line << "\n";
+            }
+        }
+    inp.close();
+    if (liked) {
+        out.close();
+        remove(filename.c_str());
+        rename((id + "tmp.txt").c_str(), filename.c_str());
+        return true;
+    }
+
+    out << like << "\n";
+    out.close();
+    remove(filename.c_str());
+    rename((id + "tmp.txt").c_str(), filename.c_str());
+    return true;
+}
+
+/**@brief Calls putUserLike(id, like) on each like in likes
+ */
+bool putUserLikes(std::string id, std::vector<std::string> likes) {
+    for (auto it : likes)
+        bool b = putUserLike(id, it);
+    return true;
+}
+
+/**@brief Recovers the articles that the user liked.
+ *
+ * @details Goes into the interaction matrix and returns the row corresponding to the user's id
+ *
+ * @param id The user's id
+ *
+ * @param dr The directory of the interaction matrix
+ *
+ * @return A vector containing the ids of the papers associated to the user
+ */
+std::vector<std::string> getUserArticles(std::string id, std::string dr) {
+    Author u(id);
+    Driver d(dr);
+    vector<Edge> tmp = d.getFrom(u);
+    vector<string> ret;
+    for (vector<Edge>::iterator it = tmp.begin(); it != tmp.end(); it++) {
+        ret.push_back((it->paper).id);
+    }
+    return ret;
+}
+
+/** @brief Records the fact that the user liked these articles
+ *
+ * @details Adds an edge in the interaction matrix between the user and every papaper
+ *
+ * @param id the User's id
+ *
+ * @param articles Vector of articles
+ *
+ * @param dr The interaction matrix's directory
+ */
+bool putUserArticles(std::string id, std::vector<std::string> articles, std::string dr) {
+    Author u(id);
+    Driver d(dr);
+    for (std::vector<std::string>::iterator it = articles.begin(); it != articles.end(); it++) {
+        bool b = d.writeEdge(Edge(u, Paper(*it)));
+    }
+    return true;
+}
+
+std::string urlDec(string &str) {
+    // credit to stackoverflow
+    // https://stackoverflow.com/questions/154536/encode-decode-urls-in-c
+    std::string out;
+    char c;
+    int f, sec;
+    int l = str.length();
+
+    for (int i = 0; i < l; i++) {
+        if (str[i] != '%') {
+            if (str[i] == '+')
+                out += ' ';
+            else
+                out += str[i];
+        } else {
+            sscanf(str.substr(i + 1, 2).c_str(), "%x", &i);
+            c = static_cast<char>(i);
+            out += c;
+            i = i + 2;
+        }
+    }
+    return out;
+}
+
 std::string jsonize(std::vector<std::string> &arts) {
     std::string output = "[";
     std::vector<std::string>::iterator it;
@@ -165,135 +294,6 @@ class GUI_Serv {
         }
     }
 };
-
-/** @brief Returns the user's liked topics
- *
- * @details Finds the user's text file and returns the topics it contains in the form of a
- * vector of strings
- *
- * @param id the User's id
- *
- * @return vector of topics
- */
-std::vector<std::string> getUserLikes(std::string id) {
-    Reader r(id + ".txt");
-    std::vector<std::vector<std::string>> tmp = r.read();
-    std::vector<std::string> ret;
-    for(auto it : tmp) {
-        ret.push_back(it[0]);
-    }
-    return ret;
-}
-
-/**@brief Calls putUserLike(id, like) on each like in likes
- */
-bool putUserLikes(std::string id, std::vector<std::string> likes) {
-    for (auto it : likes)
-        bool b = putUserLike(id, it);
-    return true;
-}
-
-/**@brief Records the fact that the user liked this topic
- *
-* @details Creates or opens a text file with the user's id, then adds the like
-*
-* @param id the User's id
-*
-* @param like a topic liked by the user
-*/
-bool putUserLike(std::string id, std::string like) {
-    std::string filename = id + ".txt";
-    ifstream inp(filename);
-    ofstream out(id + "tmp.txt");
-
-    string line;
-    bool liked = false;
-        while (getline(inp, line)) {
-            if (line == like) {
-                out << line << "\n";
-                liked = true;
-            } else {
-                out << line << "\n";
-            }
-        }
-    inp.close();
-    if (liked) {
-        out.close();
-        remove(filename.c_str());
-        rename((id + "tmp.txt").c_str(), filename.c_str());
-        return true;
-    }
-
-    out << like << "\n";
-    out.close();
-    remove(filename.c_str());
-    rename((id + "tmp.txt").c_str(), filename.c_str());
-    return true;
-}
-
-/**@brief Recovers the articles that the user liked.
- *
- * @details Goes into the interaction matrix and returns the row corresponding to the user's id
- *
- * @param id The user's id
- *
- * @param dr The directory of the interaction matrix
- *
- * @return A vector containing the ids of the papers associated to the user
- */
-std::vector<std::string> getUserArticles(std::string id, std::string dr) {
-    Author u(id);
-    Driver d(dr);
-    vector<Edge> tmp = d.getFrom(u);
-    vector<string> ret;
-    for (vector<Edge>::iterator it = tmp.begin(); it != tmp.end(); it++) {
-        ret.push_back((it->paper).id);
-    }
-    return ret;
-}
-
-/** @brief Records the fact that the user liked these articles
- *
- * @details Adds an edge in the interaction matrix between the user and every papaper
- *
- * @param id the User's id
- *
- * @param articles Vector of articles
- *
- * @param dr The interaction matrix's directory
- */
-bool putUserArticles(std::string id, std::vector<std::string> articles, std::string dr) {
-    Author u(id);
-    Driver d(dr);
-    for (std::vector<std::string>::iterator it = articles.begin(); it != articles.end(); it++ +) {
-        bool b = d.writeEdge(Edge(u, Paper(*it)));
-    }
-    return true;
-}
-
-std::string urlDec(string &str) {
-    // credit to stackoverflow
-    // https://stackoverflow.com/questions/154536/encode-decode-urls-in-c
-    std::string out;
-    char c;
-    int f, sec;
-    int l = str.length();
-
-    for (int i = 0; i < l; i++) {
-        if (str[i] != '%') {
-            if (str[i] == '+')
-                out += ' ';
-            else
-                out += str[i];
-        } else {
-            sscanf(str.substr(i + 1, 2).c_str(), "%x", &i);
-            c = static_cast<char>(i);
-            out += c;
-            i = i + 2;
-        }
-    }
-    return out;
-}
 
 int main(int argc, char **argv) {
     std::ostringstream ostr;
