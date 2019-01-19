@@ -36,3 +36,6 @@ class Person {
 
     void setPaperasRead(std::string &paper); /*update the database when we recommend a paper: create an interaction between the paper and the client, need to be done*/
 };
+
+
+std::map<std::string, int> getAuthorClusters(std::string cldata);

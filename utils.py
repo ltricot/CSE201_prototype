@@ -73,7 +73,7 @@ def _run_tfidf(sdata, tfidfdata):
         print(line, end='')
 
 def _run_clustering(mdata, clusterdata):
-    sh = f'./build/src/executable/cluster {mdata} {clusterdata}'
+    sh = f'./build/src/executables/cluster {mdata} {clusterdata}'
     for line in os.popen(sh):
         print(line, end='')
 
