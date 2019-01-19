@@ -123,8 +123,8 @@ bool putUserArticles(std::string id, std::vector<std::string> articles, std::str
 
 std::string decodeUrl(std::string nameEnc) {
     CURL *curl = curl_easy_init();
-    int *cp;
-    char *decoded = curl_easy_unescape(curl, nameEnc.c_str(), nameEnc.size(), cp);
+    int cp;
+    char *decoded = curl_easy_unescape(curl, nameEnc.c_str(), nameEnc.size(), &cp);
     std::string ret(decoded, decoded + *cp);
     curl_free(decoded);
     curl_easy_cleanup(curl);
