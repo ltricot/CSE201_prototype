@@ -114,8 +114,8 @@ make
 We use ``Qt Creator`` to build and run the Graphical User Interface. Procedure:
 - Donwload the Qt project named GUI_final
 - Open ``Qt Creator`` on your computer
-- File > Open Project > select GUI_final
-- You might have to run qmake, to this end right click on the project and select run qmake
+- ``File > Open file or project`` and select GUI_final
+- When ``Qt Creator``ask you, construct the project
 - Run the project (shortcut Ctrl + R)
 
 ## Running the tests

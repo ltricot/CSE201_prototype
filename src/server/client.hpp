@@ -1,7 +1,8 @@
 #include <string>
+#include <vector>
 
 #include "json.hpp"
-#include "../database/primitives.hpp"
+#include "primitives.hpp"
 
 
 using json = nlohmann::json;
@@ -27,5 +28,5 @@ class Client {
     std::vector<std::string> getArticles(Author author);
     bool putArticles(Author author, std::vector<std::string> articles);
     
-    Paper getSummary(Paper paper);
+    // Paper getSummary(Paper paper);
 };
