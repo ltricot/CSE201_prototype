@@ -30,7 +30,7 @@ def _run_compile(debug=""):
     if not os.path.exists('build'):
         os.mkdir('build')
 
-    sh = f'cd {build} && cmake {"-DCMAKE_BUILD_TYPE=Debug" if debug else ""} .. && make'
+    sh = f'cd build && cmake {"-DCMAKE_BUILD_TYPE=Debug" if debug else ""} .. && make'
     for line in os.popen(sh):
         print(line, end='')
 
@@ -66,6 +66,14 @@ def _run_minhash(cdata, mdata, threshold):
     sh = f'./build/src/executables/minhash {cdata} {mdata} {threshold}'
     for line in os.popen(sh):
         print(line, end='')
+
+def _run_tfidf(sdata, tfidfdata):
+    sh = f'./build/src/executables/tfidf {sdata} {tfidfdata}'
+    for line in os.popen(sh):
+        print(line, end='')
+
+def _run_clustering(mdata, clusterdata):
+    sh = f'./build/src/executable'
 
 def _run_references_all(data, archives, statep=""):
     archs = []
