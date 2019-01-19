@@ -27,7 +27,6 @@ class Cluster {
 
     private:
     int sizeInput; //size of the input vector
-    static int T; // temperature
     /* "label" is a std::vector that associates to each vector of the input (each node) its label ie the label at index i is the label of the ith vector*/
     std::vector<int> label;
     std::map<std::string,int> nodes; //map from Author to int

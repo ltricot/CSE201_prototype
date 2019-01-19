@@ -7,11 +7,8 @@
 
 using namespace std;
 
-using std::exp;
 // using json = nlohmann::json;
 
-
-int Cluster::T = 2;
 
 //@brief function that initialize the vector<int> label
 void Cluster::initializelabel() {
@@ -75,7 +72,7 @@ void Cluster::getCDF() {
             allSim(c) = it->second;
             c++;
         }
-        allProb = (1 / ((T * allSim).exp().sum())) * (T * allSim).exp();
+        allProb = (1 / (allSim.sum())) * (allSim);
         allSim.resize(0);
         // the probability to choose the label of the jth neighbor is equal to allProb(j)
         std::vector<double> cdf; // cumulative distribution function corresponding to allProb
