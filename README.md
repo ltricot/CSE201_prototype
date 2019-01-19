@@ -1,5 +1,5 @@
 # Tinder for researchers 
-
+# Good job to everyone. I love you all :sparkling_heart:
 ![logo](src/GUI/TestGUI/TestGUI/img/logo_2.png)
 
 ## Source code structure
