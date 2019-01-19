@@ -83,8 +83,6 @@ std::string Crawler::callArxiv(std::string url) {
 }
 
 std::vector<Edge> Crawler::getPairs(std::string xmlstr) {
-    std::cerr << "Crawler::getPairs" << std::endl;
-
     // return value
     std::vector<Edge> pairs;
 
@@ -132,15 +130,10 @@ std::vector<Edge> Crawler::getPairs(std::string xmlstr) {
         i++; // means we're getting the next paper
     }
 
-    std::cerr << "pairs.size(): " << pairs.size() << std::endl;
     return pairs;
 }
 
 std::vector<Edge> Crawler::fromAuthors(std::vector<Author> authors) {
-    std::cerr << "Crawler::fromAuthors" << std::endl;
-    for (auto a : authors)
-        std::cerr << a.name << std::endl;
-
     // return value & auxiliary iteration variable
     std::vector<Edge> pairs;
     std::vector<Edge> pairs_aux;
@@ -170,7 +163,6 @@ std::vector<Edge> Crawler::fromAuthors(std::vector<Author> authors) {
 
         url << "&maxresults=500";
 
-        std::cout << url.str() << std::endl;
         xmlstr = this->callArxiv(url.str());
 
         // extend found pairs with this author's new pairs
@@ -183,10 +175,6 @@ std::vector<Edge> Crawler::fromAuthors(std::vector<Author> authors) {
 }
 
 std::vector<Edge> Crawler::fromPapers(std::vector<Paper> papers) {
-    std::cerr << "Crawler::fromPapers" << std::endl;
-    for (auto p : papers)
-        std::cerr << p.id << std::endl;
-
     // return value & auxiliary iteration variable
     std::vector<Edge> pairs;
     std::vector<Edge> pairs_aux;
@@ -229,8 +217,6 @@ bool Crawler::iterator::operator!=(iterator other) const { return true; }
  * @return an Edge
  */
 Edge Crawler::iterator::operator*() const {
-    std::cerr << "Crawler::iterator::operator*" << std::endl;
-
     auto ret = *cursor;
     return ret;
 }
@@ -264,8 +250,6 @@ Crawler::iterator Crawler::iterator::operator++() {
     // while (crawler->Set.find(cursor) != crawler->Set.end() && cursor != buffer.end()) {
     //     cursor++;
     // }
-    std::cerr << "Crawler::iterator::operator++" << std::endl;
-
     if (cursor == buffer.end())
         goto fillup;
     else if (++cursor == buffer.end())
@@ -305,8 +289,6 @@ Crawler::iterator Crawler::end() {
 }
 
 std::vector<Paper> Crawler::getSummary(std::string xmlstr) {
-    std::cerr << "Crawler::getSummary" << std::endl;
-
     // return value
     std::vector<Paper> summ;
 
@@ -350,7 +332,6 @@ std::vector<Paper> Crawler::getSummary(std::string xmlstr) {
  * @return a vector of (author, paper) pairs.
  */
 std::vector<Edge> Crawler::crawl(int steps) {
-    std::cerr << "Crawler::crawl" << std::endl;
     Driver driver(this->refdata);
     Driver d(this->cdata);
 
@@ -414,9 +395,6 @@ std::vector<Edge> Crawler::crawl(int steps) {
                         Set.find(references[i].second.id) == Set.end()) {
 
                         newEdges.push_back(Edge(buffer[i].author, references[i].second));
-
-                        std::cerr << Edge(buffer[i].author, references[i].second).paper.id
-                                  << std::endl;
                     }
                 }
             }
@@ -466,7 +444,6 @@ std::vector<Edge> Crawler::crawl(int steps) {
         this->from = !(this->from);
     }
 
-    std::cerr << "buffer.size(): " << buffer.size() << std::endl;
     return buffer;
 }
 

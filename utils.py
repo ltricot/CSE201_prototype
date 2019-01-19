@@ -26,18 +26,11 @@ def _run_clean(src: str):
             if fpath == '.DS_Store':
                 _del(os.path.join(dirpath, fpath))
 
-def _run_crawl(cdata: str, refdata, sdata, source):
-    sh = f'./build/src/executables/crawl {cdata} {refdata} {sdata} {source}'
-    for line in os.popen(sh):
-        print(line, end='')
+def _run_compile(debug=""):
+    if not os.path.exists('build'):
+        os.mkdir('build')
 
-def _run_compile(build: str, debug=""):
     sh = f'cd {build} && cmake {"-DCMAKE_BUILD_TYPE=Debug" if debug else ""} .. && make'
-    for line in os.popen(sh):
-        print(line, end='')
-
-def _run_download_references(paper, data):
-    sh = f'./build/src/executables/download_references {paper} {data}'
     for line in os.popen(sh):
         print(line, end='')
 
@@ -54,6 +47,25 @@ def _run_get_sources(topicp, out, many="10"):
     
     with open(out, 'w') as f:
         json.dump(toparts, f)
+
+def _run_estimate(cdata):
+    tot = 0
+    for dirpath, dirnames, filenames in os.walk(cdata):
+        for fname in filenames:
+            p = os.path.join(dirpath, fname)
+            with open(p) as f:
+                tot += len(f.read()) - 1
+    print(f'{tot} edges found')
+
+def _run_crawl(cdata: str, refdata, sdata, source):
+    sh = f'./build/src/executables/crawl {cdata} {refdata} {sdata} {source}'
+    for line in os.popen(sh):
+        print(line, end='')
+
+def _run_minhash(cdata, mdata, threshold):
+    sh = f'./build/src/executables/minhash {cdata} {mdata} {threshold}'
+    for line in os.popen(sh):
+        print(line, end='')
 
 def _run_references_all(data, archives, statep=""):
     archs = []
@@ -109,10 +121,10 @@ if __name__ == '__main__':
         'fmt': _run_format,
         'clean': _run_clean,
         'crawl': _run_crawl,
-        'references': _run_download_references,
         'compile': _run_compile,
         'ref_all': _run_references_all,
         'sources': _run_get_sources,
+        'estimate': _run_estimate,
     }
 
     cmds[sys.argv[1]].__call__(*sys.argv[2:])
