@@ -16,6 +16,7 @@ std::string encode(std::string name) {
     char *encoded = curl_easy_escape(curl, name.c_str(), name.size());
     std::string ret = encoded;
     curl_free(encoded);
+    curl_easy_cleanup(curl);
     return ret;
 }
 
@@ -32,7 +33,7 @@ std::vector<std::string> Client::getTopics() {
 
 std::vector<std::string> Client::getLikes(Author author) {
     std::string response = get(ip + "/users/" + encode(author.name) + "/likes");
-
+    std::cout << response << std::endl;
     json resp = json::parse(response);
     std::vector<std::string> ret;
     for(std::string topic : topics) {
@@ -69,6 +70,7 @@ Paper Client::getRecommendation(Author author) {
 
 std::vector<std::string> Client::getArticles(Author author) {
     std::string response = get(ip + "/users/" + encode(author.name) + "/articles");
+    std::cout << response << endl;
     json resp = json::parse(response);
 
     std::vector<std::string> ret;
