@@ -198,9 +198,11 @@ class GUI_Serv {
     void getLikes(const Rest::Request &request, Http::ResponseWriter response) {
         auto id = (std::string) request.param(":id").as<std::string>();
         std::vector<std::string> ret = getUserLikes(id, user_dir);
-
+        std::cout << ret << endl;
         json j;
-        if (ret.empty())
+        if (ret.empty()) {
+            response.send(Htpp::Code::ok, "{}");
+        }
         for (auto top : topics)
             if(std::find(ret.begin(), ret.end(), top) != ret.end())
                 j[top] = 1;
