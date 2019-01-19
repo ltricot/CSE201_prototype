@@ -6,7 +6,7 @@
 #include "pistache/endpoint.h"
 #include "pistache/http.h"
 #include "pistache/router.h"
-#include <iostream>
+#include <curl/curl.h>
 #include <fstream>
 #include <sstream>
 #include <string>
@@ -121,28 +121,12 @@ bool putUserArticles(std::string id, std::vector<std::string> articles, std::str
     return true;
 }
 
-std::string urlDec(string &str) {
-    // credit to stackoverflow
-    // https://stackoverflow.com/questions/154536/encode-decode-urls-in-c
-    std::string out;
-    char c;
-    int f, sec;
-    int l = str.length();
-
-    for (int i = 0; i < l; i++) {
-        if (str[i] != '%') {
-            if (str[i] == '+')
-                out += ' ';
-            else
-                out += str[i];
-        } else {
-            sscanf(str.substr(i + 1, 2).c_str(), "%x", &i);
-            c = static_cast<char>(i);
-            out += c;
-            i = i + 2;
-        }
-    }
-    return out;
+std::string encode(std::string nameEnc) {
+    CURL *curl = curl_easy_init();
+    char *decoded = curl_easy_unescape(curl, nameEnc.c_str(), nameEnc.size());
+    std::string ret = decoded;
+    curl_free(decoded);
+    return ret;
 }
 
 std::string jsonize(std::vector<std::string> &arts) {
