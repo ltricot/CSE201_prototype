@@ -79,7 +79,7 @@ class GUI_Serv {
 
   private:
     void getTopics(const Rest::Request &request, Http::ResponseWriter response) {
-        GUI_Serv::js = "{SEND NUDES}";
+        GUI_Serv::js = "[\"SEND NUDES\"]";
         response.send(Http::Code::Ok, GUI_Serv::js);
     }
 
@@ -87,14 +87,14 @@ class GUI_Serv {
         auto id = request.param(":id").as<std::string>();
         // js = getUserLikes(id)
         GUI_Serv::js =
-            "{\"physics\" : 0, \"math\": 1, \"computers\": 1}"; // answer for testing response
+            "[\"physics\" : 0, \"math\": 1, \"computers\": 1]"; // answer for testing response
         response.send(Http::Code::Ok, GUI_Serv::js);
     }
 
     void getReco(const Rest::Request &request, Http::ResponseWriter response) {
         auto id = request.param(":id").as<std::string>();
         // js = getUserRecs(id)
-        GUI_Serv::js = "{\"article\": \"1812.01234_v2\" }";
+        GUI_Serv::js = "{\"article\": \"1812.01234_v2\"}";
         response.send(Http::Code::Ok, GUI_Serv::js);
     }
 

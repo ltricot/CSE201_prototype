@@ -9,7 +9,10 @@ else (CURL_FOUND)
 endif (CURL_FOUND)
 
 # link that curl mmmmmm
-target_link_libraries(client PRIVATE ${CURL_LIBRARIES})
+target_link_libraries(client PUBLIC ${CURL_LIBRARIES})
+
+add_executable (testclient learn.cpp)
+target_link_libraries (testclient client)
 
 # this be no joke
 add_executable (serve server8.cpp)

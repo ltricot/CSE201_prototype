@@ -6,7 +6,7 @@ int main() {
     std::cout << "Hello World" << std::endl;
 
     Author Shakespeare("Shakespeare");
-    Client Tom("ip_adress", 80);
+    Client Tom("20.188.35.105", 80);
     Paper Bestpaper("1901.05944");
 
     std::vector<std::string> topics = Tom.getTopics();
