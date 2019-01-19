@@ -13,13 +13,14 @@ using namespace Pistache;
 using json = nlohmann::json;
 
 std::string jsonize(std::vector<std::string> &arts) {
-    std::string output = "{";
+    std::string output = "[";
     std::vector<std::string>::iterator it;
     for (it = arts.begin(); it != arts.end(); it++) {
         std::string add = "\"" + *it + "\"";
         output += add + ",";
     }
-    output += "}";
+    output = output.substr(0, output.length()-1);
+    output += "]";
     return output;
 }
 

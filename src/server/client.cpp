@@ -66,7 +66,6 @@ Paper Client::getRecommendation(Author author) {
 }
 
 std::vector<std::string> Client::getArticles(Author author) {
-
     std::string response = get(ip + "/users/" + encode(author.name) + "/articles");
     json resp = json::parse(response);
 

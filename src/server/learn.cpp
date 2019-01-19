@@ -10,16 +10,16 @@ int main() {
     Paper Bestpaper("1901.05944");
 
     std::vector<std::string> topics = Tom.getTopics();
-    for (std::vector<std::string>::const_iterator i = topics.begin(); i != topics.end(); ++i)
-    std::cout << *i << ' ';
+    for (auto i = topics.begin(); i != topics.end(); ++i)
+        std::cout << *i << ' ';
 
     std::vector<std::string> likes = Tom.getLikes(Shakespeare);
-    for (std::vector<std::string>::const_iterator i = likes.begin(); i != likes.end(); ++i)
-    std::cout << *i << ' ';
+    for (auto i = likes.begin(); i != likes.end(); ++i)
+        std::cout << *i << ' ';
 
     std::vector<std::string> articles = Tom.getArticles(Shakespeare);
-    for (std::vector<std::string>::const_iterator i = articles.begin(); i != articles.end(); ++i)
-    std::cout << *i << ' ';
+    for (auto i = articles.begin(); i != articles.end(); ++i)
+        std::cout << *i << ' ';
 
     bool outcome = Tom.putArticles(Shakespeare, {"1901.05944"});
     std::cout << outcome << std::endl;
