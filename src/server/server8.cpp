@@ -87,7 +87,7 @@ class GUI_Serv {
         auto id = request.param(":id").as<std::string>();
         // js = getUserLikes(id)
         GUI_Serv::js =
-            "[\"physics\" : 0, \"math\": 1, \"computers\": 1]"; // answer for testing response
+            "{\"physics\" : 0, \"math\": 1, \"computers\": 1}"; // answer for testing response
         response.send(Http::Code::Ok, GUI_Serv::js);
     }
 
