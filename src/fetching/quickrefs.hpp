@@ -19,7 +19,11 @@ class Archive {
 
     std::string temp_pdf_folder; 
     std::string s3path, graph;
+    /** @brief launches the download of .tar pdf files 
+     */
     void download(); 
+    /** @brief decompresses the .tar pdf files 
+     */
     void decompress();
 
     public:

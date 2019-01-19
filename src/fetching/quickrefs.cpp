@@ -309,7 +309,8 @@ void Archive::run() {
 }
 
 void Archive::download() {
-    std::string cmd = "aws s3 cp --request-payer requester s3://arxiv/pdf/" + s3path + " " + s3path;
+    // cmd gives us the list of .tar files of pdfs to download 
+    std::string cmd = "aws s3 cp --request-payer requester s3://arxiv/pdf/" + s3path + " " + s3path; 
     system(cmd.c_str());
 }
 
