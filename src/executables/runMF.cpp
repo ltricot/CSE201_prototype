@@ -3,16 +3,21 @@
 // mat_fac_eigen.cpp
 
 #include "driver.hpp"
-#include "ReferencesReader.h"
+#include "matfac/mat_fac_test_with_database.cpp"
 #include <iostream>
+
 
 int main(int argc, char const *argv[]){
     std::string cdata = argv[1];
     std::string vdata = argv[2];
+    double alpha = stod(argv[3]), beta = stod(argv[4]);
 
+    mat_factorization factor(cdata, vdata, alpha, beta);
+    factor.run();
+
+    #ifdef notinuse
     Driver cdriver(cdata);
     Driver vdriver(vdata);
-
 
     // Testing the database
     ReferencesReader r("CSE201_prototype\src\database\References.txt");
@@ -38,14 +43,9 @@ int main(int argc, char const *argv[]){
 
     mat_factorization M(0.02, 0.002);
     for (int j = 0; j < 1000; j++) {
-
         for (vector<Edge>::iterator it = foo.begin(); it < foo.end(); it++) {
             M.regularized_update(*it);
         }
     }
-
-
-
-
-
+    #endif
 }

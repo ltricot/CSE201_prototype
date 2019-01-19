@@ -6,6 +6,8 @@
 #include "Eigen/Eigen"
 #include <unordered_map>
 #include <sstream>
+#include <map>
+#include <set>
 
 #include "primitives.hpp"
 
@@ -107,6 +109,7 @@ class EdgeAccessor {
     /// of priority queue may be wise
     std::vector<Edge> replayBuffer;
 
+    public:
     /** @brief Update the internal buffer by interacting with the database
      * 
      * @details This method will be called more or less often in order to
@@ -119,7 +122,6 @@ class EdgeAccessor {
      */
     void updateBuffer(float proportion);
 
-    public:
     /** @brief constructor of the EdgeAccessor objects.
      * 
      * @param directory name of the database directory we
@@ -127,9 +129,8 @@ class EdgeAccessor {
      * @param size size of the internal buffer
      * 
      */
-    EdgeAccessor(std::string directory, unsigned int size)
-        : driver(Driver(directory)), bufferSize(size) {} 
-    
+    EdgeAccessor(std::string directory, unsigned int size);
+
     class iterator : public std::iterator<
             std::input_iterator_tag,
             Edge, int, const Edge*, Edge> {
@@ -150,10 +151,9 @@ class EdgeAccessor {
 
 
 template <int rank> class VectorAccessor {
+    public:
     typedef Eigen::Matrix<double, rank, 1> vec;
 
-  public:
-    
     string directory;
 
 	VectorAccessor(string dir) {
@@ -226,4 +226,88 @@ template <int rank> class VectorAccessor {
         v.storevector<rank> (id, vect);
         return true;        
     }
+};
+
+/** @brief access the accessor to access accessor.access
+ * 
+ * @details access access access access access access access access
+ * access access access access access access access access access access
+ * access access access access access access access access access access
+ * access access access access access access access access access access
+ * :heart:
+ */
+template <int rank> class VectorAccessorAccessor {
+    private:
+    VectorAccessor<rank> accessor;
+    typedef typename VectorAccessor<rank>::vec vec;
+
+    void put(std::string key, vec val) {
+        // replace if already here
+        if(buffer.find(key) != buffer.end()) {
+            buffer[key] = val;
+            return;
+        }
+
+        // if there is space, put & ret
+        if(buffer.size() < bufferSize) {
+            keys.insert(key);
+            (buffer[key] = val);
+            return;
+        }
+
+        // replace random & ret
+        int k = rand() % (buffer.size());
+        auto it = keys.begin();
+        std::advance(it, k);
+        keys.erase(it);
+        buffer.erase(key);
+
+        keys.insert(key);
+        buffer[key] = val;
+        return;
+    }
+
+    vec get(std::string key) {
+        // ret buf if found is all
+        if(buffer.find(key) != buffer.end())
+            return buffer[key];
+
+        // if there is space, put & ret
+        vec val = accessor.get_vector(Author(key));
+        if(buffer.size() < bufferSize) {
+            keys.insert(key);
+            return (buffer[key] = val);
+        }
+
+        // replace random & ret
+        int k = rand() % (buffer.size());
+        auto it = keys.begin();
+        std::advance(it, k);
+        keys.erase(it);
+        buffer.erase(key);
+
+        keys.insert(key);
+        return (buffer[key] = val);
+    }
+
+    int bufferSize;
+    std::unordered_map<std::string, vec> buffer;
+    std::set<std::string> keys;
+
+    public:
+    VectorAccessorAccessor(std::string vdata, unsigned int size)
+        : accessor(vdata), bufferSize(size) {}
+
+    /// @brief store that shit real fast
+    ~VectorAccessorAccessor() {
+        // papers are authors and authors are papers
+        for (auto& [key, val] : buffer)  // ain't we cool
+            accessor.send_vector(Author(key), val);
+    }
+
+    void put(Author author, vec val) { put(author.name, val); }
+    vec get(Author author) { return get(author.name); }
+
+    void put(Paper paper, vec val) { put(paper.id, val); }
+    vec get(Paper paper) { return get(paper.id); }
 };

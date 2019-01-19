@@ -8,6 +8,7 @@
 #include <string>
 #include <unordered_map>
 #include <vector>
+#include <algorithm>
 
 namespace fs = std::experimental::filesystem;
 using namespace std;
@@ -362,4 +363,52 @@ std::vector<Paper> SummaryAccessor::getKeys() {
     }
 
     return keys;
+}
+
+EdgeAccessor::EdgeAccessor(std::string directory, unsigned int size)
+    : driver(Driver(directory)), bufferSize(size) {    
+
+    this->someAuthors = this->driver.getKeys<Author>();
+    for(int i = 0; i < bufferSize; i++) {
+        // we add a random edge to the buffer
+        int j = rand() % this->someAuthors.size(); // random int between 0 and someAuthors.size()
+        Author au = someAuthors[j];
+        std::vector<Edge> edges = this->driver.getFrom(au);
+        int m = rand() % edges.size();          // random int between 0 and edges.size()
+        this->replayBuffer.push_back(edges[m]); // or do we want to add all of them?
+    }
+}
+
+void EdgeAccessor::updateBuffer(float proportion) {
+    int i = 0;
+    while (i <= int(proportion * bufferSize)) {
+        i++;
+        // we remove a random edge from the buffer
+        int k = rand() % (this->replayBuffer.size()); // random int between 0 and replayBuffer.size()
+        this->replayBuffer.erase(this->replayBuffer.begin() + k);
+
+        // we add a random edge to the buffer
+        int j = rand() % this->someAuthors.size(); // random int between 0 and someAuthors.size()
+        Author au = someAuthors[j];
+        std::vector<Edge> edges = this->driver.getFrom(au);
+        int m = rand() % edges.size();          // random int between 0 and edges.size()
+        this->replayBuffer.push_back(edges[m]); // or do we want to add all of them?
+    }
+}
+
+EdgeAccessor::iterator EdgeAccessor::iterator::operator++() {
+    this->cursor = rand() % this->parent->replayBuffer.size();
+    return *this;
+}
+
+Edge EdgeAccessor::iterator::operator*() {
+    return this->parent->replayBuffer[this->cursor];
+}
+
+EdgeAccessor::iterator EdgeAccessor::begin() {
+    return EdgeAccessor::iterator(this);
+}
+
+EdgeAccessor::iterator EdgeAccessor::end() {
+    return EdgeAccessor::iterator(this);
 }

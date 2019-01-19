@@ -15,5 +15,8 @@ target_link_libraries (cluster database engine stdc++fs)
 add_executable (tfidf runtfidf.cpp)
 target_link_libraries (tfidf database engine stdc++fs)
 
+add_executable (runmf runMF.cpp)
+target_link_libraries (runmf database engine stdc++fs)
+
 # add_executable (serve serve.cpp)
 # target_link_libraries (serve database)
