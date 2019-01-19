@@ -37,7 +37,7 @@ class SummariesIt {
         SummariesIt *parent ; 
         
         public:
-        iterator(SummariesIt *parent, int cursor=0): parent(parent), cursor(cursor){}
+        iterator(SummariesIt *parent, int cursor): parent(parent), cursor(cursor) {}
 
         // make it so next pEde is available
         iterator operator++();
@@ -53,8 +53,8 @@ class SummariesIt {
         Paper operator*() const;
     };
 
-    iterator begin() { return iterator(this); }
-    iterator end() { return iterator(this, pKeys.size()); }
+    iterator begin();
+    iterator end();
 };
 
 class TFIDF {
@@ -62,9 +62,11 @@ class TFIDF {
     // type of a word to paper interaction
     typedef std::tuple<std::string, Paper, double> pEdge;
     std::vector<pEdge> buffer; //object on which we iterate to get new pEdge object
+    SummariesIt summaries;
+
     void update(int threshold);
 
-    TFIDF(std::string sdata) : sdata(sdata) {
+    TFIDF(std::string sdata) : sdata(sdata), summaries(sdata) {
         update(30000); //we initialize the tfidf object with 30000 summaries
     };
     

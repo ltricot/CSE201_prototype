@@ -23,13 +23,23 @@ int main(int argc, char *argv[]) {
     map<int, std::vector<std::string>> clusters = clustering.clusters;
 
     for (map<int, vector<string>>::iterator it = clusters.begin(); it != clusters.end(); ++it) {
-        string label = std::to_string(it->first);
+        // string label = std::to_string(it->first);
+
+        std::vector<Author> authors;
+        for (auto au_s : it->second)
+            authors.push_back(Author(au_s));
+
         addKey(outfolder, it->first);
+        setNeighbors(outfolder, it->first, authors);
+
+        #ifdef outdated
         string path = outfolder + "/" + label + ".txt";
         ofstream myfile(path);
+
         for (vector<string>::iterator i = it->second.begin(); i != it->second.end(); i++)
             myfile << *i << '\n';
 
         myfile.close();
+        #endif
     }
 }

@@ -8,3 +8,7 @@ mdata
 err
 *.tar
 temp
+sdata
+outfolder
+tfdata
+summs

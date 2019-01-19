@@ -8,7 +8,8 @@
 using namespace std;
 
 using std::exp;
-using json = nlohmann::json;
+// using json = nlohmann::json;
+
 
 int Cluster::T = 2;
 
@@ -81,9 +82,11 @@ void Cluster::getCDF() {
         double sum = 0;
         for (int j = 0; j < allProb.size(); j++) {
             sum += allProb(j);
-            if (i == 1) {
-                std::cout << sum << std::endl;
-            }
+
+            // if (i == 1) {
+            //    std::cout << sum << std::endl;
+            // }
+
             cdf.push_back(sum);
         }
         allProb.resize(0);

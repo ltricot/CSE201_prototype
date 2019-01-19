@@ -26,8 +26,8 @@ def _run_clean(src: str):
             if fpath == '.DS_Store':
                 _del(os.path.join(dirpath, fpath))
 
-def _run_crawl(cdata: str, refdata, source):
-    sh = f'./build/src/executables/crawl {cdata} {refdata} {source}'
+def _run_crawl(cdata: str, refdata, sdata, source):
+    sh = f'./build/src/executables/crawl {cdata} {refdata} {sdata} {source}'
     for line in os.popen(sh):
         print(line, end='')
 

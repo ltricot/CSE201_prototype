@@ -153,17 +153,24 @@ std::vector<Edge> Crawler::fromAuthors(std::vector<Author> authors) {
     // each iteration is one call to arxiv
     // it is likely that we should have some waiting period between each call
     // so as not to be blocked by arxiv (they are a small organization)
-
-    for (author = authors.begin(); author < authors.end(); author += 15) {
+    // wanted to batch author requests but authors write too much
+    for (author = authors.begin(); author < authors.end(); author += 1) {
         url.str("");
         url << "http://export.arxiv.org/api/query?search_query=";
 
-        for (auto a = author; a < min(authors.end(), author + 15); a++, url << "+OR+") {
+        for (auto a = author; a < min(authors.end(), author + 1); a++) {
             char *escaped = curl_escape(a->name.c_str(), a->name.length());
             url << "au:" << escaped;
             curl_free(escaped);
+
+            // dont put after last author
+            if(a + 1 < min(authors.end(), author + 1))
+                url << "+OR+";
         }
 
+        url << "&maxresults=500";
+
+        std::cout << url.str() << std::endl;
         xmlstr = this->callArxiv(url.str());
 
         // extend found pairs with this author's new pairs
