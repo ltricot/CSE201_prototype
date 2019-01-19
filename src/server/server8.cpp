@@ -2,9 +2,9 @@
 #include "../database/driver.hpp"
 #include "json.hpp"
 #include <iostream>
-#include <pistache/endpoint.h>
-#include <pistache/http.h>
-#include <pistache/router.h>
+#include "pistache/endpoint.h"
+#include "pistache/http.h"
+#include "pistache/router.h"
 #include <sstream>
 #include <string>
 
@@ -13,13 +13,14 @@ using namespace Pistache;
 using json = nlohmann::json;
 
 std::string jsonize(std::vector<std::string> &arts) {
-    std::string output = "{";
+    std::string output = "[";
     std::vector<std::string>::iterator it;
     for (it = arts.begin(); it != arts.end(); it++) {
         std::string add = "\"" + *it + "\"";
         output += add + ",";
     }
-    output += "}";
+    output = output.substr(0, output.length()-1);
+    output += "]";
     return output;
 }
 
@@ -79,7 +80,7 @@ class GUI_Serv {
 
   private:
     void getTopics(const Rest::Request &request, Http::ResponseWriter response) {
-        GUI_Serv::js = "{SEND NUDES}";
+        GUI_Serv::js = "[\"physics\", \"math\", \"computers\"]";
         response.send(Http::Code::Ok, GUI_Serv::js);
     }
 
@@ -94,7 +95,7 @@ class GUI_Serv {
     void getReco(const Rest::Request &request, Http::ResponseWriter response) {
         auto id = request.param(":id").as<std::string>();
         // js = getUserRecs(id)
-        GUI_Serv::js = "{\"article\": \"1812.01234_v2\" }";
+        GUI_Serv::js = "{\"article\": \"1812.01234_v2\"}";
         response.send(Http::Code::Ok, GUI_Serv::js);
     }
 

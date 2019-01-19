@@ -2,6 +2,7 @@
 #include "driver.hpp"
 #include <iostream>
 #include <tuple>
+#include <set>
 
 #include <experimental/filesystem>
 namespace fs = std::experimental::filesystem;
@@ -21,9 +22,14 @@ int main(int argc, char *argv[]) {
     std::vector<Edge> edges;
 
     std::vector<Author> authors = dcdata.getKeys<Author>();
+    std::set<std::string> seen;
+    for(auto au : authors)
+        seen.insert(au.name);
+    
+    authors.clear();
 
-    for (std::vector<Author>::iterator au = authors.begin(); au != authors.end(); au++) {
-        std::vector<Edge> temp = (dcdata.getFrom(*au));
+    for (auto au : seen) {
+        std::vector<Edge> temp = (dcdata.getFrom(Author(au)));
         edges.insert(edges.end(), temp.begin(), temp.end());
     }
 
@@ -55,11 +61,14 @@ int main(int argc, char *argv[]) {
 
     // now we construct and fill the driver mdata
     Driver dmdata(mdata);
-    for (std::vector<Author>::iterator au1 = authors.begin(); au1 != authors.end(); au1++) {
-        for (std::vector<Author>::iterator au2 = authors.begin(); au2 != authors.end(); au2++) {
-            double sim = (double)minhash.getSimilarity(*au1, *au2);
+    for (auto au1_s : seen) {
+        Author au1 = Author(au1_s);
+
+        for (auto au2_s : seen) {
+            Author au2 = Author(au2_s);
+            double sim = (double)minhash.getSimilarity(au1, au2);
             if (sim > s) { // we take the "friendship" into account
-                dmdata.writeEdge(std::make_tuple(*au1, *au2, sim));
+                dmdata.writeEdge(std::make_tuple(au1, au2, sim));
             }
         }
     }

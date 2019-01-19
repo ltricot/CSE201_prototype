@@ -8,17 +8,19 @@ TFIDF::iterator TFIDF::iterator::operator++() {
     else
         goto done;
 
-fillup : {
-    std::vector<pEdge> copy = parent->buffer;
-    parent->buffer.clear();
-    for (int j = 1000; j < copy.size(); j++) {
-        parent->buffer.push_back(copy[j]);
+    fillup: {
+        std::vector<pEdge> copy = parent->buffer;
+        parent->buffer.clear();
+        for (int j = 1000; j < copy.size(); j++)
+            parent->buffer.push_back(copy[j]);
+
+        copy.clear();
+        parent->update(1000);
+        cursor = parent->buffer.begin();
     }
-    copy.clear();
-    parent->update(1000);
-    cursor = parent->buffer.begin();
-}
-done : { return *this; }
+
+    done:
+        return *this;
 }
 
 TFIDF::pEdge TFIDF::iterator::operator*() const { return *cursor; }
@@ -119,10 +121,10 @@ void TFIDF::calweightMat() {
     }
     weightMat = tf * idf;
 }
-// do the update by pulling new summaries (up to a given threshold) and update accordingly the
-// weightMat and the buffer
+/**@brief do the update by pulling new summaries (up to a given threshold) and update accordingly the
+  *weightMat and the buffer
+*/
 void TFIDF::update(int threshold) {
-    SummariesIt summaries(this->sdata);
     for (SummariesIt::iterator it = summaries.begin(); it != summaries.end(); ++it) {
         auto itval = *it;
         if (papers.find(itval.id) == papers.end()) {
@@ -144,7 +146,9 @@ void TFIDF::update(int threshold) {
         for (std::map<std::string, int>::iterator it2 = vocab.begin(); it2 != vocab.end(); it2++) {
             /*fill the buffer object with pEdge objects composed of a word, a Paper and the
              * corresponding tfidf coefficient*/
-            buffer.push_back(std::make_tuple(it2->first, Paper(*it1), weightMat(i, j)));
+            if (weightMat(i,j)>0){
+                buffer.push_back(std::make_tuple(it2->first, Paper(*it1), weightMat(i, j)));
+            }
             j++;
         }
         i++;
@@ -153,7 +157,17 @@ void TFIDF::update(int threshold) {
 
 SummariesIt::SummariesIt(std::string sdata) : sdata(sdata), driver(sdata), sAccess(sdata) {
     // SummaryAccessor sAccess(sdata);
-    this->pKeys = sAccess.getKeys();
+    auto allKeys = sAccess.getKeys();
+    std::set<std::string> seen;
+
+    for (auto paper : allKeys)
+        seen.insert(paper.id);
+    
+    allKeys.clear();
+    for (auto paper_s : seen)
+        allKeys.push_back(Paper(paper_s));
+    
+    this->pKeys = allKeys;
 }
 
 SummariesIt::iterator SummariesIt::iterator::operator++() {
@@ -167,3 +181,6 @@ Paper SummariesIt::iterator::operator*() const {
     p.summary = summ;
     return p;
 }
+
+SummariesIt::iterator SummariesIt::begin() { return iterator(this, 0); }
+SummariesIt::iterator SummariesIt::end() { return iterator(this, pKeys.size()); }
