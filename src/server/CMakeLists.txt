@@ -16,7 +16,7 @@ target_link_libraries (testclient client)
 
 # this be no joke
 add_executable (serve server8.cpp)
-target_link_libraries (serve pistache_static)
+target_link_libraries (serve pistache_static ${CURL_LIBRARIES})
 
 set(THREADS_PREFER_PTHREAD_FLAG ON)
 find_package(Threads REQUIRED)
