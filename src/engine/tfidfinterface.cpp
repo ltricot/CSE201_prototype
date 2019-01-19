@@ -119,8 +119,9 @@ void TFIDF::calweightMat() {
     }
     weightMat = tf * idf;
 }
-// do the update by pulling new summaries (up to a given threshold) and update accordingly the
-// weightMat and the buffer
+/**@brief do the update by pulling new summaries (up to a given threshold) and update accordingly the
+  *weightMat and the buffer
+*/
 void TFIDF::update(int threshold) {
     SummariesIt summaries(this->sdata);
     for (SummariesIt::iterator it = summaries.begin(); it != summaries.end(); ++it) {
@@ -144,7 +145,9 @@ void TFIDF::update(int threshold) {
         for (std::map<std::string, int>::iterator it2 = vocab.begin(); it2 != vocab.end(); it2++) {
             /*fill the buffer object with pEdge objects composed of a word, a Paper and the
              * corresponding tfidf coefficient*/
-            buffer.push_back(std::make_tuple(it2->first, Paper(*it1), weightMat(i, j)));
+            if (weighMat(i,j)>0){
+                buffer.push_back(std::make_tuple(it2->first, Paper(*it1), weightMat(i, j)));
+            }
             j++;
         }
         i++;
