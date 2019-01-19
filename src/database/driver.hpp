@@ -23,8 +23,10 @@ class Driver {
 	std::string directory;
     std::string keysfile;
 
+    /// @brief Return all the keys stored in the matrix
     template <class KeyT> std::vector<KeyT> getKeys();
 
+    void storekey(std::string key);
 	/// @brief get all edges outwards from ``from``
 	std::vector<Edge> getFrom(Author from);
     std::vector<Reference> getFrom(Paper paper);

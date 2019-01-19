@@ -41,6 +41,32 @@ template <class KeyT> std::vector<KeyT> Driver::getKeys() {
     }
     }*/
 }
+void Driver::storekey(string dir){
+    ifstream in(this->directory + "/keys.txt");
+    ofstream out(this->directory + "/" + dir + "keystmp.txt");
+    std::string line;
+    bool stored = false;
+    while (getline(in, line)) {
+        if (line == dir) {
+            out << line << "\n";
+            stored = true;
+        } else {
+            out << line << "\n";
+        }
+    }
+
+    in.close();
+
+    if (stored) {
+        out.close();
+        remove((this->directory + "/keys.txt").c_str());
+        rename((this->directory + "/" + dir + "keystmp.txt").c_str(), (this->directory + "/keys.txt").c_str());
+    }
+    out << dir << "\n";
+    out.close();
+    remove((this->directory + "/keys.txt").c_str());
+    rename((this->directory + "/" + dir + "keystmp.txt").c_str(), (this->directory + "/keys.txt").c_str());
+}
 
 Driver::Driver(string dir) {
     this->directory = dir;
@@ -59,8 +85,7 @@ bool Driver::writeEdge(Edge edge) {
     string row = ostr.str();
     string col = edge.paper.id;
     m.write(row, col, edge.weight, n);
-    ofstream keys(this->keysfile, std::ios_base::app);
-    keys << n << "\n";
+    this->storekey(n);
     return true;
 }
 
@@ -75,8 +100,7 @@ bool Driver::writeEdge(Reference ref) {
     string row = ostr.str();
     string col = ref.second.id;
     m.write(row, col, 1, n);
-    ofstream keys(this->keysfile, std::ios_base::app);
-    keys << n << "\n";
+    this->storekey(n);
     return true;
 }
 
@@ -91,8 +115,7 @@ bool Driver::writeEdge(Friends friends) {
     string row = ostr.str();
     string col = get<1>(friends).name;
     m.write(row, col, get<2>(friends), n);
-    ofstream keys(this->keysfile, std::ios_base::app);
-    keys << n << "\n";
+    this->storekey(n);
     return true;
 }
 
@@ -149,7 +172,6 @@ vector<Edge> Driver::getFrom(Author from) {
     string row = ostr.str();
     vector<vector<string>> res = m.getrow(row);
     vector<Edge> ret;
-
     if (res.size() == 0)
         return ret;
     res.erase(res.begin());
@@ -274,6 +296,34 @@ SummaryAccessor::SummaryAccessor(string dir) {
     int res = mkdir(dir.c_str(), 0666);
 }
 
+void SummaryAccessor::storekey(string dir){
+    ifstream in(this->directory + "/keys.txt");
+    ofstream out(this->directory + "/" + dir + "keystmp.txt");
+    std::string line;
+    bool stored = false;
+    while (getline(in, line)) {
+        if (line == dir) {
+            out << line << "\n";
+            stored = true;
+        } else {
+            out << line << "\n";
+        }
+    }
+
+    in.close();
+
+    if (stored) {
+        out.close();
+        remove((this->directory + "/keys.txt").c_str());
+        rename((this->directory + "/" + dir + "keystmp.txt").c_str(), (this->directory + "/keys.txt").c_str());
+    }
+    out << dir << "\n";
+    out.close();
+    remove((this->directory + "/keys.txt").c_str());
+    rename((this->directory + "/" + dir + "keystmp.txt").c_str(), (this->directory + "/keys.txt").c_str());
+}
+
+
 void SummaryAccessor::sendSummary(Paper paper) {
     hash<string> hasher;
     string n = paper.id;
@@ -283,8 +333,7 @@ void SummaryAccessor::sendSummary(Paper paper) {
     ostr << foo;
     string id = ostr.str();
     Summaries s(this->directory);
-    ofstream keys(this->keysfile, std::ios_base::app);
-    keys << n << "\n";
+    this->storekey(n);
     s.storeSummary(id, paper.summary);
 }
 
