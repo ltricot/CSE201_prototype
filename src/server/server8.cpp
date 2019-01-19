@@ -209,9 +209,7 @@ bool putUserLike(std::string id, std::string like) {
     string line;
     bool liked = false;
         while (getline(inp, line)) {
-            vector<string> vec;
-            boost::algorithm::split(vec, line, boost::is_any_of(","));
-            if (vec[0] == like) {
+            if (line == like) {
                 out << line << "\n";
                 liked = true;
             } else {
@@ -219,18 +217,17 @@ bool putUserLike(std::string id, std::string like) {
             }
         }
     inp.close();
-
     if (liked) {
         out.close();
-        remove(filepath.c_str());
-        rename((id + "tmp.txt").c_str(), filepath.c_str());
+        remove(filename.c_str());
+        rename((id + "tmp.txt").c_str(), filename.c_str());
         return true;
     }
 
     out << like << "\n";
     out.close();
-    remove(filepath.c_str());
-    rename((id + "tmp.txt").c_str(), filepath.c_str());
+    remove(filename.c_str());
+    rename((id + "tmp.txt").c_str(), filename.c_str());
     return true;
 }
 
