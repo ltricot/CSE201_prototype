@@ -4,6 +4,10 @@
 #include <iostream>
 #include <map>
 #include <stdio.h>
+#include <cstring>
+
+using namespace std;
+
 
 static std::size_t makeString(void *contents, size_t size, size_t nmemb, std::string *s) {
     std::size_t newLength = size * nmemb;

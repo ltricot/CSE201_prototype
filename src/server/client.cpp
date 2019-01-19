@@ -1,6 +1,6 @@
 #include "client.hpp"
 #include "curl/curl.h"
-#include "rapidxml.hpp"
+#include "rapidxml/rapidxml.hpp"
 #include "tools.hpp"
 #include <iostream>
 #include <string>

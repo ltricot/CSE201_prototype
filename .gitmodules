@@ -1,3 +1,6 @@
 [submodule "libraries/eigen-git-mirror"]
 	path = libraries/eigen-git-mirror
 	url = https://github.com/eigenteam/eigen-git-mirror
+[submodule "libraries/pistache"]
+	path = libraries/pistache
+	url = https://github.com/oktal/pistache

@@ -146,7 +146,7 @@ void TFIDF::update(int threshold) {
         for (std::map<std::string, int>::iterator it2 = vocab.begin(); it2 != vocab.end(); it2++) {
             /*fill the buffer object with pEdge objects composed of a word, a Paper and the
              * corresponding tfidf coefficient*/
-            if (weighMat(i,j)>0){
+            if (weightMat(i,j)>0){
                 buffer.push_back(std::make_tuple(it2->first, Paper(*it1), weightMat(i, j)));
             }
             j++;
