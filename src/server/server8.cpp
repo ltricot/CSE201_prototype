@@ -236,7 +236,7 @@ class GUI_Serv {
         auto id = request.param(":id").as<std::string>();
         std::vector<std::string> articles = getUserArticles((std::string)id, GUI_Serv::dir);
         if (articles.empty()) {
-            response.send(Http::Code::Ok, '[]');
+            response.send(Http::Code::Ok, "[]");
             return;
         } 
         json s = articles;
