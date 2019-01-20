@@ -29,7 +29,7 @@ The data we must obtain from arxiv is therefore two-fold. We use the arxiv API t
 The database is subdivided in a number of storage units:
 1. the academic graph as a key-value store     (custom)
 2. the user/paper vectors as a key-value store (custom)
-3. the user likes as a key-value store on Azure Cosmos
+3. the user likes stored directly in text files on the server
 4. the cluster labels as a csv
 
 @Abdelrahmansameh
