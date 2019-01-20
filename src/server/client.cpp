@@ -37,7 +37,6 @@ std::vector<std::string> Client::getLikes(Author author) {
         return {};
     
     json resp = json::parse(response);
-đ    
     std::vector<std::string> ret;
 
     for(std::string topic : topics) {
