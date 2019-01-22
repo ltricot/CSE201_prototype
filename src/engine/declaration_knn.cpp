@@ -10,8 +10,8 @@
 
 #include "clusteringlast.hpp"
 #include "declaration_knn.hpp"
+#include "Reader.h"
 
-using json = nlohmann::json;
 
 /* constructor for name
 get the interactions in the data base
@@ -19,11 +19,10 @@ get the cluster (list of name of researchers) of jules
 get person identity vector or a paper identity vectior*/
 /*verifier que edge.paper est une string d'un nom de papier */
 
-Person::Person(Author author, std::string cdata, std::string vdata, std::string outfolder,
-               std::string keyfile)
-    : author(author), outfolder(outfolder), keyfile(keyfile), cdata(cdata), vdata(vdata) {
+Person::Person(Author author, std::string cdata, std::string cldata, std::string vdata, std::string outfolder)
+    : author(author), outfolder(outfolder), cdata(cdata), vdata(vdata) {
 
-    // keys = getAuthorClusters(keyfile);
+    keys = getAuthorClusters(cldata);
 }
 
 /** @brief Get a recommendation (Title of a paper) for a client
@@ -54,35 +53,31 @@ std::string Person::getRecommendation(int &k) {
  *
  * @return a vector of name of papers that has been read by those k neighbours
  */
-
 std::vector<std::string> Person::get_k_NeighborsInteractions(int &k) {
     std::vector<Author> list_of_neighbours_in_cluster;
 
     list_of_neighbours_in_cluster = getNeighbors(outfolder, keys[author.name]);
 
     std::vector<std::vector<std::string>> total_interactions;
-    int i = 0;
     for (std::vector<Author>::iterator nei = list_of_neighbours_in_cluster.begin();
          nei != list_of_neighbours_in_cluster.end(); nei++) {
         Driver driver(cdata); // $$
         std::vector<Edge> interactions_pairs_nei = driver.getFrom(*nei);
         std::vector<std::string> interactions_nei;
-        for (int i = 0; i <= interactions_pairs_nei.size(); i++) {
+        for (int j = 0; j < interactions_pairs_nei.size(); j++) {
             interactions_nei.push_back(
-                interactions_pairs_nei[i]
+                interactions_pairs_nei[j]
                     .paper.id); /*because Edge is composed of a paper and a author and paper has an
                                    atribute .id which is a string*/
         }
 
-        total_interactions[i] = interactions_nei;
-        i++;
+        total_interactions.push_back(interactions_nei);
     }
 
     std::vector<std::vector<std::string>> knn_info;
-    for (int l = 0; l < k; l++) {
-
-        int n = rand() % list_of_neighbours_in_cluster.size() + 1;
-        knn_info[l] = total_interactions[n]; /* knn info is a vector of elements from total
+    for (int l = 0; l < std::min(k, (int)list_of_neighbours_in_cluster.size()); l++) {
+        int n = rand() % list_of_neighbours_in_cluster.size();
+        knn_info.push_back(total_interactions[n]); /* knn info is a vector of elements from total
                                                 interactions (its element are =vector of string),
                                                 the string is the name of a paper some papers can
                                                 appears in several times : it is a Paper.id*/
@@ -165,7 +160,7 @@ Person::get_a_title_paper(std::pair<std::vector<float>, std::vector<std::string>
     float random = ((float)rand()) / (float)RAND_MAX;
     int interval = 0;
     int k = 0;
-    for (int i = 0; i <= result.first.size(); i++) {
+    for (int i = 0; i < result.first.size(); i++) {
         k = i;
         if (interval > random * sum) {
             break;
@@ -177,15 +172,15 @@ Person::get_a_title_paper(std::pair<std::vector<float>, std::vector<std::string>
 }
 
 std::map<std::string, int> getAuthorClusters(std::string cldata){
-    std::map<std::string int> ret;
+    std::map<std::string, int> ret;
     Reader r(cldata + "/keys.txt");
-    std::vector<std::vector<std::string>> tmp;
+    std::vector<std::vector<std::string>> tmp = r.read();
     for (std::vector<std::vector<std::string>>::iterator it = tmp.begin(); it != tmp.end(); it++){
         std::string label = (*it)[0];
         Reader r2(cldata + "/" + label + ".txt");
-        std::vector<std::vector<std::string>> tmp2;
+        std::vector<std::vector<std::string>> tmp2 = r2.read();
         for (std::vector<std::vector<std::string>>::iterator it2 = tmp2.begin(); it2 != tmp2.end(); it2++){
-            std::string author = (*it)[0];
+            std::string author = (*it2)[0];
             ret[author] = std::stoi(label);
         }      
     }

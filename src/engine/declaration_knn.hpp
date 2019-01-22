@@ -4,25 +4,20 @@
 #include <array>
 #include "driver.hpp"
 #include "primitives.hpp"
-#include "json.hpp"
-
-
-using json = nlohmann::json;
 
 
 class Person {
     private:
     
-    std::string keyfile;
     std::string outfolder;
     std::string cdata;
     std::string vdata;
     Author author;
-    json keys;
+    std::map<std::string, int> keys;
     
     public:
     
-    Person(Author author, std::string cdata, std::string vdata, std::string outfolder, std::string keyfile);
+    Person(Author author, std::string cdata, std::string cldata, std::string vdata, std::string outfolder);
 
     std::vector<Author> cluster; // $$
 
