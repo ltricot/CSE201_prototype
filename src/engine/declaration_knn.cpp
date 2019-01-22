@@ -38,7 +38,7 @@ Person::Person(Author author, std::string cdata, std::string cldata, std::string
 std::string Person::getRecommendation(int &k) {
     std::vector<std::string> a_list_of_interaction_papers;
     a_list_of_interaction_papers = this->get_k_NeighborsInteractions(k);
-    std::pair<std::vector<float>, std::vector<std::string>> result;
+    std::pair<std::vector<double>, std::vector<std::string>> result;
     result = this->getRatings_of_papers(a_list_of_interaction_papers);
     std::string recommendation;
     recommendation = this->get_a_title_paper(result);
@@ -100,13 +100,13 @@ std::vector<std::string> Person::get_k_NeighborsInteractions(int &k) {
  * predict the ratings of each paper of the list
  *
  * @param vector of strings : the vector contains titles of papers
- * @return a pair composed of a vector of float (predicted ratings) and a vector of name of papers
+ * @return a pair composed of a vector of double (predicted ratings) and a vector of name of papers
  * (the rating at index i corresponds to the paper at the index i in the vector of papers)
  */
 
-std::pair<std::vector<float>, std::vector<std::string>> Person::getRatings_of_papers(
+std::pair<std::vector<double>, std::vector<std::string>> Person::getRatings_of_papers(
     std::vector<std::string> &list_of_papers) { /*list of papers sera id.get_k_Interactions*/
-    std::vector<float> ratings_of_ID;
+    std::vector<double> ratings_of_ID;
     Driver driver(cdata); // $$
     std::vector<Edge> interactions_pairs = driver.getFrom(this->author);
     std::vector<std::string>
@@ -128,13 +128,13 @@ std::pair<std::vector<float>, std::vector<std::string>> Person::getRatings_of_pa
             Eigen::Matrix<double, 30, 1> vector_id_researcher = v.get_vector(this->author);
             Eigen::Matrix<double, 30, 1> vector_id_paper = v.get_vector(Paper(name_paper));
 
-            float rating_id = vector_id_researcher.dot(vector_id_paper);
+            double rating_id = vector_id_researcher.dot(vector_id_paper);
             ratings_of_ID.push_back(rating_id);
             name_of_papers_of_ID.push_back(name_paper);
         }
     }
 
-    std::pair<std::vector<float>, std::vector<std::string>> result;
+    std::pair<std::vector<double>, std::vector<std::string>> result;
     result.first = ratings_of_ID;
     result.second =
         name_of_papers_of_ID; /* result.second is a list of Paper.id, hence a list of string*/
@@ -145,19 +145,19 @@ std::pair<std::vector<float>, std::vector<std::string>> Person::getRatings_of_pa
  *
  * @details
  *
- * @param a pair composed of a vector of float (predicted ratings) and a vector of name of papers
+ * @param a pair composed of a vector of double (predicted ratings) and a vector of name of papers
  * (the rating at index i corresponds to the paper at the
  *
  * @return a name of a paper from the vector of paper names given as parameter
  */
 std::string
-Person::get_a_title_paper(std::pair<std::vector<float>, std::vector<std::string>> &result) {
+Person::get_a_title_paper(std::pair<std::vector<double>, std::vector<std::string>> &result) {
     int proba;
-    float sum;
-    for (std::vector<float>::iterator it = result.first.begin(); it != result.first.end(); ++it) {
+    double sum;
+    for (std::vector<double>::iterator it = result.first.begin(); it != result.first.end(); ++it) {
         sum += *it;
     }
-    float random = ((float)rand()) / (float)RAND_MAX;
+    double random = ((double)rand()) / (double)RAND_MAX;
     int interval = 0;
     int k = 0;
     for (int i = 0; i < result.first.size(); i++) {

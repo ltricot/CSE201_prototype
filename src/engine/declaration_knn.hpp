@@ -25,9 +25,9 @@ class Person {
 
     std::vector<std::string> get_k_NeighborsInteractions(int &k) ;
 
-    std::pair<std::vector<float>,std::vector<std::string>>  getRatings_of_papers(std::vector<std::string> &list_of_papers);
+    std::pair<std::vector<double>,std::vector<std::string>>  getRatings_of_papers(std::vector<std::string> &list_of_papers);
 
-    std::string get_a_title_paper(std::pair<std::vector<float>,std::vector<std::string>> &result);
+    std::string get_a_title_paper(std::pair<std::vector<double>,std::vector<std::string>> &result);
 
     void setPaperasRead(std::string &paper); /*update the database when we recommend a paper: create an interaction between the paper and the client, need to be done*/
 };
