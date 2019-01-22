@@ -7,7 +7,7 @@ add_subdirectory (engine)
 target_include_directories (engine PUBLIC "database")
 
 add_subdirectory (server)
-target_include_directories (serve PRIVATE "database")
+target_include_directories (serve PRIVATE "database" "engine")
 
 # must be last as it depends on libraries defined above
 add_subdirectory (executables)

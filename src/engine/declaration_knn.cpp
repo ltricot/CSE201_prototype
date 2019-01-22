@@ -19,8 +19,8 @@ get the cluster (list of name of researchers) of jules
 get person identity vector or a paper identity vectior*/
 /*verifier que edge.paper est une string d'un nom de papier */
 
-Person::Person(Author author, std::string cdata, std::string cldata, std::string vdata, std::string outfolder)
-    : author(author), outfolder(outfolder), cdata(cdata), vdata(vdata) {
+Person::Person(Author author, std::string cdata, std::string cldata, std::string vdata)
+    : author(author), outfolder(cldata), cdata(cdata), vdata(vdata) {
 
     keys = getAuthorClusters(cldata);
 }
@@ -35,11 +35,20 @@ Person::Person(Author author, std::string cdata, std::string cldata, std::string
  *
  * @return the title of a paper that we recommend to the client according to his preferences
  */
-std::string Person::getRecommendation(int &k) {
+std::string Person::getRecommendation(int k) {
     std::vector<std::string> a_list_of_interaction_papers;
     a_list_of_interaction_papers = this->get_k_NeighborsInteractions(k);
+
+    std::cout << "candidates: " << std::endl;
+    for (auto pap : a_list_of_interaction_papers)
+        std::cout << pap << std::endl;
+
     std::pair<std::vector<double>, std::vector<std::string>> result;
     result = this->getRatings_of_papers(a_list_of_interaction_papers);
+    std::cout << "rating: " << std::endl;
+    for (int i = 0; i < result.first.size(); i++)
+        std::cout << result.second[i] << ": " << result.first[i] << std::endl;
+
     std::string recommendation;
     recommendation = this->get_a_title_paper(result);
     return recommendation;
@@ -151,7 +160,7 @@ std::pair<std::vector<double>, std::vector<std::string>> Person::getRatings_of_p
  * @return a name of a paper from the vector of paper names given as parameter
  */
 std::string
-Person::get_a_title_paper(std::pair<std::vector<double>, std::vector<std::string>> &result) {
+Person::get_a_title_paper(std::pair<std::vector<double>, std::vector<std::string>> result) {
     int proba;
     double sum;
     for (std::vector<double>::iterator it = result.first.begin(); it != result.first.end(); ++it) {
@@ -167,8 +176,9 @@ Person::get_a_title_paper(std::pair<std::vector<double>, std::vector<std::string
         }
         interval += result.first[i];
     }
-    proba = result.first[k - 1];
-    return result.second[k - 1];
+    proba = result.first[k];
+    std::string cp = result.second[k];  // copy
+    return cp;
 }
 
 std::map<std::string, int> getAuthorClusters(std::string cldata){

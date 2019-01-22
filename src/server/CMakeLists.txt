@@ -18,8 +18,12 @@ target_link_libraries (testclient client)
 add_executable (serve server8.cpp)
 target_link_libraries (serve pistache_static ${CURL_LIBRARIES})
 
+## pistache needs
 set(THREADS_PREFER_PTHREAD_FLAG ON)
 find_package(Threads REQUIRED)
 target_link_libraries(serve Threads::Threads)
 
-target_link_libraries (serve database)
+## internal linking
+target_link_libraries (serve database engine)
+
+# end of no joke

@@ -2,10 +2,13 @@
 #include "driver.hpp"
 #include "Reader.h"
 #include "json.hpp"
-#include <iostream>
+#include "declaration_knn.hpp"
+
 #include "pistache/endpoint.h"
 #include "pistache/http.h"
 #include "pistache/router.h"
+
+#include <iostream>
 #include <curl/curl.h>
 #include <fstream>
 #include <sstream>
@@ -145,16 +148,14 @@ std::string jsonize(std::vector<std::string> &arts) {
 
 class GUI_Serv {
   public:
-    std::string dir;
-    std::string user_dir;
+    std::string dir, user_dir, cldata, vdata;
     Rest::Router router;
     std::shared_ptr<Http::Endpoint> httpEndpoint;
     std::vector<std::string> topics;
 
-    GUI_Serv(std::string d, std::string d2, Address addr) {
+    GUI_Serv(std::string d, std::string d2, std::string cldata, std::string vdata, Address addr)
+        : dir(d), user_dir(d2), cldata(cldata), vdata(vdata) {
         GUI_Serv::httpEndpoint = std::make_shared<Http::Endpoint>(addr);
-        dir = d;
-        user_dir = d2;
         int res = mkdir(d2.c_str(), 0666);
         ifstream inp("topics.json");
         json j = json::parse(inp);
@@ -215,9 +216,19 @@ class GUI_Serv {
     }
 
     void getReco(const Rest::Request &request, Http::ResponseWriter response) {
-        auto id = (std::string) request.param(":id").as<std::string>();
-        // js = getUserRecs(id)
-        GUI_Serv::js = "{\"article\": \"1812.01234_v2\"}";
+        auto id = decodeUrl((std::string) request.param(":id").as<std::string>());
+
+        std::cout << "recommend: " << id << std::endl;
+        json resp;
+
+        std::cout << id << " " << dir << " " << cldata << " " << vdata << std::endl;
+        Person person(Author(id), dir, cldata, vdata);
+        resp["article"] = person.getRecommendation(10);
+
+        std::cout << resp["article"] << std::endl;
+
+        std::string js = resp.dump();
+        GUI_Serv::js = js;
         response.send(Http::Code::Ok, GUI_Serv::js);
     }
 
@@ -284,12 +295,13 @@ class GUI_Serv {
 
 int main(int argc, char **argv) {
     
-    std::string dir = argv[1];
-
-    std::string userdir = argv[2];
+    std::string cdata = argv[1];
+    std::string userdir = argv[2];  // for topic likes
+    std::string cldata = argv[3];
+    std::string vdata = argv[4];
 
     Address addr(Ipv4::any(), Port(80));
-    GUI_Serv serv(dir, userdir, addr);
+    GUI_Serv serv(cdata, userdir, cldata, vdata, addr);
 
     serv.init();
     serv.start();

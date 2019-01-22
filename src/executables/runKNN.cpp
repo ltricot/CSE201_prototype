@@ -18,7 +18,7 @@ int main(int argc, char *argv[]) {
 
     Author author(authorName);
 
-    Person person(author, cdata, clusters, vdata, clusters);
+    Person person(author, cdata, clusters, vdata);
 
     std::string title ; //the title of a paper that we recommend to the client according to his preferences
     title = person.getRecommendation(k);
